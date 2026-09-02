@@ -1,0 +1,22 @@
+[project]
+name = "thesis-backend"
+version = "0.1.0"
+description = "Thesis FastAPI backend"
+requires-python = ">=3.10"
+# Dependencies are managed via requirements.txt (pip freeze), not here.
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+# E/F = pyflakes+pycodestyle, I = isort, UP = pyupgrade, B = bugbear.
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's DI idiom puts Depends()/Query() in argument defaults on purpose.
+# Treat them as immutable calls so B008 doesn't flag the standard pattern.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query"]
