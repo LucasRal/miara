@@ -19,9 +19,15 @@ class Settings(BaseSettings):
     ALLOWED_ORIGINS: str = "http://localhost:3010"
 
     # Infra native Ubuntu (PostgreSQL / RabbitMQ / Redis) — voir scripts/setup_ubuntu.sh.
-    DATABASE_URL: str = "postgresql+asyncpg://miara:miara@localhost:5432/miara"
+    # Runtime = rôle miara_app (soumis au RLS). Migrations = miara_admin (BYPASSRLS).
+    DATABASE_URL: str = "postgresql+asyncpg://miara_app:CHANGE_ME@localhost:5432/miara"
+    DATABASE_URL_ADMIN: str = "postgresql+asyncpg://miara_admin:CHANGE_ME@localhost:5432/miara"
     RABBITMQ_URL: str = "amqp://guest:guest@localhost:5672//"
     REDIS_URL: str = "redis://localhost:6379/0"
+
+    # Clé Fernet pour les credentials d'intégration (ADR-005). Générer :
+    #   python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+    ENCRYPTION_KEY: str = ""
 
 
 settings = Settings()

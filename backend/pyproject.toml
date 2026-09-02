@@ -18,6 +18,7 @@ dependencies = [
     "python-jose[cryptography]",
     "passlib[bcrypt]",
     "structlog",
+    "cryptography>=50.0.1",
 ]
 
 [dependency-groups]
@@ -36,6 +37,10 @@ target-version = "py312"
 [tool.ruff.lint]
 # E/F = pyflakes+pycodestyle, I = isort, UP = pyupgrade, B = bugbear.
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# Migrations générées par alembic : lignes longues tolérées.
+"alembic/versions/*" = ["E501"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]
@@ -57,3 +62,7 @@ strict = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+# Une seule boucle pour toute la session : les moteurs asyncpg partagés
+# (app.core.db) ne survivent pas à un changement de boucle entre tests.
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
