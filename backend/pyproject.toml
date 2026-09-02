@@ -1,13 +1,37 @@
 [project]
-name = "thesis-backend"
+name = "miara-backend"
 version = "0.1.0"
-description = "Thesis FastAPI backend"
-requires-python = ">=3.10"
-# Dependencies are managed via requirements.txt (pip freeze), not here.
+description = "Miara - monolithe modulaire FastAPI (auth / hr / sales / core)"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "sqlalchemy[asyncio]",
+    "asyncpg",
+    "alembic",
+    "pydantic",
+    "pydantic-settings",
+    "python-dotenv",
+    "litellm",
+    "celery",
+    "redis",
+    "python-jose[cryptography]",
+    "passlib[bcrypt]",
+    "structlog",
+]
+
+[dependency-groups]
+dev = [
+    "ruff",
+    "mypy",
+    "pytest",
+    "pytest-asyncio",
+    "httpx",
+]
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py312"
 
 [tool.ruff.lint]
 # E/F = pyflakes+pycodestyle, I = isort, UP = pyupgrade, B = bugbear.
@@ -18,5 +42,18 @@ known-first-party = ["app"]
 
 [tool.ruff.lint.flake8-bugbear]
 # FastAPI's DI idiom puts Depends()/Query() in argument defaults on purpose.
-# Treat them as immutable calls so B008 doesn't flag the standard pattern.
 extend-immutable-calls = ["fastapi.Depends", "fastapi.Query"]
+
+[tool.mypy]
+python_version = "3.12"
+packages = ["app"]
+ignore_missing_imports = true
+
+# mypy strict sur core/ uniquement (exigence carte INFRA-1).
+[[tool.mypy.overrides]]
+module = "app.core.*"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

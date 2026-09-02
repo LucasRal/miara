@@ -13,6 +13,9 @@ thesis/
 
 - The two services are **independent deployables**. They never import each
   other — the frontend talks to the backend **only** over HTTP.
+- **Fixed ports (dev, build, and tests): frontend `3010`, backend `8010`.**
+  The frontend proxies `/api/*` same-origin to the backend (Next rewrites),
+  so browsers — including remote ones — only ever talk to port 3010.
 - All API endpoints live under `/api/v1/...`. A version-less `/health` is the
   liveness probe.
 - **Backend layering:** routers (HTTP) → services (logic) → schemas (Pydantic
@@ -31,7 +34,7 @@ thesis/
 ```bash
 cd backend
 source venv/bin/activate          # Windows: venv\Scripts\activate
-uvicorn app.main:app --reload     # http://localhost:8000  (docs at /docs)
+uvicorn app.main:app --reload --port 8010   # http://localhost:8010  (docs at /docs)
 ```
 
 Add a dependency: `pip install <lib>` then `pip freeze > requirements.txt`.
@@ -42,7 +45,7 @@ On a fresh clone: `python3 -m venv venv && source venv/bin/activate && pip insta
 ```bash
 cd frontend
 npm install     # first time / fresh clone
-npm run dev     # http://localhost:3000
+npm run dev     # http://localhost:3010 (port fixed in package.json scripts)
 ```
 
 ## Environment

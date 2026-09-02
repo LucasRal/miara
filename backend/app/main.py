@@ -1,23 +1,20 @@
 """FastAPI application entrypoint.
 
-Wires configuration, CORS, and the versioned API routers. Business logic
-never lives here — routers delegate to services (see app/services/).
+Wires configuration, CORS, structured logging, and the versioned API routers.
+Business logic never lives here — each module (auth/hr/sales) exposes routers
+that mount under /api/v1.
 """
 
-import logging
+import asyncio
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import items
+from app.core.health import check_broker, check_database, check_redis
+from app.core.logging import configure_logging, request_id_middleware
 
-# Root logger config so `logging.getLogger(__name__)` calls inside
-# routers/services actually emit. Uvicorn only wires its own loggers.
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-)
+configure_logging()
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -31,13 +28,25 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.middleware("http")(request_id_middleware)
 
-# All feature routers mount under /api/v1. Add new routers here.
+# Les routers des modules métier (auth, hr, sales) se montent ici sous /api/v1 :
+#   app.include_router(auth.router, prefix=api_prefix)
 api_prefix = f"/api/{settings.API_VERSION}"
-app.include_router(items.router, prefix=api_prefix)
 
 
 @app.get("/health")
-async def health_check() -> dict[str, str]:
-    """Unversioned liveness probe for load balancers / uptime checks."""
-    return {"status": "healthy"}
+async def health_check(response: Response) -> dict[str, object]:
+    """Sonde de vivacité non versionnée : BDD, broker (RabbitMQ) et Redis."""
+    db_ok, broker_ok, redis_ok = await asyncio.gather(
+        check_database(), check_broker(), check_redis()
+    )
+    checks = {
+        "database": "ok" if db_ok else "error",
+        "broker": "ok" if broker_ok else "error",
+        "redis": "ok" if redis_ok else "error",
+    }
+    healthy = db_ok and broker_ok and redis_ok
+    if not healthy:
+        response.status_code = 503
+    return {"status": "healthy" if healthy else "degraded", "checks": checks}

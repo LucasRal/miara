@@ -23,4 +23,5 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Backend contract
 - The FastAPI backend is a separate deployable, spoken to ONLY over REST via `src/lib/api.ts` (`/api/v1/...`). Never import backend code.
-- `NEXT_PUBLIC_API_URL` in `.env.local` points at the backend origin (default `http://localhost:8000`).
+- FIXED PORTS for this project (dev, build/start, and tests): frontend **3010**, backend **8010**. Never use other ports.
+- `/api/*` is proxied same-origin to the backend via `next.config.ts` rewrites (`BACKEND_URL`, server-side). `NEXT_PUBLIC_API_URL` stays empty so browser calls hit port 3010 only — required because the app is accessed from remote browsers (VPS).
