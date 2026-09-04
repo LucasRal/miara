@@ -19,7 +19,7 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+async function request<T>(path: string, init?: RequestInit, allowRefresh = true): Promise<T> {
   const res = await fetch(`${BASE}${API_PREFIX}${path}`, {
     ...init,
     headers: {
@@ -27,6 +27,13 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
       ...init?.headers,
     },
   });
+
+  // Access token (15 min) expiré : on tente UNE rotation du refresh httpOnly
+  // puis on rejoue la requête. Jamais de token en localStorage.
+  if (res.status === 401 && allowRefresh && !path.startsWith("/auth/")) {
+    const refreshed = await fetch(`${BASE}${API_PREFIX}/auth/refresh`, { method: "POST" });
+    if (refreshed.ok) return request<T>(path, init, false);
+  }
 
   if (!res.ok) {
     let detail = res.statusText;
@@ -43,9 +50,38 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const api = {
   get: <T>(path: string) => request<T>(path),
-  post: <T>(path: string, body: unknown) =>
-    request<T>(path, { method: "POST", body: JSON.stringify(body) }),
+  post: <T>(path: string, body?: unknown) =>
+    request<T>(path, {
+      method: "POST",
+      body: body === undefined ? undefined : JSON.stringify(body),
+    }),
   patch: <T>(path: string, body: unknown) =>
     request<T>(path, { method: "PATCH", body: JSON.stringify(body) }),
   delete: <T>(path: string) => request<T>(path, { method: "DELETE" }),
 };
+
+// --- Contrats du module auth (backend/app/auth/schemas.py) ---
+
+export type Role = "owner" | "admin" | "sales" | "hr";
+
+export interface MembershipInfo {
+  organization_id: string;
+  organization_name: string;
+  organization_slug: string;
+  role: Role;
+}
+
+export interface Me {
+  id: string;
+  email: string;
+  full_name: string;
+  org_id: string | null;
+  role: Role | null;
+  memberships: MembershipInfo[];
+}
+
+export interface Org {
+  id: string;
+  name: string;
+  slug: string;
+}

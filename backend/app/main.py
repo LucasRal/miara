@@ -10,9 +10,11 @@ import asyncio
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.auth.router import router as auth_router
 from app.config import settings
 from app.core.health import check_broker, check_database, check_redis
 from app.core.logging import configure_logging, request_id_middleware
+from app.sales.router import router as sales_router
 
 configure_logging()
 
@@ -30,9 +32,10 @@ app.add_middleware(
 )
 app.middleware("http")(request_id_middleware)
 
-# Les routers des modules métier (auth, hr, sales) se montent ici sous /api/v1 :
-#   app.include_router(auth.router, prefix=api_prefix)
+# Les routers des modules métier (auth, hr, sales) se montent ici sous /api/v1.
 api_prefix = f"/api/{settings.API_VERSION}"
+app.include_router(auth_router, prefix=api_prefix)
+app.include_router(sales_router, prefix=api_prefix)
 
 
 @app.get("/health")

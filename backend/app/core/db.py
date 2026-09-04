@@ -20,9 +20,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
 from app.config import settings
 
 engine: AsyncEngine = create_async_engine(settings.DATABASE_URL, pool_pre_ping=True)
-async_session: async_sessionmaker[AsyncSession] = async_sessionmaker(
-    engine, expire_on_commit=False
-)
+async_session: async_sessionmaker[AsyncSession] = async_sessionmaker(engine, expire_on_commit=False)
 
 
 class Base(DeclarativeBase):

@@ -24,11 +24,23 @@ from app.core.db import async_session
 
 
 @asynccontextmanager
-async def tenant_session(org_id: uuid.UUID) -> AsyncIterator[AsyncSession]:
+async def tenant_session(
+    org_id: uuid.UUID, user_id: uuid.UUID | None = None
+) -> AsyncIterator[AsyncSession]:
+    """Session transactionnelle scellée sur une organisation.
+
+    `user_id` (optionnel) pose aussi `app.current_user` : nécessaire aux
+    politiques de *row ownership* (ex. `member_self_access` sur memberships).
+    """
     async with async_session() as session:
         async with session.begin():
             await session.execute(
                 text("SELECT set_config('app.current_org', :org, true)"),
                 {"org": str(org_id)},
             )
+            if user_id is not None:
+                await session.execute(
+                    text("SELECT set_config('app.current_user', :usr, true)"),
+                    {"usr": str(user_id)},
+                )
             yield session

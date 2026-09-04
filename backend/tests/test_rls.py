@@ -37,9 +37,7 @@ async def test_requete_sans_filtre_ne_voit_jamais_l_autre_org(
     org_a, org_b = two_orgs
 
     async with tenant_session(org_a) as s:
-        visible = {
-            row.organization_id for row in (await s.execute(select(Integration))).scalars()
-        }
+        visible = {row.organization_id for row in (await s.execute(select(Integration))).scalars()}
 
     assert org_b not in visible
     assert visible == {org_a}
