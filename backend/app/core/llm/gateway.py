@@ -163,7 +163,9 @@ class LLMGateway:
             msgs.append(_schema_instruction(response_model))
 
         result = await self._invoke(alias, msgs, tools, ctx)
-        if response_model is None:
+        # La validation structurée ne s'applique qu'aux réponses FINALES :
+        # une réponse à base de tool_calls n'a pas (encore) de JSON à valider.
+        if response_model is None or result.tool_calls:
             return result
 
         try:
