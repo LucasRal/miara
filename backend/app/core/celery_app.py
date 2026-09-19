@@ -29,6 +29,10 @@ celery_app.conf.update(
     task_acks_late=True,
     timezone="UTC",
     enable_utc=True,
+    # Chargé au démarrage du worker PAR NOM (pas d'import Python ici : core
+    # n'importe jamais un module métier) : enregistre toutes les tables dans
+    # Base.metadata pour résoudre les FK inter-modules (voir app/db_registry.py).
+    imports=["app.db_registry"],
 )
 
 

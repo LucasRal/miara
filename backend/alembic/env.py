@@ -5,9 +5,8 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-# Les modules de modèles doivent être importés pour peupler Base.metadata.
-import app.auth.models  # noqa: F401
-import app.core.models  # noqa: F401
+# Tous les modules de modèles doivent être importés pour peupler Base.metadata.
+import app.db_registry  # noqa: F401
 from alembic import context
 from app.config import settings
 from app.core.db import Base
