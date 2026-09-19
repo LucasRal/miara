@@ -1,0 +1,32 @@
+# Alias de modèles (ADR-011) — SEUL endroit du dépôt où des noms de modèles
+# apparaissent. Changer de fournisseur = éditer ce fichier, jamais le code.
+# Clés API dans backend/.env (ANTHROPIC_API_KEY / OPENAI_API_KEY), exportées
+# vers litellm par la passerelle (app/core/llm/gateway.py).
+#
+# `primary` / éléments de `fallbacks` : nom de modèle litellm, ou mapping
+# litellm_params complet ({model: ..., temperature: ...}) si besoin.
+
+defaults:
+  timeout: 30 # secondes par appel
+  max_retries: 2 # retries transport avant bascule sur le repli
+
+aliases:
+  sales.route: # léger : routage/choix d'outils, latence < 3 s (ADR-008)
+    primary: anthropic/claude-haiku-4-5-20251001
+    fallbacks:
+      - openai/gpt-4o-mini
+
+  sales.synthesize: # fort : synthèse du briefing commercial
+    primary: anthropic/claude-sonnet-5
+    fallbacks:
+      - openai/gpt-4o
+
+  hr.extract: # léger, sorties JSON : structuration de CV
+    primary: anthropic/claude-haiku-4-5-20251001
+    fallbacks:
+      - openai/gpt-4o-mini
+
+  hr.score: # fort, JSON : notation contre la grille de critères (ADR-007)
+    primary: anthropic/claude-sonnet-5
+    fallbacks:
+      - openai/gpt-4o

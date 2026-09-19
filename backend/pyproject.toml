@@ -19,6 +19,7 @@ dependencies = [
     "passlib[argon2]",
     "structlog",
     "cryptography>=50.0.1",
+    "pyyaml>=6.0.3",
 ]
 
 [dependency-groups]

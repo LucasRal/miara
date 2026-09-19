@@ -1,7 +1,12 @@
 # Prompts versionnés (ADR-010)
 
-Un dossier par agent, un fichier par version : `prompts/<agent>/v<N>.md`.
+Convention : `prompts/<agent>/v<N>.md` — un fichier par version, jamais
+d'écrasement. Un changement de prompt = un nouveau fichier `v<N+1>.md`.
 
-- Un changement de prompt = un nouveau fichier `v<N+1>.md` — on n'écrase jamais une version.
-- La version utilisée est journalisée à chaque appel LLM (`llm_calls.prompt_version`).
-- Agents prévus : `sales_route`, `sales_synthesize`, `hr_extract`, `hr_score` (mêmes noms que les alias de modèles, ADR-011).
+Chargement : `app.core.llm.load_prompt(agent, version=None)` renvoie
+`(texte, version)` — dernière version par défaut. La version utilisée est
+journalisée dans `llm_calls.prompt_version` à chaque appel (reproductibilité
+des expériences, chap. 8 du mémoire).
+
+Agents prévus (cartes [SALES] / [HR]) : `sales_route`, `sales_synthesize`,
+`sales_coach`, `hr_extract`, `hr_score`.

@@ -29,6 +29,14 @@ class Settings(BaseSettings):
     #   python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
     ENCRYPTION_KEY: str = ""
 
+    # --- LLM (ADR-004 / ADR-011) -----------------------------------------
+    # Chemin du fichier d'alias ; vide = backend/config/llm.yaml.
+    LLM_CONFIG_PATH: str = ""
+    # Clés fournisseurs (optionnelles tant qu'aucun agent ne tourne) ;
+    # exportées vers l'environnement pour litellm par la passerelle.
+    ANTHROPIC_API_KEY: str = ""
+    OPENAI_API_KEY: str = ""
+
     # --- Auth (ADR-003) ---------------------------------------------------
     # Secret HS256 des JWT d'accès. Générer : openssl rand -hex 32
     JWT_SECRET: str = ""
