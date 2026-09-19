@@ -15,6 +15,7 @@ from app.config import settings
 from app.core.health import check_broker, check_database, check_redis
 from app.core.logging import configure_logging, request_id_middleware
 from app.sales.router import router as sales_router
+from app.usage import router as usage_router
 
 configure_logging()
 
@@ -36,6 +37,7 @@ app.middleware("http")(request_id_middleware)
 api_prefix = f"/api/{settings.API_VERSION}"
 app.include_router(auth_router, prefix=api_prefix)
 app.include_router(sales_router, prefix=api_prefix)
+app.include_router(usage_router, prefix=api_prefix)
 
 
 @app.get("/health")
