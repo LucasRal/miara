@@ -16,6 +16,8 @@ from pydantic import BaseModel
 from app.core.agents.context import RequestContext
 
 ToolHandler = Callable[[BaseModel, RequestContext], Awaitable[Any]]
+# Rendu lisible d'une écriture, montré à l'humain avant confirmation (ADR-009).
+ToolPreview = Callable[[BaseModel], str]
 
 
 @dataclass(frozen=True)
@@ -25,9 +27,14 @@ class Tool:
     args_schema: type[BaseModel]
     is_write: bool
     handler: ToolHandler
+    # Écritures uniquement : phrase de confirmation en français pour l'UI.
+    preview: ToolPreview | None = None
 
     async def run(self, args: BaseModel, ctx: RequestContext) -> Any:
         return await self.handler(args, ctx)
+
+    def render_preview(self, args: BaseModel) -> str | None:
+        return self.preview(args) if self.preview is not None else None
 
     def to_llm_schema(self) -> dict[str, Any]:
         """Déclaration au format outil OpenAI (compris par litellm)."""

@@ -15,13 +15,19 @@ sans rappeler le LLM pour re-décider.
 
 Chaque événement est tracé dans `agent_traces` (flush en fin de run, même en
 cas d'erreur) ; les résumés y sont tronqués et les logs applicatifs ne
-contiennent jamais le contenu des messages.
+contiennent jamais le contenu des messages. Un `observer` optionnel reçoit ces
+mêmes événements à chaud (diffusion SSE de la progression).
+
+Deux modèles par agent (ADR-011) : le 1er appel part sur `model_alias` (léger,
+il choisit les outils), les suivants sur `synthesis_alias` s'il est défini
+(fort, il rédige à partir des résultats d'outils).
 """
 
 import json
 import time
 import uuid
-from dataclasses import dataclass, field
+from collections.abc import Callable
+from dataclasses import dataclass, field, replace
 from typing import Any
 
 import structlog
@@ -37,6 +43,11 @@ from app.core.tenant import tenant_session
 logger = structlog.get_logger(__name__)
 
 _SUMMARY_MAX = 500
+
+# Observateur d'étapes : appelé À CHAUD à chaque événement tracé, pour diffuser
+# la progression (SSE) sans attendre le flush final. Synchrone et non bloquant
+# — il ne doit jamais ralentir ni faire échouer la boucle.
+StepObserver = Callable[[dict[str, Any]], None]
 
 
 @dataclass
@@ -56,6 +67,7 @@ class NeedsConfirmation:
     tool: str
     args: dict[str, Any]
     trace_id: uuid.UUID
+    preview: str | None = None  # phrase de confirmation lisible (ADR-009)
     new_messages: list[dict[str, Any]] = field(default_factory=list)
 
 
@@ -72,8 +84,9 @@ AgentResult = Final | NeedsConfirmation | StepLimitExceeded
 class _Tracer:
     """Accumule les événements puis les écrit en une transaction (finally)."""
 
-    def __init__(self, ctx: RequestContext) -> None:
+    def __init__(self, ctx: RequestContext, observer: StepObserver | None = None) -> None:
         self._ctx = ctx
+        self._observer = observer
         self._step = 0
         self._rows: list[AgentTrace] = []
 
@@ -87,18 +100,32 @@ class _Tracer:
         latency_ms: int | None = None,
     ) -> None:
         self._step += 1
+        summary = summary[:_SUMMARY_MAX] if summary else None
         self._rows.append(
             AgentTrace(
                 organization_id=self._ctx.org_id,
                 trace_id=self._ctx.trace_id,
+                conversation_id=self._ctx.conversation_id,
                 step=self._step,
                 kind=kind,
                 tool=tool,
                 args_json=args,
-                result_summary=summary[:_SUMMARY_MAX] if summary else None,
+                result_summary=summary,
                 latency_ms=latency_ms,
             )
         )
+        if self._observer is not None:
+            event = {
+                "step": self._step,
+                "kind": kind,
+                "tool": tool,
+                "summary": summary,
+                "latency_ms": latency_ms,
+            }
+            try:
+                self._observer(event)
+            except Exception:  # un consommateur défaillant n'interrompt pas l'agent
+                logger.warning("agent_step_observer_failed", kind=kind)
 
     async def flush(self) -> None:
         if not self._rows:
@@ -185,12 +212,17 @@ async def _handle_tool_calls(
             args_dict = args.model_dump()
             tracer.add("needs_confirmation", tool=tool.name, args=args_dict)
             return NeedsConfirmation(
-                call_id=call["id"], tool=tool.name, args=args_dict, trace_id=ctx.trace_id
+                call_id=call["id"],
+                tool=tool.name,
+                args=args_dict,
+                trace_id=ctx.trace_id,
+                preview=tool.render_preview(args),
             )
 
         start = time.perf_counter()
         try:
-            result = await tool.run(args, ctx)
+            # call_id posé dans le contexte : clé d'idempotence des écritures.
+            result = await tool.run(args, replace(ctx, call_id=call["id"]))
         except Exception as exc:
             latency = int((time.perf_counter() - start) * 1000)
             tracer.add(
@@ -221,6 +253,7 @@ async def run(
     history: list[dict[str, Any]] | None = None,
     confirmations: set[str] | None = None,
     gateway: LLMGateway | None = None,
+    observer: StepObserver | None = None,
 ) -> AgentResult:
     gateway = gateway or get_gateway()
     confirmations = confirmations or set()
@@ -236,8 +269,9 @@ async def run(
 
     tools_by_name = {t.name: t for t in definition.tools}
     tool_schemas = [t.to_llm_schema() for t in definition.tools] or None
-    tracer = _Tracer(ctx)
+    tracer = _Tracer(ctx, observer)
     llm_steps = 0
+    has_tool_results = False
 
     try:
         # Reprise : appels d'outils en attente dans l'historique (confirmation).
@@ -251,6 +285,7 @@ async def run(
                     blocked.new_messages = new_messages
                     return blocked
                 pending = []
+                has_tool_results = True
                 continue
 
             if llm_steps >= definition.max_steps:
@@ -258,9 +293,12 @@ async def run(
                 return StepLimitExceeded(
                     trace_id=ctx.trace_id, steps=llm_steps, new_messages=new_messages
                 )
+            # Escalade déterministe : routage sur l'alias léger, synthèse sur
+            # l'alias fort une fois les résultats d'outils en main (ADR-011).
+            alias = definition.alias_for_step(has_tool_results)
             llm_steps += 1
             result = await gateway.complete(
-                definition.model_alias,
+                alias,
                 messages,
                 ctx=CallContext(
                     org_id=ctx.org_id,
@@ -273,7 +311,7 @@ async def run(
             )
             tracer.add(
                 "llm_call",
-                summary=f"alias={definition.model_alias} model={result.model_used} "
+                summary=f"alias={alias} model={result.model_used} "
                 f"tool_calls={len(result.tool_calls or [])}",
                 latency_ms=result.latency_ms,
             )

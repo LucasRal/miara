@@ -15,3 +15,9 @@ class RequestContext:
     user_id: uuid.UUID
     role: str
     trace_id: uuid.UUID = field(default_factory=uuid.uuid4)
+    # Id de l'appel d'outil en cours d'exécution (posé par la boucle avant
+    # d'exécuter un outil) : clé d'idempotence des écritures. None hors boucle.
+    call_id: str | None = None
+    # Conversation d'où part l'exécution : rattache `agent_traces` à l'échange
+    # pour rejouer une conversation avec sa trace. None hors conversation.
+    conversation_id: uuid.UUID | None = None

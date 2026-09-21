@@ -70,6 +70,10 @@ class AgentTrace(TenantScoped, Base):
         primary_key=True, server_default=text("gen_random_uuid()")
     )
     trace_id: Mapped[uuid.UUID] = mapped_column(index=True)
+    # Conversation d'origine (None : agent lancé hors conversation, ex. Celery).
+    conversation_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("conversations.id", ondelete="CASCADE"), index=True, nullable=True
+    )
     step: Mapped[int]
     # llm_call | tool_exec | tool_error | needs_confirmation | final | step_limit
     kind: Mapped[str] = mapped_column(String(30))
