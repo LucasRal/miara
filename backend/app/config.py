@@ -37,6 +37,29 @@ class Settings(BaseSettings):
     ANTHROPIC_API_KEY: str = ""
     OPENAI_API_KEY: str = ""
 
+    # --- Salesforce OAuth (ADR-005) ---------------------------------------
+    # Connected App Salesforce de la plateforme (une seule app, multi-org).
+    SF_CLIENT_ID: str = ""
+    SF_CLIENT_SECRET: str = ""
+    # test.salesforce.com pour un bac à sable ; login.salesforce.com en prod.
+    SF_LOGIN_URL: str = "https://test.salesforce.com"
+    # Doit correspondre EXACTEMENT à la Callback URL de la Connected App.
+    # En dev : le navigateur passe par le proxy Next (port 3010).
+    SF_REDIRECT_URI: str = "http://localhost:3010/api/v1/integrations/salesforce/callback"
+
+    # --- Présélection RH (ADR-007) ----------------------------------------
+    # Racine du stockage des CV. Chemin relatif = ancré sur backend/. Hors
+    # du dépôt : ce sont des données personnelles (voir .gitignore).
+    HR_STORAGE_DIR: str = "storage"
+    # Bornes du dépôt de CV, imposées par la plateforme (carte [HR] socle).
+    HR_MAX_UPLOAD_FILES: int = 20
+    HR_MAX_FILE_MB: int = 10
+
+    # --- Agent commercial (ADR-008) ---------------------------------------
+    # Budget de jetons du contexte structuré injecté au modèle. Fixé par la
+    # configuration, JAMAIS par le modèle (carte [SALES] assistant, NE PAS).
+    SALES_CONTEXT_BUDGET_TOKENS: int = 3000
+
     # --- Auth (ADR-003) ---------------------------------------------------
     # Secret HS256 des JWT d'accès. Générer : openssl rand -hex 32
     JWT_SECRET: str = ""

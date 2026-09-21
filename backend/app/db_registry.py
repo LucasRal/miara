@@ -14,5 +14,7 @@ core ne doit jamais importer un module métier.
 
 import app.auth.models  # noqa: F401
 import app.core.models  # noqa: F401
+import app.hr.models  # noqa: F401
+import app.sales.models  # noqa: F401
 
-# Cartes à venir : ajouter ici app.hr.models, app.sales.models, etc.
+# Cartes à venir : ajouter ici les modèles des nouveaux modules métier.

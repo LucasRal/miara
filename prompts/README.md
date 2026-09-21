@@ -8,5 +8,9 @@ Chargement : `app.core.llm.load_prompt(agent, version=None)` renvoie
 journalisée dans `llm_calls.prompt_version` à chaque appel (reproductibilité
 des expériences, chap. 8 du mémoire).
 
-Agents prévus (cartes [SALES] / [HR]) : `sales_route`, `sales_synthesize`,
-`sales_coach`, `hr_extract`, `hr_score`.
+Le nom du dossier est le `prompt_name` de l'`AgentDefinition`, donc le nom de
+l'agent lui-même — un agent peut enchaîner plusieurs alias de modèles (routage
+puis synthèse) avec UN seul prompt système.
+
+Agents : `echo` (test du runtime), `sales.assistant` (assistant commercial) ;
+à venir : `sales.coach`, `hr.extract`, `hr.score`.

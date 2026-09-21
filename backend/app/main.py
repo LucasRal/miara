@@ -14,6 +14,10 @@ from app.auth.router import router as auth_router
 from app.config import settings
 from app.core.health import check_broker, check_database, check_redis
 from app.core.logging import configure_logging, request_id_middleware
+from app.hr.jobs import router as hr_jobs_router
+from app.sales.coaching import router as sales_coaching_router
+from app.sales.conversations import router as sales_conversations_router
+from app.sales.integrations import router as integrations_router
 from app.sales.router import router as sales_router
 from app.usage import router as usage_router
 
@@ -37,6 +41,10 @@ app.middleware("http")(request_id_middleware)
 api_prefix = f"/api/{settings.API_VERSION}"
 app.include_router(auth_router, prefix=api_prefix)
 app.include_router(sales_router, prefix=api_prefix)
+app.include_router(sales_conversations_router, prefix=api_prefix)
+app.include_router(sales_coaching_router, prefix=api_prefix)
+app.include_router(integrations_router, prefix=api_prefix)
+app.include_router(hr_jobs_router, prefix=api_prefix)
 app.include_router(usage_router, prefix=api_prefix)
 
 
