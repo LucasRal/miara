@@ -14,3 +14,6 @@ __pycache__/
 
 # Trello credentials (skill: trello-project-management)
 .trello.env
+
+# CV déposés (données personnelles) — HR_STORAGE_DIR
+storage/
