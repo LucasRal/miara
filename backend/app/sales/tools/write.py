@@ -1,0 +1,281 @@
+"""Outils d'ÉCRITURE Salesforce, sûrs par construction (ADR-009).
+
+Le « flux inverse » : l'agent écrit dans le CRM à la place du commercial. Trois
+garde-fous :
+- `is_write=True` → la boucle exige une confirmation humaine AVANT exécution ;
+- idempotence par `(org, trace_id, call_id)` en Redis (24 h) : une confirmation
+  rejouée ne crée pas de doublon ;
+- chaque tentative est tracée dans `crm_writes` (piste d'audit).
+
+Chaque outil expose un `preview(args)` en français pour l'écran de confirmation.
+Les erreurs Salesforce (champ requis, permission) sont renvoyées AU MODÈLE comme
+résultat d'outil, jamais levées en exception. NE PAS : supprimer, écrire sans
+confirmation, toucher Amount/CloseDate (hors périmètre).
+"""
+
+import json
+import uuid
+from collections.abc import Awaitable, Callable
+from datetime import date
+from typing import Any
+
+import redis.asyncio as aioredis
+import structlog
+from pydantic import BaseModel, Field
+
+from app.config import settings
+from app.core.agents.context import RequestContext
+from app.core.agents.tool import Tool
+from app.core.tenant import tenant_session
+from app.sales.crm import CRMError, CRMPort, get_crm
+from app.sales.models import CrmWrite
+
+logger = structlog.get_logger(__name__)
+
+IDEM_TTL_SECONDS = 24 * 3600
+STAGES_TTL_SECONDS = 3600
+_IDEM_PREFIX = "crm:write:"
+_STAGES_PREFIX = "sales:oppstages:"
+
+_redis = aioredis.from_url(settings.REDIS_URL, decode_responses=True)
+
+
+def _fr_date(iso: str) -> str:
+    """'2026-09-08' -> '08/09/2026' (repli sur la valeur brute si non ISO)."""
+    try:
+        return date.fromisoformat(iso).strftime("%d/%m/%Y")
+    except ValueError:
+        return iso
+
+
+# --- args ----------------------------------------------------------------
+
+
+class CreateTaskArgs(BaseModel):
+    subject: str = Field(description="Intitulé de la tâche")
+    due_date: str = Field(description="Échéance au format AAAA-MM-JJ")
+    related_record_id: str = Field(description="Id du compte ou de l'opportunité liée")
+    contact_id: str | None = Field(default=None, description="Id du contact concerné (optionnel)")
+    priority: str = Field(default="Normal", description="Priorité (Low, Normal, High)")
+
+
+class LogCallNoteArgs(BaseModel):
+    record_id: str = Field(description="Id du compte, contact ou opportunité concerné")
+    summary: str = Field(description="Résumé de l'appel (objet de la tâche)")
+    outcome: str = Field(description="Issue de l'appel (corps de la note)")
+
+
+class UpdateOpportunityStageArgs(BaseModel):
+    opportunity_id: str = Field(description="Id de l'opportunité")
+    stage: str = Field(description="Nouvelle étape (doit être une étape active de l'org)")
+    next_step: str | None = Field(default=None, description="Prochaine action (optionnel)")
+
+
+# --- idempotence & audit -------------------------------------------------
+
+
+async def _idempotent(
+    ctx: RequestContext, tool: str, producer: Callable[[], Awaitable[dict[str, Any]]]
+) -> dict[str, Any]:
+    """Exécute `producer` une seule fois par (org, trace_id, call_id). Les
+    rejeux renvoient le résultat mémorisé. Seuls les succès sont mémorisés :
+    une erreur transitoire reste réessayable."""
+    call_id = ctx.call_id or uuid.uuid4().hex
+    key = f"{_IDEM_PREFIX}{ctx.org_id}:{ctx.trace_id}:{call_id}"
+    cached = await _redis.get(key)
+    if cached is not None:
+        return dict(json.loads(cached))
+    result = await producer()
+    if "error" not in result:
+        await _redis.set(key, json.dumps(result, default=str), ex=IDEM_TTL_SECONDS)
+    return result
+
+
+async def _audit(
+    ctx: RequestContext,
+    tool: str,
+    args: BaseModel,
+    sf_record_id: str | None,
+    status: str,
+    error: str | None,
+) -> None:
+    async with tenant_session(ctx.org_id, ctx.user_id) as session:
+        session.add(
+            CrmWrite(
+                organization_id=ctx.org_id,
+                trace_id=ctx.trace_id,
+                tool=tool,
+                args_json=args.model_dump(mode="json"),
+                sf_record_id=sf_record_id,
+                status=status,
+                confirmed_by=ctx.user_id,
+                error=error,
+            )
+        )
+
+
+async def _write(
+    ctx: RequestContext,
+    tool: str,
+    args: BaseModel,
+    do_write: Callable[[CRMPort], Awaitable[str]],
+) -> dict[str, Any]:
+    """Ossature commune : idempotence → écriture CRM → audit. `do_write`
+    renvoie l'id Salesforce créé/modifié."""
+
+    async def producer() -> dict[str, Any]:
+        crm = await get_crm(ctx)
+        try:
+            record_id = await do_write(crm)
+        except CRMError as exc:
+            await _audit(ctx, tool, args, None, "error", str(exc))
+            logger.warning("crm_write_failed", tool=tool, trace_id=str(ctx.trace_id))
+            return {"error": f"Salesforce a refusé l'écriture : {exc}"}
+        finally:
+            await crm.aclose()
+        await _audit(ctx, tool, args, record_id, "created", None)
+        logger.info("crm_write", tool=tool, sf_record_id=record_id, trace_id=str(ctx.trace_id))
+        return {"status": "created", "sf_record_id": record_id}
+
+    return await _idempotent(ctx, tool, producer)
+
+
+async def _active_stages(ctx: RequestContext, crm: CRMPort) -> list[str]:
+    """Étapes d'opportunité actives de l'org, cachées 1 h."""
+    key = f"{_STAGES_PREFIX}{ctx.org_id}"
+    cached = await _redis.get(key)
+    if cached is not None:
+        return list(json.loads(cached))
+    rows = await crm.query("SELECT MasterLabel FROM OpportunityStage WHERE IsActive = true")
+    stages = [r["MasterLabel"] for r in rows if r.get("MasterLabel")]
+    await _redis.set(key, json.dumps(stages), ex=STAGES_TTL_SECONDS)
+    return stages
+
+
+# --- handlers ------------------------------------------------------------
+
+
+async def _create_task(args: BaseModel, ctx: RequestContext) -> dict[str, Any]:
+    assert isinstance(args, CreateTaskArgs)
+
+    async def do_write(crm: CRMPort) -> str:
+        payload: dict[str, Any] = {
+            "Subject": args.subject,
+            "ActivityDate": args.due_date,
+            "WhatId": args.related_record_id,
+            "Priority": args.priority,
+            "Status": "Not Started",
+        }
+        if args.contact_id:
+            payload["WhoId"] = args.contact_id
+        return await crm.create("Task", payload)
+
+    return await _write(ctx, "create_task", args, do_write)
+
+
+async def _log_call_note(args: BaseModel, ctx: RequestContext) -> dict[str, Any]:
+    assert isinstance(args, LogCallNoteArgs)
+
+    async def do_write(crm: CRMPort) -> str:
+        return await crm.create(
+            "Task",
+            {
+                "Subject": args.summary,
+                "Description": args.outcome,
+                "TaskSubtype": "Call",
+                "Status": "Completed",
+                "ActivityDate": date.today().isoformat(),
+                "WhatId": args.record_id,
+            },
+        )
+
+    return await _write(ctx, "log_call_note", args, do_write)
+
+
+async def _update_opportunity_stage(args: BaseModel, ctx: RequestContext) -> dict[str, Any]:
+    assert isinstance(args, UpdateOpportunityStageArgs)
+
+    # Validation AVANT toute écriture : l'étape doit être active dans l'org.
+    crm = await get_crm(ctx)
+    try:
+        stages = await _active_stages(ctx, crm)
+    finally:
+        await crm.aclose()
+    if args.stage not in stages:
+        return {
+            "error": (f"Étape invalide : {args.stage!r}. Étapes actives : {', '.join(stages)}.")
+        }
+
+    async def do_write(crm: CRMPort) -> str:
+        payload: dict[str, Any] = {"StageName": args.stage}
+        if args.next_step:
+            payload["NextStep"] = args.next_step
+        await crm.update("Opportunity", args.opportunity_id, payload)
+        return args.opportunity_id
+
+    return await _write(ctx, "update_opportunity_stage", args, do_write)
+
+
+# --- previews ------------------------------------------------------------
+
+
+def _preview_create_task(args: BaseModel) -> str:
+    assert isinstance(args, CreateTaskArgs)
+    return (
+        f"Créer une tâche « {args.subject} » le {_fr_date(args.due_date)} "
+        f"liée à {args.related_record_id}"
+    )
+
+
+def _preview_log_call_note(args: BaseModel) -> str:
+    assert isinstance(args, LogCallNoteArgs)
+    return (
+        f"Journaliser un appel sur {args.record_id} : « {args.summary} » (issue : {args.outcome})"
+    )
+
+
+def _preview_update_stage(args: BaseModel) -> str:
+    assert isinstance(args, UpdateOpportunityStageArgs)
+    return f"Faire passer l'opportunité {args.opportunity_id} à l'étape « {args.stage} »"
+
+
+# --- catalogue -----------------------------------------------------------
+
+create_task = Tool(
+    name="create_task",
+    description=(
+        "Crée une tâche de suivi liée à un compte ou une opportunité. "
+        "Nécessite une confirmation humaine avant écriture."
+    ),
+    args_schema=CreateTaskArgs,
+    is_write=True,
+    handler=_create_task,
+    preview=_preview_create_task,
+)
+
+log_call_note = Tool(
+    name="log_call_note",
+    description=(
+        "Journalise un appel téléphonique (tâche de type Call, marquée terminée "
+        "à la date du jour). Nécessite une confirmation humaine."
+    ),
+    args_schema=LogCallNoteArgs,
+    is_write=True,
+    handler=_log_call_note,
+    preview=_preview_log_call_note,
+)
+
+update_opportunity_stage = Tool(
+    name="update_opportunity_stage",
+    description=(
+        "Fait passer une opportunité à une nouvelle étape (parmi les étapes "
+        "actives de l'organisation). N'affecte ni le montant ni la date de "
+        "clôture. Nécessite une confirmation humaine."
+    ),
+    args_schema=UpdateOpportunityStageArgs,
+    is_write=True,
+    handler=_update_opportunity_stage,
+    preview=_preview_update_stage,
+)
+
+WRITE_TOOLS: list[Tool] = [create_task, log_call_note, update_opportunity_stage]
