@@ -4,6 +4,7 @@ Aucun module ne doit importer `litellm` directement — tout passe par
 `app.core.llm.gateway.LLMGateway`.
 """
 
+from app.core.llm.deps import gateway_dependency
 from app.core.llm.gateway import (
     CallContext,
     LLMGateway,
@@ -20,6 +21,7 @@ __all__ = [
     "LLMResult",
     "StructuredOutputError",
     "UnknownAliasError",
+    "gateway_dependency",
     "get_gateway",
     "load_prompt",
 ]
