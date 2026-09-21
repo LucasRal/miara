@@ -80,6 +80,14 @@ export interface Me {
   memberships: MembershipInfo[];
 }
 
+// --- Contrats du module sales (backend/app/sales/integrations.py) ---
+
+export interface Integration {
+  provider: string;
+  instance_url: string | null;
+  status: "connected";
+}
+
 export interface Org {
   id: string;
   name: string;

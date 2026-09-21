@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { CreateOrgCard } from "@/components/auth/create-org-card";
 import { OrgSwitcher } from "@/components/auth/org-switcher";
+import { SalesforceCard } from "@/components/sales/salesforce-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -73,6 +74,7 @@ export default function DashboardPage() {
       </header>
 
       <main className="grid flex-1 content-start gap-4 p-6 sm:grid-cols-2">
+        <SalesforceCard key={me.org_id} role={me.role} />
         <Card>
           <CardHeader>
             <CardTitle>Agent commercial</CardTitle>
