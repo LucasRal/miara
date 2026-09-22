@@ -1,0 +1,2 @@
+scenario,worker_concurrency,repetition,run_id,candidatures,notes,echecs,secondes_total,debit_cv_par_minute,cout_usd,cout_par_cv_usd,appels_llm,appels_llm_en_erreur,extract_moyenne_s,profile_moyenne_s,score_moyenne_s,memoire_pic_mo,memoire_moyenne_mo,documents_distincts,repetition_corpus,statut
+mixed,8,1,2b10f1e5-4a32-4717-8e98-2de156722401,100,100,0,201.38,29.79,1.146592,0.011466,200,0,0.07,5.77,4.997,2707.2,2706.0,100,1.0,termine

@@ -1,0 +1,499 @@
+{
+  "campagne": {
+    "version": 1,
+    "date": "2026-09-22T13:43:36+00:00",
+    "sha": "e6ebfc6-sale",
+    "dossier": "/home/ubuntu/projects/thesis/bench/reports/20260922-134336",
+    "graine": 20260922,
+    "alias_override": {},
+    "secondes_total": 3537.1,
+    "plan": [
+      {
+        "scenario": "sales-30",
+        "worker_concurrency": 0,
+        "repetition": 1
+      },
+      {
+        "scenario": "mixed",
+        "worker_concurrency": 8,
+        "repetition": 1
+      },
+      {
+        "scenario": "hr-50",
+        "worker_concurrency": 2,
+        "repetition": 1
+      },
+      {
+        "scenario": "hr-50",
+        "worker_concurrency": 2,
+        "repetition": 2
+      },
+      {
+        "scenario": "hr-50",
+        "worker_concurrency": 2,
+        "repetition": 3
+      },
+      {
+        "scenario": "hr-50",
+        "worker_concurrency": 4,
+        "repetition": 1
+      },
+      {
+        "scenario": "hr-50",
+        "worker_concurrency": 4,
+        "repetition": 2
+      },
+      {
+        "scenario": "hr-50",
+        "worker_concurrency": 4,
+        "repetition": 3
+      },
+      {
+        "scenario": "hr-50",
+        "worker_concurrency": 8,
+        "repetition": 1
+      },
+      {
+        "scenario": "hr-50",
+        "worker_concurrency": 8,
+        "repetition": 2
+      },
+      {
+        "scenario": "hr-50",
+        "worker_concurrency": 8,
+        "repetition": 3
+      },
+      {
+        "scenario": "hr-100",
+        "worker_concurrency": 4,
+        "repetition": 1
+      },
+      {
+        "scenario": "hr-500",
+        "worker_concurrency": 8,
+        "repetition": 1
+      }
+    ],
+    "journal": [
+      {
+        "point": "sales-30@c0",
+        "repetition": 1,
+        "etat": "execute",
+        "depense_cumulee_usd": 0.115373
+      },
+      {
+        "point": "mixed@c8",
+        "repetition": 1,
+        "etat": "execute",
+        "depense_cumulee_usd": 1.493135
+      },
+      {
+        "point": "hr-50@c2",
+        "repetition": 1,
+        "etat": "execute",
+        "depense_cumulee_usd": 2.078437
+      },
+      {
+        "point": "hr-50@c2",
+        "repetition": 2,
+        "etat": "execute",
+        "depense_cumulee_usd": 2.652206
+      },
+      {
+        "point": "hr-50@c2",
+        "repetition": 3,
+        "etat": "execute",
+        "depense_cumulee_usd": 3.230446
+      },
+      {
+        "point": "hr-50@c4",
+        "repetition": 1,
+        "etat": "execute",
+        "depense_cumulee_usd": 3.811192
+      },
+      {
+        "point": "hr-50@c4",
+        "repetition": 2,
+        "etat": "execute",
+        "depense_cumulee_usd": 4.393932
+      },
+      {
+        "point": "hr-50@c4",
+        "repetition": 3,
+        "etat": "execute",
+        "depense_cumulee_usd": 4.949335
+      },
+      {
+        "point": "hr-50@c8",
+        "repetition": 1,
+        "etat": "execute",
+        "depense_cumulee_usd": 5.517123
+      },
+      {
+        "point": "hr-50@c8",
+        "repetition": 2,
+        "etat": "execute",
+        "depense_cumulee_usd": 6.090779
+      },
+      {
+        "point": "hr-50@c8",
+        "repetition": 3,
+        "etat": "execute",
+        "depense_cumulee_usd": 6.654666
+      },
+      {
+        "point": "hr-100@c4",
+        "repetition": 1,
+        "etat": "execute",
+        "depense_cumulee_usd": 7.810322
+      },
+      {
+        "point": "hr-500@c8",
+        "repetition": 1,
+        "etat": "execute",
+        "depense_cumulee_usd": 13.467116
+      }
+    ]
+  },
+  "budget": {
+    "plafond_usd": 18.0,
+    "depense_usd": 13.467116,
+    "reste_usd": 4.532884,
+    "points_ignores": 0
+  },
+  "hr": {
+    "hr-100@c4": {
+      "repetitions": 1,
+      "candidatures": 100,
+      "corpus": {
+        "candidatures": 100,
+        "documents_distincts": 100,
+        "repetition_moyenne": 1.0
+      },
+      "debit_cv_par_minute_moyen": 19.98,
+      "secondes_total_moyen": 300.24,
+      "cout_usd_moyen": 1.1557,
+      "cout_par_cv_usd_moyen": 0.0116,
+      "echecs_total": 0,
+      "appels_llm_en_erreur": 0,
+      "memoire_pic_mo": 1533.6,
+      "etapes_moyennes_s": {
+        "extract": 0.047,
+        "profile": 6.659,
+        "score": 5.085
+      },
+      "statuts": [
+        "termine"
+      ]
+    },
+    "hr-500@c8": {
+      "repetitions": 1,
+      "candidatures": 500,
+      "corpus": {
+        "candidatures": 500,
+        "documents_distincts": 180,
+        "repetition_moyenne": 2.78
+      },
+      "debit_cv_par_minute_moyen": 30.3,
+      "secondes_total_moyen": 990.12,
+      "cout_usd_moyen": 5.6568,
+      "cout_par_cv_usd_moyen": 0.0113,
+      "echecs_total": 0,
+      "appels_llm_en_erreur": 0,
+      "memoire_pic_mo": 2926.6,
+      "etapes_moyennes_s": {
+        "extract": 0.068,
+        "profile": 5.717,
+        "score": 5.232
+      },
+      "statuts": [
+        "termine"
+      ]
+    },
+    "hr-50@c2": {
+      "repetitions": 3,
+      "candidatures": 50,
+      "corpus": {
+        "candidatures": 50,
+        "documents_distincts": 50,
+        "repetition_moyenne": 1.0
+      },
+      "debit_cv_par_minute_moyen": 9.83,
+      "secondes_total_moyen": 305.2567,
+      "cout_usd_moyen": 0.5791,
+      "cout_par_cv_usd_moyen": 0.0116,
+      "echecs_total": 0,
+      "appels_llm_en_erreur": 0,
+      "memoire_pic_mo": 933.0,
+      "etapes_moyennes_s": {
+        "extract": 0.0423,
+        "profile": 6.5637,
+        "score": 5.4137
+      },
+      "statuts": [
+        "termine"
+      ]
+    },
+    "hr-50@c4": {
+      "repetitions": 3,
+      "candidatures": 50,
+      "corpus": {
+        "candidatures": 50,
+        "documents_distincts": 50,
+        "repetition_moyenne": 1.0
+      },
+      "debit_cv_par_minute_moyen": 19.3233,
+      "secondes_total_moyen": 155.39,
+      "cout_usd_moyen": 0.573,
+      "cout_par_cv_usd_moyen": 0.0115,
+      "echecs_total": 0,
+      "appels_llm_en_erreur": 0,
+      "memoire_pic_mo": 1487.6,
+      "etapes_moyennes_s": {
+        "extract": 0.0493,
+        "profile": 6.997,
+        "score": 4.834
+      },
+      "statuts": [
+        "termine"
+      ]
+    },
+    "hr-50@c8": {
+      "repetitions": 3,
+      "candidatures": 50,
+      "corpus": {
+        "candidatures": 50,
+        "documents_distincts": 50,
+        "repetition_moyenne": 1.0
+      },
+      "debit_cv_par_minute_moyen": 31.6533,
+      "secondes_total_moyen": 94.8067,
+      "cout_usd_moyen": 0.5684,
+      "cout_par_cv_usd_moyen": 0.0114,
+      "echecs_total": 0,
+      "appels_llm_en_erreur": 0,
+      "memoire_pic_mo": 2604.9,
+      "etapes_moyennes_s": {
+        "extract": 0.084,
+        "profile": 6.988,
+        "score": 4.7907
+      },
+      "statuts": [
+        "termine"
+      ]
+    },
+    "mixed@c8": {
+      "repetitions": 1,
+      "candidatures": 100,
+      "corpus": {
+        "candidatures": 100,
+        "documents_distincts": 100,
+        "repetition_moyenne": 1.0
+      },
+      "debit_cv_par_minute_moyen": 32.41,
+      "secondes_total_moyen": 185.1,
+      "cout_usd_moyen": 1.1536,
+      "cout_par_cv_usd_moyen": 0.0115,
+      "echecs_total": 0,
+      "appels_llm_en_erreur": 0,
+      "memoire_pic_mo": 2680.9,
+      "etapes_moyennes_s": {
+        "extract": 0.063,
+        "profile": 6.403,
+        "score": 5.498
+      },
+      "statuts": [
+        "termine"
+      ]
+    }
+  },
+  "sales": {
+    "a_vide": {
+      "questions": 30,
+      "tours_aboutis": 30,
+      "latence": {
+        "p50_secondes": 2.45,
+        "p95_secondes": 4.37,
+        "p99_secondes": 5.45,
+        "max_secondes": 5.743
+      },
+      "par_etape_ms": {
+        "llm_moyen": 2674.5667,
+        "outil_moyen": 16.9667,
+        "autre_moyen": 33.5333
+      },
+      "etapes": {
+        "appels_llm_moyen": 2.0667,
+        "outils_moyen": 1.0667,
+        "non_aboutis": 0
+      }
+    }
+  },
+  "mixed": {
+    "a_vide": {
+      "questions": 30,
+      "tours_aboutis": 30,
+      "latence": {
+        "p50_secondes": 2.58,
+        "p95_secondes": 4.29,
+        "p99_secondes": 5.1,
+        "max_secondes": 5.116
+      },
+      "par_etape_ms": {
+        "llm_moyen": 2637.3333,
+        "outil_moyen": 12.2667,
+        "autre_moyen": 31.2
+      },
+      "etapes": {
+        "appels_llm_moyen": 2.0667,
+        "outils_moyen": 1.0667,
+        "non_aboutis": 0
+      }
+    },
+    "sous_charge": {
+      "questions": 30,
+      "tours_aboutis": 30,
+      "latence": {
+        "p50_secondes": 2.27,
+        "p95_secondes": 3.54,
+        "p99_secondes": 4.11,
+        "max_secondes": 4.275
+      },
+      "par_etape_ms": {
+        "llm_moyen": 2367.3667,
+        "outil_moyen": 13.8667,
+        "autre_moyen": 34.7667
+      },
+      "etapes": {
+        "appels_llm_moyen": 2.0,
+        "outils_moyen": 1.0,
+        "non_aboutis": 0
+      }
+    },
+    "critere_p95": {
+      "p95_charge_s": 3.54,
+      "p95_vide_s": 4.29,
+      "rapport": 0.825,
+      "facteur_max": 1.5,
+      "tenu": true
+    },
+    "file_light": {
+      "a_vide": {
+        "sondes": 5,
+        "p50_secondes": 0.01,
+        "p95_secondes": 0.07,
+        "max_secondes": 0.088,
+        "sans_reponse": 0
+      },
+      "sous_charge": {
+        "sondes": 5,
+        "p50_secondes": 0.01,
+        "p95_secondes": 25.37,
+        "max_secondes": 28.189,
+        "sans_reponse": 2
+      }
+    },
+    "famine_file_light": {
+      "sondes_sans_reponse": 2,
+      "p95_vide_s": 0.07,
+      "p95_charge_s": 25.37,
+      "rapport": null,
+      "facteur_max": 5.0,
+      "famine": true
+    }
+  },
+  "reproductibilite": [
+    {
+      "grandeur": "debit_cv_par_minute",
+      "configuration": "hr-50@c2",
+      "repetitions": 3,
+      "valeurs": [
+        9.96,
+        9.9,
+        9.63
+      ],
+      "moyenne": 9.83,
+      "ecart_relatif": 0.0336,
+      "tolerance": 0.1,
+      "tenu": true,
+      "indices_aberrants": [
+        2
+      ]
+    },
+    {
+      "grandeur": "debit_cv_par_minute",
+      "configuration": "hr-50@c4",
+      "repetitions": 3,
+      "valeurs": [
+        20.03,
+        18.73,
+        19.21
+      ],
+      "moyenne": 19.3233,
+      "ecart_relatif": 0.0673,
+      "tolerance": 0.1,
+      "tenu": true,
+      "indices_aberrants": []
+    },
+    {
+      "grandeur": "debit_cv_par_minute",
+      "configuration": "hr-50@c8",
+      "repetitions": 3,
+      "valeurs": [
+        31.64,
+        30.99,
+        32.33
+      ],
+      "moyenne": 31.6533,
+      "ecart_relatif": 0.0423,
+      "tolerance": 0.1,
+      "tenu": true,
+      "indices_aberrants": []
+    }
+  ],
+  "figures": {
+    "debit_vs_concurrence": "/home/ubuntu/projects/thesis/bench/reports/20260922-134336/figures/debit_vs_concurrence.png",
+    "latence_par_etape": "/home/ubuntu/projects/thesis/bench/reports/20260922-134336/figures/latence_par_etape.png",
+    "cout_par_lot": "/home/ubuntu/projects/thesis/bench/reports/20260922-134336/figures/cout_par_lot.png"
+  },
+  "environnement": {
+    "date": "2026-09-22T13:43:36+00:00",
+    "sha": "e6ebfc6-sale",
+    "machine": {
+      "hote": "lucas",
+      "noyau": "7.0.0-29-generic",
+      "processeurs_logiques": 6,
+      "modele_cpu": "Intel Core Processor (Haswell, no TSX)",
+      "memoire_totale_mo": 11671
+    },
+    "versions": {
+      "python": "3.12.14",
+      "postgresql": "psql (PostgreSQL) 18.6 (Ubuntu 18.6-0ubuntu0.26.04.1)",
+      "celery": "5.6.3",
+      "litellm": "1.99.0"
+    },
+    "llm": {
+      "config": "backend/config/llm.yaml",
+      "alias": {
+        "sales.route": "anthropic/claude-haiku-4-5-20251001",
+        "sales.synthesize": "anthropic/claude-sonnet-5",
+        "hr.extract": "anthropic/claude-haiku-4-5-20251001",
+        "hr.score": "anthropic/claude-sonnet-5",
+        "hr.calibrate": "anthropic/claude-sonnet-5",
+        "eval.judge": "anthropic/claude-sonnet-5"
+      },
+      "alias_override": {},
+      "cle_anthropic_presente": false,
+      "cle_openai_presente": true
+    },
+    "reglages": {
+      "HR_LLM_CALLS_PER_MINUTE": 60,
+      "HR_SCREENING_CONCURRENCY": 8,
+      "HR_CALIBRATE_TOP_K": 0
+    },
+    "jeu_dore": {
+      "offre_de_reference": "developpeur-full-stack",
+      "documents_distincts": 180
+    }
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "campagne": {
+    "version": 1,
+    "date": "2026-09-22T15:57:31+00:00",
+    "sha": "e6ebfc6-sale",
+    "dossier": "../bench/reports/20260922-155731",
+    "graine": 20260922,
+    "topologie_workers": "separee",
+    "alias_override": {},
+    "secondes_total": 300.3,
+    "plan": [
+      {
+        "scenario": "mixed",
+        "worker_concurrency": 8,
+        "repetition": 1
+      }
+    ],
+    "journal": [
+      {
+        "point": "mixed@c8",
+        "repetition": 1,
+        "etat": "execute",
+        "depense_cumulee_usd": 1.3655
+      }
+    ]
+  },
+  "budget": {
+    "plafond_usd": 3.0,
+    "depense_usd": 1.3655,
+    "reste_usd": 1.6345,
+    "points_ignores": 0
+  },
+  "hr": {
+    "mixed@c8": {
+      "repetitions": 1,
+      "candidatures": 100,
+      "corpus": {
+        "candidatures": 100,
+        "documents_distincts": 100,
+        "repetition_moyenne": 1.0
+      },
+      "debit_cv_par_minute_moyen": 32.84,
+      "secondes_total_moyen": 182.72,
+      "cout_usd_moyen": 1.1463,
+      "cout_par_cv_usd_moyen": 0.0115,
+      "echecs_total": 0,
+      "appels_llm_en_erreur": 0,
+      "memoire_pic_mo": 3493.1,
+      "etapes_moyennes_s": {
+        "extract": 0.068,
+        "profile": 4.791,
+        "score": 8.08
+      },
+      "statuts": [
+        "termine"
+      ]
+    }
+  },
+  "sales": {
+    "a_vide": {
+      "questions": 0,
+      "tours_aboutis": 0,
+      "latence": {
+        "p50_secondes": null,
+        "p95_secondes": null,
+        "p99_secondes": null,
+        "max_secondes": null
+      },
+      "par_etape_ms": {
+        "llm_moyen": null,
+        "outil_moyen": null,
+        "autre_moyen": null
+      },
+      "etapes": {
+        "appels_llm_moyen": null,
+        "outils_moyen": null,
+        "non_aboutis": 0
+      }
+    }
+  },
+  "mixed": {
+    "a_vide": {
+      "questions": 30,
+      "tours_aboutis": 30,
+      "latence": {
+        "p50_secondes": 2.07,
+        "p95_secondes": 3.66,
+        "p99_secondes": 5.01,
+        "max_secondes": 5.493
+      },
+      "par_etape_ms": {
+        "llm_moyen": 2244.4667,
+        "outil_moyen": 16.2667,
+        "autre_moyen": 29.6667
+      },
+      "etapes": {
+        "appels_llm_moyen": 2.0,
+        "outils_moyen": 1.0,
+        "non_aboutis": 0
+      }
+    },
+    "sous_charge": {
+      "questions": 30,
+      "tours_aboutis": 30,
+      "latence": {
+        "p50_secondes": 2.46,
+        "p95_secondes": 5.06,
+        "p99_secondes": 8.14,
+        "max_secondes": 9.13
+      },
+      "par_etape_ms": {
+        "llm_moyen": 2851.2333,
+        "outil_moyen": 12.2333,
+        "autre_moyen": 34.6333
+      },
+      "etapes": {
+        "appels_llm_moyen": 2.0667,
+        "outils_moyen": 1.0667,
+        "non_aboutis": 0
+      }
+    },
+    "critere_p95": {
+      "p95_charge_s": 5.06,
+      "p95_vide_s": 3.66,
+      "rapport": 1.383,
+      "facteur_max": 1.5,
+      "tenu": true
+    },
+    "file_light": {
+      "a_vide": {
+        "sondes": 5,
+        "p50_secondes": 0.01,
+        "p95_secondes": 0.09,
+        "max_secondes": 0.111,
+        "sans_reponse": 0
+      },
+      "sous_charge": {
+        "sondes": 5,
+        "p50_secondes": 0.01,
+        "p95_secondes": 0.02,
+        "max_secondes": 0.017,
+        "sans_reponse": 0
+      }
+    },
+    "famine_file_light": {
+      "sondes_sans_reponse": 0,
+      "p95_vide_s": 0.09,
+      "p95_charge_s": 0.02,
+      "rapport": 0.222,
+      "facteur_max": 5.0,
+      "famine": false
+    },
+    "topologie_workers": "separee"
+  },
+  "reproductibilite": [],
+  "figures": {
+    "latence_par_etape": "../bench/reports/20260922-155731/figures/latence_par_etape.png",
+    "cout_par_lot": "../bench/reports/20260922-155731/figures/cout_par_lot.png"
+  },
+  "environnement": {
+    "date": "2026-09-22T15:57:31+00:00",
+    "sha": "e6ebfc6-sale",
+    "machine": {
+      "hote": "lucas",
+      "noyau": "7.0.0-29-generic",
+      "processeurs_logiques": 6,
+      "modele_cpu": "Intel Core Processor (Haswell, no TSX)",
+      "memoire_totale_mo": 11671
+    },
+    "versions": {
+      "python": "3.12.14",
+      "postgresql": "psql (PostgreSQL) 18.6 (Ubuntu 18.6-0ubuntu0.26.04.1)",
+      "celery": "5.6.3",
+      "litellm": "1.99.0"
+    },
+    "llm": {
+      "config": "backend/config/llm.yaml",
+      "alias": {
+        "sales.route": "anthropic/claude-haiku-4-5-20251001",
+        "sales.synthesize": "anthropic/claude-sonnet-5",
+        "hr.extract": "anthropic/claude-haiku-4-5-20251001",
+        "hr.score": "anthropic/claude-sonnet-5",
+        "hr.calibrate": "anthropic/claude-sonnet-5",
+        "eval.judge": "anthropic/claude-sonnet-5"
+      },
+      "alias_override": {},
+      "cle_anthropic_presente": false,
+      "cle_openai_presente": true
+    },
+    "reglages": {
+      "HR_LLM_CALLS_PER_MINUTE": 60,
+      "HR_SCREENING_CONCURRENCY": 8,
+      "HR_CALIBRATE_TOP_K": 0
+    },
+    "jeu_dore": {
+      "offre_de_reference": "developpeur-full-stack",
+      "documents_distincts": 180
+    }
+  }
+}

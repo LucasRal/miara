@@ -1,0 +1,4 @@
+grandeur,configuration,repetitions,moyenne,ecart_relatif,tolerance,tenu
+debit_cv_par_minute,hr-50@c2,3,9.83,0.0336,0.1,True
+debit_cv_par_minute,hr-50@c4,3,19.3233,0.0673,0.1,True
+debit_cv_par_minute,hr-50@c8,3,31.6533,0.0423,0.1,True

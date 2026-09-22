@@ -1,0 +1,11 @@
+scenario,worker_concurrency,repetition,contexte,index,secondes
+mixed,8,1,a_vide,0,0.111
+mixed,8,1,a_vide,1,0.008
+mixed,8,1,a_vide,2,0.008
+mixed,8,1,a_vide,3,0.008
+mixed,8,1,a_vide,4,0.01
+mixed,8,1,sous_charge,0,0.017
+mixed,8,1,sous_charge,1,0.017
+mixed,8,1,sous_charge,2,0.011
+mixed,8,1,sous_charge,3,0.008
+mixed,8,1,sous_charge,4,0.008
