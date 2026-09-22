@@ -17,7 +17,7 @@ def _call(org_id: uuid.UUID, alias: str, tokens: int, cost: str) -> LLMCall:
     return LLMCall(
         organization_id=org_id,
         trace_id=uuid.uuid4(),
-        agent="test",
+        agent="core.test",
         alias=alias,
         model_used="mock",
         input_tokens=tokens,
