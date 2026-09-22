@@ -1,0 +1,87 @@
+{
+  "metier": {
+    "titres": {
+      "m": [
+        "Commercial grands comptes",
+        "Chargé d'affaires",
+        "Ingénieur d'affaires",
+        "Responsable de secteur"
+      ],
+      "f": [
+        "Commerciale grands comptes",
+        "Chargée d'affaires",
+        "Ingénieure d'affaires",
+        "Responsable de secteur"
+      ]
+    },
+    "formations": [
+      "Master management et développement commercial, école fictive Valmont ({ville})",
+      "Licence professionnelle technico-commerciale, {ville}",
+      "BTS négociation et digitalisation de la relation client, {ville}",
+      "Parcours interne : promotion du poste de chargé de clientèle à celui de commercial terrain ({ville})",
+      "Master marketing et vente, université fictive de {ville}"
+    ],
+    "sections": {
+      "experience": "PARCOURS COMMERCIAL",
+      "formation": "FORMATION",
+      "competences": "POINTS FORTS",
+      "divers": "DIVERS"
+    },
+    "divers": [
+      "Permis B, déplacements hebdomadaires en région.",
+      "Mentor de deux commerciaux juniors sur leur première année.",
+      "Participation annuelle au salon professionnel du secteur.",
+      "Pratique du sport collectif en club, capitaine d'équipe."
+    ]
+  },
+  "briques": {
+    "Vente B2B en cycle long": [
+      "",
+      "Vente en boutique auprès de particuliers, aucun cycle B2B.",
+      "Vente B2B de petits contrats conclus en un ou deux rendez-vous, sur des montants inférieurs à 5 000 euros.",
+      "Cycles B2B de trois à quatre mois auprès de PME, un ou deux interlocuteurs, environ quinze affaires signées par an.",
+      "Cycles de six à neuf mois auprès d'entreprises de taille intermédiaire, avec direction générale et direction des systèmes d'information autour de la table ; 620 k€ signés l'an dernier.",
+      "Pilotage de cycles de neuf à douze mois sur des comptes de plus de 800 salariés : cartographie des décideurs, soutenance devant comité, 1,4 M€ signés sur l'exercice, trois affaires de plus de 300 k€."
+    ],
+    "Prospection et génération d'affaires": [
+      "",
+      "Traitement des demandes entrantes transmises par le marketing, sans démarche sortante.",
+      "Quelques campagnes d'appels menées à la demande de mon responsable, sans vivier propre.",
+      "Prospection régulière : environ trente appels sortants par semaine et des courriels ciblés, un tiers de mes affaires vient de là.",
+      "Construction de mon propre vivier : ciblage par secteur, séquences d'appels et de courriels, réseau professionnel ; la moitié de mes affaires signées provient de ma prospection.",
+      "Ouverture d'un territoire vierge de zéro à 180 comptes qualifiés en dix-huit mois : ciblage, séquences multicanales, partenariats de prescription, deux salons par an, 70 % de mes signatures issues de comptes que j'ai ouverts moi-même."
+    ],
+    "Négociation et conclusion": [
+      "",
+      "Application stricte du tarif public, aucune marge de négociation dans mon poste.",
+      "Négociations limitées à des remises standard validées par mon responsable.",
+      "Conduite de mes négociations jusqu'à la signature sur des affaires de taille moyenne, dans le cadre de remise fixé par la direction.",
+      "Négociation d'accords pluriannuels : traitement des objections de prix par la valeur, contreparties d'engagement, taux de conclusion de 32 % sur les affaires qualifiées.",
+      "Négociation de contrats-cadres avec les directions achats : préparation des concessions, gestion des appels d'offres, taux de conclusion de 41 % et érosion de marge contenue sous 4 %."
+    ],
+    "Maîtrise d'un CRM": [
+      "",
+      "Saisie occasionnelle dans un tableur partagé, pas de CRM dans mes postes précédents.",
+      "Utilisation d'un CRM imposée par l'entreprise, mise à jour irrégulière des opportunités.",
+      "Tenue quotidienne de mes opportunités dans Salesforce : étapes, montants, dates de clôture, comptes rendus d'échange.",
+      "Usage avancé de Salesforce : vues et rapports personnalisés, prévisionnel hebdomadaire fiable à 10 % près, hygiène de données suivie.",
+      "Référent CRM de l'équipe commerciale : définition des étapes du cycle, tableaux de bord de prévision, formation des nouveaux arrivants, adoption passée de 40 % à 95 % des opportunités tenues à jour."
+    ],
+    "Connaissance du secteur logiciel ou santé": [
+      "",
+      "Aucune expérience du logiciel ni du secteur de la santé.",
+      "Vente de matériel et de consommables, découverte indirecte du secteur de la santé par un client.",
+      "Vente de licences logicielles à des PME, compréhension du modèle par abonnement.",
+      "Vente de logiciels en mode abonnement à des établissements de santé : connaissance des circuits de décision et des contraintes réglementaires.",
+      "Huit ans de vente de logiciels aux structures de soins : direction des soins, direction des systèmes d'information, groupements d'achat, financements publics ; intervenant régulier dans les congrès du secteur."
+    ],
+    "Anglais professionnel": [
+      "",
+      "Anglais scolaire, échanges professionnels impossibles.",
+      "Compréhension écrite de l'anglais, expression très limitée.",
+      "Échanges écrits courants en anglais avec des fournisseurs étrangers.",
+      "Anglais professionnel : réunions hebdomadaires avec la maison mère britannique, comptes rendus rédigés en anglais.",
+      "Anglais courant : négociation et soutenance commerciale en anglais, deux ans passés dans une filiale à Manchester."
+    ]
+  }
+}

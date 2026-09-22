@@ -1,0 +1,483 @@
+{
+  "version": 1,
+  "description": "Bac a sable CRM du jeu dore. Chaque enregistrement porte une reference stable (`ref`) : le harnais la resout vers l'identifiant attribue par le CRM au chargement, ce qui rend les questions rejouables a l'identique sur FakeCRM (mode demo) comme sur une organisation Salesforce de bac a sable. Les dates sont relatives a la date de chargement (`today-10`, `today+45`) pour que les fenetres d'activites de 30 et 90 jours restent valables. Toutes les entreprises et personnes sont fictives.",
+  "records": [
+    {
+      "object": "Account",
+      "ref": "acc_norelec",
+      "fields": {
+        "Name": "Norelec",
+        "Industry": "Énergie",
+        "Phone": "+33 2 99 00 12 34",
+        "Website": "norelec.example",
+        "BillingCity": "Rennes"
+      }
+    },
+    {
+      "object": "Account",
+      "ref": "acc_ternova",
+      "fields": {
+        "Name": "Ternova",
+        "Industry": "Services aux entreprises",
+        "Phone": "+33 2 40 00 55 12",
+        "Website": "ternova.example",
+        "BillingCity": "Nantes"
+      }
+    },
+    {
+      "object": "Account",
+      "ref": "acc_sogedim",
+      "fields": {
+        "Name": "Sogedim",
+        "Industry": "Distribution",
+        "Phone": "+33 2 51 00 78 90",
+        "Website": "sogedim.example",
+        "BillingCity": "La Roche-sur-Yon"
+      }
+    },
+    {
+      "object": "Account",
+      "ref": "acc_maline",
+      "fields": {
+        "Name": "Maline Industries",
+        "Industry": "Industrie",
+        "Phone": "+33 2 43 00 11 22",
+        "Website": "maline.example",
+        "BillingCity": "Le Mans"
+      }
+    },
+    {
+      "object": "Account",
+      "ref": "acc_cabrion",
+      "fields": {
+        "Name": "Cabrion",
+        "Industry": "Santé",
+        "Phone": "+33 2 97 00 33 44",
+        "Website": "cabrion.example",
+        "BillingCity": "Vannes"
+      }
+    },
+    {
+      "object": "Account",
+      "ref": "acc_linova",
+      "fields": {
+        "Name": "Linova",
+        "Industry": "Logiciel",
+        "Phone": "+33 2 23 00 66 77",
+        "Website": "linova.example",
+        "BillingCity": "Rennes"
+      }
+    },
+    {
+      "object": "Contact",
+      "ref": "ct_lefevre",
+      "fields": {
+        "Name": "Claire Lefèvre",
+        "Title": "Directrice administrative et financière",
+        "Email": "c.lefevre@norelec.example",
+        "Phone": "+33 6 39 98 10 11",
+        "AccountId": "@acc_norelec"
+      }
+    },
+    {
+      "object": "Contact",
+      "ref": "ct_sicard",
+      "fields": {
+        "Name": "Hugo Sicard",
+        "Title": "Contrôleur de gestion",
+        "Email": "h.sicard@norelec.example",
+        "Phone": "+33 6 39 98 10 12",
+        "AccountId": "@acc_norelec"
+      }
+    },
+    {
+      "object": "Contact",
+      "ref": "ct_bonnamy",
+      "fields": {
+        "Name": "Sophie Bonnamy",
+        "Title": "Directrice des systèmes d'information",
+        "Email": "s.bonnamy@norelec.example",
+        "Phone": "+33 6 39 98 10 13",
+        "AccountId": "@acc_norelec"
+      }
+    },
+    {
+      "object": "Contact",
+      "ref": "ct_ravel",
+      "fields": {
+        "Name": "Marc Ravel",
+        "Title": "Responsable des opérations",
+        "Email": "m.ravel@ternova.example",
+        "Phone": "+33 6 39 98 20 21",
+        "AccountId": "@acc_ternova"
+      }
+    },
+    {
+      "object": "Contact",
+      "ref": "ct_vaillant",
+      "fields": {
+        "Name": "Lise Vaillant",
+        "Title": "Directrice des ressources humaines",
+        "Email": "l.vaillant@ternova.example",
+        "Phone": "+33 6 39 98 20 22",
+        "AccountId": "@acc_ternova"
+      }
+    },
+    {
+      "object": "Contact",
+      "ref": "ct_quiniou",
+      "fields": {
+        "Name": "Yann Quiniou",
+        "Title": "Directeur général",
+        "Email": "y.quiniou@sogedim.example",
+        "Phone": "+33 6 39 98 30 31",
+        "AccountId": "@acc_sogedim"
+      }
+    },
+    {
+      "object": "Contact",
+      "ref": "ct_rouvier",
+      "fields": {
+        "Name": "Tom Rouvier",
+        "Title": "Responsable informatique",
+        "Email": "t.rouvier@sogedim.example",
+        "Phone": "+33 6 39 98 30 32",
+        "AccountId": "@acc_sogedim"
+      }
+    },
+    {
+      "object": "Contact",
+      "ref": "ct_daurade",
+      "fields": {
+        "Name": "Inès Daurade",
+        "Title": "Responsable achats",
+        "Email": "i.daurade@maline.example",
+        "Phone": "+33 6 39 98 40 41",
+        "AccountId": "@acc_maline"
+      }
+    },
+    {
+      "object": "Contact",
+      "ref": "ct_merlot",
+      "fields": {
+        "Name": "Paul Merlot",
+        "Title": "Directeur des soins",
+        "Email": "p.merlot@cabrion.example",
+        "Phone": "+33 6 39 98 50 51",
+        "AccountId": "@acc_cabrion"
+      }
+    },
+    {
+      "object": "Contact",
+      "ref": "ct_aubertin",
+      "fields": {
+        "Name": "Nadia Aubertin",
+        "Title": "Responsable marketing",
+        "Email": "n.aubertin@linova.example",
+        "Phone": "+33 6 39 98 60 61",
+        "AccountId": "@acc_linova"
+      }
+    },
+    {
+      "object": "Opportunity",
+      "ref": "opp_norelec_cloture",
+      "fields": {
+        "Name": "Norelec - Automatisation de la clôture",
+        "StageName": "Négociation",
+        "Amount": 84000,
+        "CloseDate": "today+45",
+        "AccountId": "@acc_norelec",
+        "IsClosed": false
+      }
+    },
+    {
+      "object": "Opportunity",
+      "ref": "opp_norelec_pilote",
+      "fields": {
+        "Name": "Norelec - Pilote 2025",
+        "StageName": "Closed Won",
+        "Amount": 15000,
+        "CloseDate": "today-160",
+        "AccountId": "@acc_norelec",
+        "IsClosed": true
+      }
+    },
+    {
+      "object": "Opportunity",
+      "ref": "opp_ternova_interventions",
+      "fields": {
+        "Name": "Ternova - Suivi des interventions",
+        "StageName": "Proposition",
+        "Amount": 46000,
+        "CloseDate": "today+30",
+        "AccountId": "@acc_ternova",
+        "IsClosed": false
+      }
+    },
+    {
+      "object": "Opportunity",
+      "ref": "opp_ternova_rh",
+      "fields": {
+        "Name": "Ternova - Module ressources humaines",
+        "StageName": "Prospection",
+        "Amount": 22000,
+        "CloseDate": "today+90",
+        "AccountId": "@acc_ternova",
+        "IsClosed": false
+      }
+    },
+    {
+      "object": "Opportunity",
+      "ref": "opp_sogedim_renouvellement",
+      "fields": {
+        "Name": "Sogedim - Renouvellement 2026",
+        "StageName": "Proposition",
+        "Amount": 38000,
+        "CloseDate": "today+20",
+        "AccountId": "@acc_sogedim",
+        "IsClosed": false
+      }
+    },
+    {
+      "object": "Opportunity",
+      "ref": "opp_maline_ged",
+      "fields": {
+        "Name": "Maline Industries - Gestion documentaire",
+        "StageName": "Prospection",
+        "Amount": 60000,
+        "CloseDate": "today+120",
+        "AccountId": "@acc_maline",
+        "IsClosed": false
+      }
+    },
+    {
+      "object": "Opportunity",
+      "ref": "opp_cabrion_supervision",
+      "fields": {
+        "Name": "Cabrion - Supervision des capteurs",
+        "StageName": "Négociation",
+        "Amount": 72000,
+        "CloseDate": "today+15",
+        "AccountId": "@acc_cabrion",
+        "IsClosed": false
+      }
+    },
+    {
+      "object": "Opportunity",
+      "ref": "opp_cabrion_extension",
+      "fields": {
+        "Name": "Cabrion - Extension 2024",
+        "StageName": "Closed Lost",
+        "Amount": 25000,
+        "CloseDate": "today-300",
+        "AccountId": "@acc_cabrion",
+        "IsClosed": true
+      }
+    },
+    {
+      "object": "Opportunity",
+      "ref": "opp_linova_campagnes",
+      "fields": {
+        "Name": "Linova - Pilotage des campagnes",
+        "StageName": "Proposition",
+        "Amount": 31000,
+        "CloseDate": "today+60",
+        "AccountId": "@acc_linova",
+        "IsClosed": false
+      }
+    },
+    {
+      "object": "Case",
+      "ref": "case_norelec_export",
+      "fields": {
+        "CaseNumber": "00002101",
+        "Subject": "Lenteur de l'export comptable",
+        "Status": "En cours",
+        "Priority": "Haute",
+        "AccountId": "@acc_norelec",
+        "IsClosed": false
+      }
+    },
+    {
+      "object": "Case",
+      "ref": "case_norelec_facture",
+      "fields": {
+        "CaseNumber": "00002102",
+        "Subject": "Question sur la facturation annuelle",
+        "Status": "Closed",
+        "Priority": "Basse",
+        "AccountId": "@acc_norelec",
+        "IsClosed": true
+      }
+    },
+    {
+      "object": "Case",
+      "ref": "case_ternova_acces",
+      "fields": {
+        "CaseNumber": "00002110",
+        "Subject": "Droits d'accès d'un utilisateur",
+        "Status": "En cours",
+        "Priority": "Normale",
+        "AccountId": "@acc_ternova",
+        "IsClosed": false
+      }
+    },
+    {
+      "object": "Case",
+      "ref": "case_cabrion_alerte",
+      "fields": {
+        "CaseNumber": "00002120",
+        "Subject": "Alerte de supervision non remontée",
+        "Status": "En cours",
+        "Priority": "Haute",
+        "AccountId": "@acc_cabrion",
+        "IsClosed": false
+      }
+    },
+    {
+      "object": "Task",
+      "ref": "tsk_norelec_decouverte",
+      "fields": {
+        "Subject": "Appel de découverte de la clôture",
+        "ActivityDate": "today-8",
+        "Status": "Terminé",
+        "WhatId": "@acc_norelec"
+      }
+    },
+    {
+      "object": "Event",
+      "ref": "evt_norelec_demo",
+      "fields": {
+        "Subject": "Démonstration du scénario de clôture",
+        "ActivityDate": "today-3",
+        "WhatId": "@acc_norelec"
+      }
+    },
+    {
+      "object": "Task",
+      "ref": "tsk_norelec_proposition",
+      "fields": {
+        "Subject": "Envoi de la proposition commerciale",
+        "ActivityDate": "today-2",
+        "Status": "Terminé",
+        "WhatId": "@acc_norelec"
+      }
+    },
+    {
+      "object": "Event",
+      "ref": "evt_ternova_atelier",
+      "fields": {
+        "Subject": "Atelier avec l'équipe terrain",
+        "ActivityDate": "today-12",
+        "WhatId": "@acc_ternova"
+      }
+    },
+    {
+      "object": "Task",
+      "ref": "tsk_ternova_relance",
+      "fields": {
+        "Subject": "Relance téléphonique après atelier",
+        "ActivityDate": "today-45",
+        "Status": "Terminé",
+        "WhatId": "@acc_ternova"
+      }
+    },
+    {
+      "object": "Task",
+      "ref": "tsk_sogedim_renouvellement",
+      "fields": {
+        "Subject": "Point sur le renouvellement",
+        "ActivityDate": "today-20",
+        "Status": "Terminé",
+        "WhatId": "@acc_sogedim"
+      }
+    },
+    {
+      "object": "Task",
+      "ref": "tsk_maline_contact",
+      "fields": {
+        "Subject": "Premier contact salon",
+        "ActivityDate": "today-200",
+        "Status": "Terminé",
+        "WhatId": "@acc_maline"
+      }
+    },
+    {
+      "object": "Event",
+      "ref": "evt_cabrion_copil",
+      "fields": {
+        "Subject": "Comité de pilotage supervision",
+        "ActivityDate": "today-5",
+        "WhatId": "@acc_cabrion"
+      }
+    },
+    {
+      "object": "Task",
+      "ref": "tsk_cabrion_compterendu",
+      "fields": {
+        "Subject": "Compte rendu envoyé au directeur des soins",
+        "ActivityDate": "today-40",
+        "Status": "Terminé",
+        "WhatId": "@acc_cabrion"
+      }
+    },
+    {
+      "object": "Task",
+      "ref": "tsk_linova_prise_contact",
+      "fields": {
+        "Subject": "Prise de contact marketing",
+        "ActivityDate": "today-70",
+        "Status": "Terminé",
+        "WhatId": "@acc_linova"
+      }
+    },
+    {
+      "object": "OpportunityStage",
+      "ref": "stage_prospection",
+      "fields": {
+        "MasterLabel": "Prospection",
+        "IsActive": true
+      }
+    },
+    {
+      "object": "OpportunityStage",
+      "ref": "stage_proposition",
+      "fields": {
+        "MasterLabel": "Proposition",
+        "IsActive": true
+      }
+    },
+    {
+      "object": "OpportunityStage",
+      "ref": "stage_negociation",
+      "fields": {
+        "MasterLabel": "Négociation",
+        "IsActive": true
+      }
+    },
+    {
+      "object": "OpportunityStage",
+      "ref": "stage_closed_won",
+      "fields": {
+        "MasterLabel": "Closed Won",
+        "IsActive": true
+      }
+    },
+    {
+      "object": "OpportunityStage",
+      "ref": "stage_closed_lost",
+      "fields": {
+        "MasterLabel": "Closed Lost",
+        "IsActive": true
+      }
+    },
+    {
+      "object": "OpportunityStage",
+      "ref": "stage_etape_retiree",
+      "fields": {
+        "MasterLabel": "Étape retirée",
+        "IsActive": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "metier": {
+    "titres": {
+      "m": [
+        "Développeur full stack",
+        "Ingénieur logiciel",
+        "Développeur backend",
+        "Développeur web"
+      ],
+      "f": [
+        "Développeuse full stack",
+        "Ingénieure logicielle",
+        "Développeuse backend",
+        "Développeuse web"
+      ]
+    },
+    "formations": [
+      "Master informatique, université fictive de {ville}",
+      "Diplôme d'ingénieur en informatique, école fictive Valmont ({ville})",
+      "Licence professionnelle développement web, {ville}",
+      "Parcours autodidacte, formation intensive Codelab ({ville}), six mois",
+      "BUT informatique, {ville}, puis alternance de deux ans"
+    ],
+    "sections": {
+      "experience": "EXPÉRIENCE PROFESSIONNELLE",
+      "formation": "FORMATION",
+      "competences": "COMPÉTENCES",
+      "divers": "DIVERS"
+    },
+    "divers": [
+      "Contributions à des projets libres, revues de code entre pairs.",
+      "Animation d'un atelier interne de partage technique une fois par mois.",
+      "Participation régulière à des rencontres de développeurs en région.",
+      "Veille technique hebdomadaire partagée avec l'équipe."
+    ]
+  },
+  "briques": {
+    "Backend Python en production": [
+      "",
+      "Découverte de Python pendant ma formation : quelques scripts d'exercice, aucun service livré.",
+      "Scripts Python d'automatisation pour mon propre usage, et reprise ponctuelle d'un petit service écrit par un collègue.",
+      "Développement en Python d'une API interne (FastAPI) utilisée par deux équipes, mise en ligne et maintenue pendant un an.",
+      "Conception et exploitation de services Python en production depuis trois ans : API FastAPI, traitements asynchrones, astreinte partagée.",
+      "Référent backend Python sur une plateforme en production servant 1,2 million de requêtes par jour : architecture des services FastAPI, découpage des modules, revue de toutes les fusions, réduction de moitié du temps de réponse médian."
+    ],
+    "Frontend React et TypeScript": [
+      "",
+      "Notions de HTML et CSS, un exercice React suivi en tutoriel, jamais de TypeScript.",
+      "Quelques correctifs sur une application React existante, en JavaScript, accompagné par un collègue.",
+      "Développement d'écrans React en TypeScript sur une application interne : formulaires, appels d'API, gestion des erreurs.",
+      "Développement du front d'une application React et TypeScript utilisée quotidiennement par 400 utilisateurs : composants partagés, état applicatif, tests d'interface.",
+      "Conception du design system React et TypeScript de l'entreprise : bibliothèque de 40 composants documentés, migration de trois applications, accessibilité vérifiée au clavier et au lecteur d'écran."
+    ],
+    "Bases de données relationnelles": [
+      "",
+      "Notions de SQL vues en cours, requêtes simples sur une base d'exercice.",
+      "Requêtes SQL quotidiennes en lecture sur une base PostgreSQL existante, sans intervention sur le schéma.",
+      "Modélisation de schémas PostgreSQL et écriture des migrations sur les périmètres qui m'étaient confiés.",
+      "Modélisation PostgreSQL complète d'un module métier, migrations sans interruption de service, optimisation d'index sur les requêtes lentes.",
+      "Reprise de données et refonte du schéma PostgreSQL d'une base de 400 Go : partitionnement, plans d'exécution, division par six du temps des rapports mensuels."
+    ],
+    "Tests automatisés": [
+      "",
+      "Tests écrits ponctuellement en fin de projet, à la demande du responsable.",
+      "Tests unitaires sur les fonctions que j'écris, sans exécution automatique à chaque fusion.",
+      "Tests unitaires systématiques avec pytest, exécutés en intégration continue sur chaque demande de fusion.",
+      "Tests unitaires et d'intégration sur mon périmètre, couverture suivie et non régressive, jeux de données de test maintenus.",
+      "Définition de la stratégie de test de l'équipe : unitaires, intégration, bout en bout, couverture passée de 34 % à 81 % en un an, tests de non-régression sur les cas limites identifiés en production."
+    ],
+    "Intégration continue et déploiement": [
+      "",
+      "Lecture de la documentation sur les chaînes d'intégration continue, sans mise en pratique.",
+      "Utilisation de la chaîne d'intégration continue mise en place par un collègue : je la déclenche et je lis les rapports.",
+      "Écriture et maintenance des étapes d'intégration continue de mon projet, conteneurisation des services.",
+      "Mise en place de la chaîne complète d'intégration et de déploiement d'un service : tests, image de conteneur, livraison hebdomadaire sans interruption.",
+      "Refonte de la chaîne de livraison de quatre services : déploiements quotidiens, retours arrière automatisés, temps de livraison ramené de deux heures à douze minutes."
+    ],
+    "Anglais technique": [
+      "",
+      "Anglais scolaire, compréhension partielle de la documentation technique.",
+      "Lecture de documentation technique en anglais avec l'aide d'un traducteur.",
+      "Lecture courante de la documentation technique et rédaction des messages de commit et des tickets en anglais.",
+      "Anglais professionnel : échanges écrits quotidiens et réunions techniques avec une équipe basée à Dublin.",
+      "Anglais courant : animation d'ateliers techniques avec des équipes internationales, rédaction de la documentation publique de l'API."
+    ]
+  }
+}

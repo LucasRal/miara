@@ -1,0 +1,40 @@
+{
+  "criteria": [
+    {
+      "name": "Vente B2B en cycle long",
+      "weight_1_5": 5,
+      "description": "Cycles de vente de plusieurs mois auprès d'entreprises, avec plusieurs interlocuteurs, et affaires signées à l'appui.",
+      "must_have": true
+    },
+    {
+      "name": "Prospection et génération d'affaires",
+      "weight_1_5": 4,
+      "description": "Prospection sortante effective : appels, courriels ciblés, réseau, salons ; capacité à créer son propre vivier plutôt qu'à traiter des demandes entrantes.",
+      "must_have": true
+    },
+    {
+      "name": "Négociation et conclusion",
+      "weight_1_5": 4,
+      "description": "Conduite de la négociation commerciale et conclusion des accords : conditions, objections de prix, engagement du client.",
+      "must_have": false
+    },
+    {
+      "name": "Maîtrise d'un CRM",
+      "weight_1_5": 3,
+      "description": "Usage quotidien d'un CRM (Salesforce, HubSpot ou équivalent) : tenue des opportunités, étapes, comptes rendus, prévisionnel.",
+      "must_have": false
+    },
+    {
+      "name": "Connaissance du secteur logiciel ou santé",
+      "weight_1_5": 2,
+      "description": "Vente de logiciels en mode abonnement, ou connaissance des structures de soins et de leurs circuits de décision.",
+      "must_have": false
+    },
+    {
+      "name": "Anglais professionnel",
+      "weight_1_5": 2,
+      "description": "Échanges professionnels courants en anglais, à l'écrit comme à l'oral.",
+      "must_have": false
+    }
+  ]
+}

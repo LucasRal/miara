@@ -1,0 +1,70 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2979 >>
+stream
+BT /F1 10 Tf 40 800 Td (Elsa VAILLANT) Tj ET
+BT /F1 10 Tf 40 786 Td (Développeuse backend - Tours) Tj ET
+BT /F1 10 Tf 40 772 Td (elsa.vaillant@exemple.invalid - 06 39 98 92 90) Tj ET
+BT /F1 10 Tf 40 758 Td (14 ans d'expérience - candidature au poste : Développeur Full Stack) Tj ET
+BT /F1 10 Tf 40 744 Td () Tj ET
+BT /F1 10 Tf 40 730 Td (EXPÉRIENCE PROFESSIONNELLE) Tj ET
+BT /F1 10 Tf 40 716 Td (2023 - 2026 | Maline Industries, Tours) Tj ET
+BT /F1 10 Tf 40 702 Td (  Tests unitaires et d'intégration sur mon périmètre, couverture suivie et non régressive, jeux) Tj ET
+BT /F1 10 Tf 40 688 Td (de données de test maintenus.) Tj ET
+BT /F1 10 Tf 40 674 Td (2020 - 2023 | Keranel, Tours) Tj ET
+BT /F1 10 Tf 40 660 Td (  Référent backend Python sur une plateforme en production servant 1,2 million de requêtes par) Tj ET
+BT /F1 10 Tf 40 646 Td (jour : architecture des services FastAPI, découpage des modules, revue de toutes les fusions,) Tj ET
+BT /F1 10 Tf 40 632 Td (réduction de moitié du temps de réponse médian.) Tj ET
+BT /F1 10 Tf 40 618 Td (2018 - 2020 | Groupe Vasseur, Nantes) Tj ET
+BT /F1 10 Tf 40 604 Td (  Reprise de données et refonte du schéma PostgreSQL d'une base de 400 Go : partitionnement,) Tj ET
+BT /F1 10 Tf 40 590 Td (plans d'exécution, division par six du temps des rapports mensuels.) Tj ET
+BT /F1 10 Tf 40 576 Td (2015 - 2018 | Ternova, Rennes) Tj ET
+BT /F1 10 Tf 40 562 Td (  Anglais professionnel : échanges écrits quotidiens et réunions techniques avec une équipe) Tj ET
+BT /F1 10 Tf 40 548 Td (basée à Dublin.) Tj ET
+BT /F1 10 Tf 40 534 Td (2013 - 2015 | Feldspar, Tours) Tj ET
+BT /F1 10 Tf 40 520 Td (  Mise en place de la chaîne complète d'intégration et de déploiement d'un service : tests,) Tj ET
+BT /F1 10 Tf 40 506 Td (image de conteneur, livraison hebdomadaire sans interruption.) Tj ET
+BT /F1 10 Tf 40 492 Td (2010 - 2013 | Ouest Numérique, Brest) Tj ET
+BT /F1 10 Tf 40 478 Td (  Conception du design system React et TypeScript de l'entreprise : bibliothèque de 40) Tj ET
+BT /F1 10 Tf 40 464 Td (composants documentés, migration de trois applications, accessibilité vérifiée au clavier et au) Tj ET
+BT /F1 10 Tf 40 450 Td (lecteur d'écran.) Tj ET
+BT /F1 10 Tf 40 436 Td () Tj ET
+BT /F1 10 Tf 40 422 Td (FORMATION) Tj ET
+BT /F1 10 Tf 40 408 Td (Parcours autodidacte, formation intensive Codelab Nantes, six mois) Tj ET
+BT /F1 10 Tf 40 394 Td () Tj ET
+BT /F1 10 Tf 40 380 Td (COMPÉTENCES) Tj ET
+BT /F1 10 Tf 40 366 Td (Backend Python en production, Frontend React et TypeScript, Bases de données relationnelles,) Tj ET
+BT /F1 10 Tf 40 352 Td (Tests automatisés, Intégration continue et déploiement, Anglais technique) Tj ET
+BT /F1 10 Tf 40 338 Td () Tj ET
+BT /F1 10 Tf 40 324 Td (LANGUES) Tj ET
+BT /F1 10 Tf 40 310 Td (Français langue maternelle, anglais intermédiaire.) Tj ET
+BT /F1 10 Tf 40 296 Td () Tj ET
+BT /F1 10 Tf 40 282 Td (DIVERS) Tj ET
+BT /F1 10 Tf 40 268 Td (Animation d'un atelier interne de partage technique une fois par mois.) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000003272 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+3369
+%%EOF

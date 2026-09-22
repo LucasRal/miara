@@ -1,0 +1,40 @@
+{
+  "criteria": [
+    {
+      "name": "Administration du personnel",
+      "weight_1_5": 5,
+      "description": "Contrats et avenants, absences, dossiers individuels, entrées et sorties, visites médicales : gestion effective, pas seulement observée.",
+      "must_have": true
+    },
+    {
+      "name": "Recrutement et présélection",
+      "weight_1_5": 4,
+      "description": "Rédaction et diffusion d'annonces, tri de candidatures, entretiens téléphoniques de présélection, suivi des candidats.",
+      "must_have": true
+    },
+    {
+      "name": "Paie et déclarations sociales",
+      "weight_1_5": 3,
+      "description": "Préparation et contrôle des éléments variables de paie, suivi des déclarations sociales, relation avec un cabinet ou un service de paie.",
+      "must_have": false
+    },
+    {
+      "name": "Droit du travail",
+      "weight_1_5": 3,
+      "description": "Application des règles de droit du travail et des accords d'entreprise dans les situations courantes.",
+      "must_have": false
+    },
+    {
+      "name": "Outils SIRH et bureautique",
+      "weight_1_5": 2,
+      "description": "Tenue d'un SIRH, extraction de données, tableaux de bord, tableur et traitement de texte.",
+      "must_have": false
+    },
+    {
+      "name": "Expression écrite en français",
+      "weight_1_5": 3,
+      "description": "Rédaction de courriers et de notes engageant l'entreprise : clarté, correction de la langue, ton professionnel.",
+      "must_have": false
+    }
+  ]
+}

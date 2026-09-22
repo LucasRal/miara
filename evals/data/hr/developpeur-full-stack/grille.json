@@ -1,0 +1,40 @@
+{
+  "criteria": [
+    {
+      "name": "Backend Python en production",
+      "weight_1_5": 5,
+      "description": "Conception et exploitation de services backend en Python (FastAPI, Django ou équivalent) mis en production, au-delà du script ou du projet d'école.",
+      "must_have": true
+    },
+    {
+      "name": "Frontend React et TypeScript",
+      "weight_1_5": 4,
+      "description": "Développement d'écrans React en TypeScript sur une application réelle : composants, état, appels d'API, intégration d'un design system.",
+      "must_have": true
+    },
+    {
+      "name": "Bases de données relationnelles",
+      "weight_1_5": 3,
+      "description": "PostgreSQL ou équivalent : modélisation de schéma, écriture de requêtes, migrations, lecture d'un plan d'exécution.",
+      "must_have": false
+    },
+    {
+      "name": "Tests automatisés",
+      "weight_1_5": 3,
+      "description": "Pratique effective des tests unitaires et d'intégration, couverture suivie, tests exécutés en intégration continue.",
+      "must_have": false
+    },
+    {
+      "name": "Intégration continue et déploiement",
+      "weight_1_5": 2,
+      "description": "Chaînes d'intégration continue, conteneurisation, mises en production régulières et outillage associé.",
+      "must_have": false
+    },
+    {
+      "name": "Anglais technique",
+      "weight_1_5": 2,
+      "description": "Lecture de documentation et rédaction technique en anglais ; échanges écrits ou oraux avec des interlocuteurs non francophones.",
+      "must_have": false
+    }
+  ]
+}

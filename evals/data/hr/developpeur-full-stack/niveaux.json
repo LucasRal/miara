@@ -1,0 +1,482 @@
+{
+  "cv-001.pdf": {
+    "Anglais technique": 4,
+    "Backend Python en production": 5,
+    "Bases de données relationnelles": 5,
+    "Frontend React et TypeScript": 5,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 4
+  },
+  "cv-002.docx": {
+    "Anglais technique": 5,
+    "Backend Python en production": 5,
+    "Bases de données relationnelles": 5,
+    "Frontend React et TypeScript": 5,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 5
+  },
+  "cv-003.pdf": {
+    "Anglais technique": 5,
+    "Backend Python en production": 5,
+    "Bases de données relationnelles": 5,
+    "Frontend React et TypeScript": 5,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 4
+  },
+  "cv-004.docx": {
+    "Anglais technique": 1,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 1,
+    "Tests automatisés": 3
+  },
+  "cv-005.pdf": {
+    "Anglais technique": 3,
+    "Backend Python en production": 4,
+    "Bases de données relationnelles": 4,
+    "Frontend React et TypeScript": 4,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 4
+  },
+  "cv-006.docx": {
+    "Anglais technique": 3,
+    "Backend Python en production": 3,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 4,
+    "Intégration continue et déploiement": 3,
+    "Tests automatisés": 4
+  },
+  "cv-007.pdf": {
+    "Anglais technique": 3,
+    "Backend Python en production": 4,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 4,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 3
+  },
+  "cv-008.docx": {
+    "Anglais technique": 0,
+    "Backend Python en production": 3,
+    "Bases de données relationnelles": 2,
+    "Frontend React et TypeScript": 1,
+    "Intégration continue et déploiement": 0,
+    "Tests automatisés": 1
+  },
+  "cv-009.pdf": {
+    "Anglais technique": 1,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 3,
+    "Tests automatisés": 2
+  },
+  "cv-010.docx": {
+    "Anglais technique": 3,
+    "Backend Python en production": 4,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 4,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 4
+  },
+  "cv-011.pdf": {
+    "Anglais technique": 3,
+    "Backend Python en production": 1,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 1,
+    "Tests automatisés": 2
+  },
+  "cv-012.docx": {
+    "Anglais technique": 3,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 1,
+    "Tests automatisés": 2
+  },
+  "cv-013.pdf": {
+    "Anglais technique": 4,
+    "Backend Python en production": 3,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 4,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 4
+  },
+  "cv-014.docx": {
+    "Anglais technique": 4,
+    "Backend Python en production": 5,
+    "Bases de données relationnelles": 4,
+    "Frontend React et TypeScript": 5,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 5
+  },
+  "cv-015.pdf": {
+    "Anglais technique": 1,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 2,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 2,
+    "Tests automatisés": 1
+  },
+  "cv-016.docx": {
+    "Anglais technique": 1,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 1,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 2,
+    "Tests automatisés": 2
+  },
+  "cv-017.pdf": {
+    "Anglais technique": 2,
+    "Backend Python en production": 0,
+    "Bases de données relationnelles": 2,
+    "Frontend React et TypeScript": 3,
+    "Intégration continue et déploiement": 3,
+    "Tests automatisés": 2
+  },
+  "cv-018.docx": {
+    "Anglais technique": 1,
+    "Backend Python en production": 3,
+    "Bases de données relationnelles": 2,
+    "Frontend React et TypeScript": 0,
+    "Intégration continue et déploiement": 2,
+    "Tests automatisés": 2
+  },
+  "cv-019.pdf": {
+    "Anglais technique": 5,
+    "Backend Python en production": 5,
+    "Bases de données relationnelles": 4,
+    "Frontend React et TypeScript": 5,
+    "Intégration continue et déploiement": 5,
+    "Tests automatisés": 4
+  },
+  "cv-020.docx": {
+    "Anglais technique": 5,
+    "Backend Python en production": 5,
+    "Bases de données relationnelles": 4,
+    "Frontend React et TypeScript": 5,
+    "Intégration continue et déploiement": 5,
+    "Tests automatisés": 4
+  },
+  "cv-021.pdf": {
+    "Anglais technique": 0,
+    "Backend Python en production": 1,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 1,
+    "Tests automatisés": 1
+  },
+  "cv-022.docx": {
+    "Anglais technique": 0,
+    "Backend Python en production": 1,
+    "Bases de données relationnelles": 2,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 3,
+    "Tests automatisés": 3
+  },
+  "cv-023.pdf": {
+    "Anglais technique": 0,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 1,
+    "Frontend React et TypeScript": 0,
+    "Intégration continue et déploiement": 0,
+    "Tests automatisés": 0
+  },
+  "cv-024.docx": {
+    "Anglais technique": 2,
+    "Backend Python en production": 3,
+    "Bases de données relationnelles": 0,
+    "Frontend React et TypeScript": 1,
+    "Intégration continue et déploiement": 2,
+    "Tests automatisés": 0
+  },
+  "cv-025.pdf": {
+    "Anglais technique": 4,
+    "Backend Python en production": 5,
+    "Bases de données relationnelles": 5,
+    "Frontend React et TypeScript": 5,
+    "Intégration continue et déploiement": 5,
+    "Tests automatisés": 5
+  },
+  "cv-026.docx": {
+    "Anglais technique": 2,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 2,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 2,
+    "Tests automatisés": 2
+  },
+  "cv-027.pdf": {
+    "Anglais technique": 1,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 1,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 1,
+    "Tests automatisés": 1
+  },
+  "cv-028.docx": {
+    "Anglais technique": 4,
+    "Backend Python en production": 5,
+    "Bases de données relationnelles": 4,
+    "Frontend React et TypeScript": 5,
+    "Intégration continue et déploiement": 5,
+    "Tests automatisés": 5
+  },
+  "cv-029.pdf": {
+    "Anglais technique": 3,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 2,
+    "Tests automatisés": 2
+  },
+  "cv-030.docx": {
+    "Anglais technique": 4,
+    "Backend Python en production": 3,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 4,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 3
+  },
+  "cv-031.pdf": {
+    "Anglais technique": 1,
+    "Backend Python en production": 0,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 3,
+    "Intégration continue et déploiement": 0,
+    "Tests automatisés": 0
+  },
+  "cv-032.docx": {
+    "Anglais technique": 3,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 2,
+    "Tests automatisés": 1
+  },
+  "cv-033.pdf": {
+    "Anglais technique": 0,
+    "Backend Python en production": 0,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 3,
+    "Intégration continue et déploiement": 1,
+    "Tests automatisés": 1
+  },
+  "cv-034.docx": {
+    "Anglais technique": 0,
+    "Backend Python en production": 0,
+    "Bases de données relationnelles": 1,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 2,
+    "Tests automatisés": 0
+  },
+  "cv-035.pdf": {
+    "Anglais technique": 1,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 1,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 2,
+    "Tests automatisés": 1
+  },
+  "cv-036.docx": {
+    "Anglais technique": 4,
+    "Backend Python en production": 5,
+    "Bases de données relationnelles": 5,
+    "Frontend React et TypeScript": 5,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 4
+  },
+  "cv-037.pdf": {
+    "Anglais technique": 3,
+    "Backend Python en production": 3,
+    "Bases de données relationnelles": 4,
+    "Frontend React et TypeScript": 4,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 3
+  },
+  "cv-038.docx": {
+    "Anglais technique": 1,
+    "Backend Python en production": 3,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 0,
+    "Intégration continue et déploiement": 2,
+    "Tests automatisés": 0
+  },
+  "cv-039.pdf": {
+    "Anglais technique": 3,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 3,
+    "Tests automatisés": 3
+  },
+  "cv-040.docx": {
+    "Anglais technique": 4,
+    "Backend Python en production": 5,
+    "Bases de données relationnelles": 5,
+    "Frontend React et TypeScript": 5,
+    "Intégration continue et déploiement": 5,
+    "Tests automatisés": 5
+  },
+  "cv-041.pdf": {
+    "Anglais technique": 2,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 3,
+    "Tests automatisés": 3
+  },
+  "cv-042.docx": {
+    "Anglais technique": 1,
+    "Backend Python en production": 1,
+    "Bases de données relationnelles": 0,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 1,
+    "Tests automatisés": 3
+  },
+  "cv-043.pdf": {
+    "Anglais technique": 1,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 0,
+    "Intégration continue et déploiement": 3,
+    "Tests automatisés": 0
+  },
+  "cv-044.docx": {
+    "Anglais technique": 3,
+    "Backend Python en production": 3,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 3,
+    "Intégration continue et déploiement": 3,
+    "Tests automatisés": 3
+  },
+  "cv-045.pdf": {
+    "Anglais technique": 3,
+    "Backend Python en production": 4,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 4,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 4
+  },
+  "cv-046.docx": {
+    "Anglais technique": 3,
+    "Backend Python en production": 3,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 3,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 4
+  },
+  "cv-047.pdf": {
+    "Anglais technique": 3,
+    "Backend Python en production": 3,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 3,
+    "Intégration continue et déploiement": 3,
+    "Tests automatisés": 4
+  },
+  "cv-048.docx": {
+    "Anglais technique": 5,
+    "Backend Python en production": 5,
+    "Bases de données relationnelles": 4,
+    "Frontend React et TypeScript": 5,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 5
+  },
+  "cv-049.pdf": {
+    "Anglais technique": 3,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 1,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 3,
+    "Tests automatisés": 1
+  },
+  "cv-050.docx": {
+    "Anglais technique": 5,
+    "Backend Python en production": 5,
+    "Bases de données relationnelles": 4,
+    "Frontend React et TypeScript": 5,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 4
+  },
+  "cv-051.pdf": {
+    "Anglais technique": 1,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 2,
+    "Tests automatisés": 1
+  },
+  "cv-052.docx": {
+    "Anglais technique": 4,
+    "Backend Python en production": 5,
+    "Bases de données relationnelles": 4,
+    "Frontend React et TypeScript": 5,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 5
+  },
+  "cv-053.pdf": {
+    "Anglais technique": 3,
+    "Backend Python en production": 3,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 3,
+    "Intégration continue et déploiement": 3,
+    "Tests automatisés": 4
+  },
+  "cv-054.docx": {
+    "Anglais technique": 4,
+    "Backend Python en production": 5,
+    "Bases de données relationnelles": 5,
+    "Frontend React et TypeScript": 5,
+    "Intégration continue et déploiement": 5,
+    "Tests automatisés": 5
+  },
+  "cv-055.pdf": {
+    "Anglais technique": 4,
+    "Backend Python en production": 3,
+    "Bases de données relationnelles": 3,
+    "Frontend React et TypeScript": 4,
+    "Intégration continue et déploiement": 3,
+    "Tests automatisés": 3
+  },
+  "cv-056.docx": {
+    "Anglais technique": 4,
+    "Backend Python en production": 4,
+    "Bases de données relationnelles": 4,
+    "Frontend React et TypeScript": 3,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 3
+  },
+  "cv-057.pdf": {
+    "Anglais technique": 3,
+    "Backend Python en production": 4,
+    "Bases de données relationnelles": 4,
+    "Frontend React et TypeScript": 3,
+    "Intégration continue et déploiement": 4,
+    "Tests automatisés": 4
+  },
+  "cv-058.docx": {
+    "Anglais technique": 4,
+    "Backend Python en production": 5,
+    "Bases de données relationnelles": 4,
+    "Frontend React et TypeScript": 5,
+    "Intégration continue et déploiement": 5,
+    "Tests automatisés": 4
+  },
+  "cv-059.pdf": {
+    "Anglais technique": 2,
+    "Backend Python en production": 2,
+    "Bases de données relationnelles": 1,
+    "Frontend React et TypeScript": 2,
+    "Intégration continue et déploiement": 3,
+    "Tests automatisés": 2
+  },
+  "cv-060.docx": {
+    "Anglais technique": 2,
+    "Backend Python en production": 3,
+    "Bases de données relationnelles": 0,
+    "Frontend React et TypeScript": 1,
+    "Intégration continue et déploiement": 0,
+    "Tests automatisés": 1
+  }
+}

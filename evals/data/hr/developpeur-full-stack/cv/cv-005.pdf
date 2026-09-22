@@ -1,0 +1,68 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2768 >>
+stream
+BT /F1 10 Tf 40 800 Td (Lise VASSEUR) Tj ET
+BT /F1 10 Tf 40 786 Td (Développeuse web - Vannes) Tj ET
+BT /F1 10 Tf 40 772 Td (lise.vasseur@exemple.invalid - 06 39 98 24 85) Tj ET
+BT /F1 10 Tf 40 758 Td (12 ans d'expérience - candidature au poste : Développeur Full Stack) Tj ET
+BT /F1 10 Tf 40 744 Td () Tj ET
+BT /F1 10 Tf 40 730 Td (EXPÉRIENCE PROFESSIONNELLE) Tj ET
+BT /F1 10 Tf 40 716 Td (2024 - 2026 | Alcyon Services, Le Mans) Tj ET
+BT /F1 10 Tf 40 702 Td (  Développement du front d'une application React et TypeScript utilisée quotidiennement par 400) Tj ET
+BT /F1 10 Tf 40 688 Td (utilisateurs : composants partagés, état applicatif, tests d'interface.) Tj ET
+BT /F1 10 Tf 40 674 Td (2021 - 2024 | Maline Industries, Vannes) Tj ET
+BT /F1 10 Tf 40 660 Td (  Tests unitaires et d'intégration sur mon périmètre, couverture suivie et non régressive, jeux) Tj ET
+BT /F1 10 Tf 40 646 Td (de données de test maintenus.) Tj ET
+BT /F1 10 Tf 40 632 Td (2020 - 2021 | Alcyon Services, La Rochelle) Tj ET
+BT /F1 10 Tf 40 618 Td (  Lecture courante de la documentation technique et rédaction des messages de commit et des) Tj ET
+BT /F1 10 Tf 40 604 Td (tickets en anglais.) Tj ET
+BT /F1 10 Tf 40 590 Td (2017 - 2020 | Norelec, Tours) Tj ET
+BT /F1 10 Tf 40 576 Td (  Mise en place de la chaîne complète d'intégration et de déploiement d'un service : tests,) Tj ET
+BT /F1 10 Tf 40 562 Td (image de conteneur, livraison hebdomadaire sans interruption.) Tj ET
+BT /F1 10 Tf 40 548 Td (2016 - 2017 | Groupe Vasseur, Rennes) Tj ET
+BT /F1 10 Tf 40 534 Td (  Conception et exploitation de services Python en production depuis trois ans : API FastAPI,) Tj ET
+BT /F1 10 Tf 40 520 Td (traitements asynchrones, astreinte partagée.) Tj ET
+BT /F1 10 Tf 40 506 Td (2014 - 2016 | Ternova, Angers) Tj ET
+BT /F1 10 Tf 40 492 Td (  Modélisation PostgreSQL complète d'un module métier, migrations sans interruption de service,) Tj ET
+BT /F1 10 Tf 40 478 Td (optimisation d'index sur les requêtes lentes.) Tj ET
+BT /F1 10 Tf 40 464 Td () Tj ET
+BT /F1 10 Tf 40 450 Td (FORMATION) Tj ET
+BT /F1 10 Tf 40 436 Td (BUT informatique, Le Mans, puis alternance de deux ans) Tj ET
+BT /F1 10 Tf 40 422 Td () Tj ET
+BT /F1 10 Tf 40 408 Td (COMPÉTENCES) Tj ET
+BT /F1 10 Tf 40 394 Td (Backend Python en production, Frontend React et TypeScript, Bases de données relationnelles,) Tj ET
+BT /F1 10 Tf 40 380 Td (Tests automatisés, Intégration continue et déploiement, Anglais technique) Tj ET
+BT /F1 10 Tf 40 366 Td () Tj ET
+BT /F1 10 Tf 40 352 Td (LANGUES) Tj ET
+BT /F1 10 Tf 40 338 Td (Français langue maternelle, anglais intermédiaire.) Tj ET
+BT /F1 10 Tf 40 324 Td () Tj ET
+BT /F1 10 Tf 40 310 Td (DIVERS) Tj ET
+BT /F1 10 Tf 40 296 Td (Participation régulière à des rencontres de développeurs en région.) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000003061 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+3158
+%%EOF

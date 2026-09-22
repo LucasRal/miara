@@ -1,0 +1,64 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2267 >>
+stream
+BT /F1 10 Tf 40 800 Td (Léa AUBERTIN) Tj ET
+BT /F1 10 Tf 40 786 Td (Ingénieure logicielle - Rennes) Tj ET
+BT /F1 10 Tf 40 772 Td (lea.aubertin@exemple.invalid - 06 39 98 20 38) Tj ET
+BT /F1 10 Tf 40 758 Td (7 ans d'expérience - candidature au poste : Développeur Full Stack) Tj ET
+BT /F1 10 Tf 40 744 Td () Tj ET
+BT /F1 10 Tf 40 730 Td (EXPÉRIENCE PROFESSIONNELLE) Tj ET
+BT /F1 10 Tf 40 716 Td (2025 - 2026 | Arvorix, Brest) Tj ET
+BT /F1 10 Tf 40 702 Td (  Modélisation de schémas PostgreSQL et écriture des migrations sur les périmètres qui) Tj ET
+BT /F1 10 Tf 40 688 Td (m'étaient confiés.) Tj ET
+BT /F1 10 Tf 40 674 Td (2023 - 2025 | Groupe Vasseur, Nantes) Tj ET
+BT /F1 10 Tf 40 660 Td (  Tests unitaires sur les fonctions que j'écris, sans exécution automatique à chaque fusion.) Tj ET
+BT /F1 10 Tf 40 646 Td (2022 - 2023 | Pontier & Fils, Brest) Tj ET
+BT /F1 10 Tf 40 632 Td (  Lecture courante de la documentation technique et rédaction des messages de commit et des) Tj ET
+BT /F1 10 Tf 40 618 Td (tickets en anglais.) Tj ET
+BT /F1 10 Tf 40 604 Td (2020 - 2022 | Arvorix, Nantes) Tj ET
+BT /F1 10 Tf 40 590 Td (  Lecture de la documentation sur les chaînes d'intégration continue, sans mise en pratique.) Tj ET
+BT /F1 10 Tf 40 576 Td (2019 - 2020 | Pontier & Fils, Tours) Tj ET
+BT /F1 10 Tf 40 562 Td (  Quelques correctifs sur une application React existante, en JavaScript, accompagné par un) Tj ET
+BT /F1 10 Tf 40 548 Td (collègue.) Tj ET
+BT /F1 10 Tf 40 534 Td (2018 - 2019 | Linova, Le Mans) Tj ET
+BT /F1 10 Tf 40 520 Td (  Découverte de Python pendant ma formation : quelques scripts d'exercice, aucun service livré.) Tj ET
+BT /F1 10 Tf 40 506 Td () Tj ET
+BT /F1 10 Tf 40 492 Td (FORMATION) Tj ET
+BT /F1 10 Tf 40 478 Td (Licence professionnelle développement web, Brest) Tj ET
+BT /F1 10 Tf 40 464 Td () Tj ET
+BT /F1 10 Tf 40 450 Td (COMPÉTENCES) Tj ET
+BT /F1 10 Tf 40 436 Td (Bases de données relationnelles, Anglais technique) Tj ET
+BT /F1 10 Tf 40 422 Td () Tj ET
+BT /F1 10 Tf 40 408 Td (LANGUES) Tj ET
+BT /F1 10 Tf 40 394 Td (Français langue maternelle, anglais intermédiaire.) Tj ET
+BT /F1 10 Tf 40 380 Td () Tj ET
+BT /F1 10 Tf 40 366 Td (DIVERS) Tj ET
+BT /F1 10 Tf 40 352 Td (Participation régulière à des rencontres de développeurs en région.) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000002560 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+2657
+%%EOF

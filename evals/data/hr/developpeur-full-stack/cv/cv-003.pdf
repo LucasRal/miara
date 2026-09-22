@@ -1,0 +1,70 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2985 >>
+stream
+BT /F1 10 Tf 40 800 Td (Sacha QUINIOU) Tj ET
+BT /F1 10 Tf 40 786 Td (Développeur backend - Rennes) Tj ET
+BT /F1 10 Tf 40 772 Td (sacha.quiniou@exemple.invalid - 06 39 98 62 30) Tj ET
+BT /F1 10 Tf 40 758 Td (15 ans d'expérience - candidature au poste : Développeur Full Stack) Tj ET
+BT /F1 10 Tf 40 744 Td () Tj ET
+BT /F1 10 Tf 40 730 Td (EXPÉRIENCE PROFESSIONNELLE) Tj ET
+BT /F1 10 Tf 40 716 Td (2025 - 2026 | Sogedim, Rennes) Tj ET
+BT /F1 10 Tf 40 702 Td (  Mise en place de la chaîne complète d'intégration et de déploiement d'un service : tests,) Tj ET
+BT /F1 10 Tf 40 688 Td (image de conteneur, livraison hebdomadaire sans interruption.) Tj ET
+BT /F1 10 Tf 40 674 Td (2024 - 2025 | Feldspar, Nantes) Tj ET
+BT /F1 10 Tf 40 660 Td (  Référent backend Python sur une plateforme en production servant 1,2 million de requêtes par) Tj ET
+BT /F1 10 Tf 40 646 Td (jour : architecture des services FastAPI, découpage des modules, revue de toutes les fusions,) Tj ET
+BT /F1 10 Tf 40 632 Td (réduction de moitié du temps de réponse médian.) Tj ET
+BT /F1 10 Tf 40 618 Td (2023 - 2024 | Feldspar, Angers) Tj ET
+BT /F1 10 Tf 40 604 Td (  Conception du design system React et TypeScript de l'entreprise : bibliothèque de 40) Tj ET
+BT /F1 10 Tf 40 590 Td (composants documentés, migration de trois applications, accessibilité vérifiée au clavier et au) Tj ET
+BT /F1 10 Tf 40 576 Td (lecteur d'écran.) Tj ET
+BT /F1 10 Tf 40 562 Td (2021 - 2023 | Alcyon Services, Le Mans) Tj ET
+BT /F1 10 Tf 40 548 Td (  Anglais courant : animation d'ateliers techniques avec des équipes internationales, rédaction) Tj ET
+BT /F1 10 Tf 40 534 Td (de la documentation publique de l'API.) Tj ET
+BT /F1 10 Tf 40 520 Td (2018 - 2021 | Turbine Verte, Angers) Tj ET
+BT /F1 10 Tf 40 506 Td (  Reprise de données et refonte du schéma PostgreSQL d'une base de 400 Go : partitionnement,) Tj ET
+BT /F1 10 Tf 40 492 Td (plans d'exécution, division par six du temps des rapports mensuels.) Tj ET
+BT /F1 10 Tf 40 478 Td (2017 - 2018 | Feldspar, Nantes) Tj ET
+BT /F1 10 Tf 40 464 Td (  Tests unitaires et d'intégration sur mon périmètre, couverture suivie et non régressive, jeux) Tj ET
+BT /F1 10 Tf 40 450 Td (de données de test maintenus.) Tj ET
+BT /F1 10 Tf 40 436 Td () Tj ET
+BT /F1 10 Tf 40 422 Td (FORMATION) Tj ET
+BT /F1 10 Tf 40 408 Td (Parcours autodidacte, formation intensive Codelab Rennes, six mois) Tj ET
+BT /F1 10 Tf 40 394 Td () Tj ET
+BT /F1 10 Tf 40 380 Td (COMPÉTENCES) Tj ET
+BT /F1 10 Tf 40 366 Td (Backend Python en production, Frontend React et TypeScript, Bases de données relationnelles,) Tj ET
+BT /F1 10 Tf 40 352 Td (Tests automatisés, Intégration continue et déploiement, Anglais technique) Tj ET
+BT /F1 10 Tf 40 338 Td () Tj ET
+BT /F1 10 Tf 40 324 Td (LANGUES) Tj ET
+BT /F1 10 Tf 40 310 Td (Français langue maternelle, anglais intermédiaire.) Tj ET
+BT /F1 10 Tf 40 296 Td () Tj ET
+BT /F1 10 Tf 40 282 Td (DIVERS) Tj ET
+BT /F1 10 Tf 40 268 Td (Veille technique hebdomadaire partagée avec l'équipe.) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000003278 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+3375
+%%EOF

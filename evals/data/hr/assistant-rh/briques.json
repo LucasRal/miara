@@ -1,0 +1,87 @@
+{
+  "metier": {
+    "titres": {
+      "m": [
+        "Assistant ressources humaines",
+        "Gestionnaire administration du personnel",
+        "Chargé de recrutement",
+        "Assistant administratif et RH"
+      ],
+      "f": [
+        "Assistante ressources humaines",
+        "Gestionnaire administration du personnel",
+        "Chargée de recrutement",
+        "Assistante administrative et RH"
+      ]
+    },
+    "formations": [
+      "Licence professionnelle gestion des ressources humaines, {ville}",
+      "Master 1 gestion des ressources humaines, université fictive de {ville}",
+      "BTS support à l'action managériale, {ville}",
+      "Titre professionnel gestionnaire de paie, centre fictif Arvor ({ville})",
+      "DUT gestion des entreprises et des administrations, {ville}"
+    ],
+    "sections": {
+      "experience": "EXPÉRIENCE PROFESSIONNELLE",
+      "formation": "FORMATION",
+      "competences": "COMPÉTENCES",
+      "divers": "DIVERS"
+    },
+    "divers": [
+      "Discrétion professionnelle et goût du travail en équipe.",
+      "Accueil et intégration des nouveaux arrivants au sein du service.",
+      "Bénévolat associatif : gestion des adhésions d'un club de 200 membres.",
+      "Attention portée aux questions de diversité et d'égalité professionnelle."
+    ]
+  },
+  "briques": {
+    "Administration du personnel": [
+      "",
+      "Stage d'observation de trois semaines dans un service RH, sans dossier en propre.",
+      "Classement et archivage des dossiers du personnel, sous le contrôle de la responsable RH.",
+      "Gestion administrative de 60 salariés : contrats, avenants, absences, dossiers individuels, entrées et sorties.",
+      "Administration du personnel de 180 salariés sur deux sites : contrats et avenants rédigés en autonomie, suivi des absences, visites médicales, registre du personnel, réponses aux demandes courantes.",
+      "Responsable de l'administration du personnel de 420 salariés, dont 60 en contrats courts : refonte du circuit d'entrée et de sortie, délai moyen d'établissement d'un contrat ramené de neuf à deux jours, zéro non-conformité au dernier audit interne."
+    ],
+    "Recrutement et présélection": [
+      "",
+      "Participation à un forum de l'emploi pour le compte de mon employeur, sans suite opérationnelle.",
+      "Diffusion des annonces rédigées par ma responsable et accusés de réception aux candidats.",
+      "Rédaction et diffusion des annonces, tri des candidatures et entretiens téléphoniques de présélection sur une dizaine de postes par an.",
+      "Présélection sur 35 recrutements par an : grilles de tri, entretiens téléphoniques, comptes rendus aux managers, suivi du vivier et retours aux candidats non retenus.",
+      "Pilotage du processus de présélection de 90 recrutements par an : grilles critériées construites avec les managers, 600 candidatures traitées, délai de retour aux candidats ramené à cinq jours, suivi des indicateurs de recrutement en comité."
+    ],
+    "Paie et déclarations sociales": [
+      "",
+      "Aucune exposition à la paie.",
+      "Notions de paie acquises en formation, jamais appliquées en poste.",
+      "Collecte des éléments variables de paie et transmission au cabinet, sans contrôle des bulletins.",
+      "Préparation et contrôle des éléments variables de 180 bulletins par mois, vérification des bulletins et suivi des déclarations sociales avec le cabinet.",
+      "Préparation, contrôle et clôture de la paie de 420 salariés avec le cabinet : soldes de tout compte, déclaration sociale nominative, reprise des anomalies, taux d'erreur ramené sous 0,3 % des bulletins."
+    ],
+    "Droit du travail": [
+      "",
+      "Aucune notion de droit du travail mentionnée.",
+      "Notions générales vues en formation, sans application professionnelle.",
+      "Application des règles courantes sous le contrôle de la responsable RH : durée du travail, congés, absences.",
+      "Traitement autonome des questions courantes de droit du travail et d'application de la convention collective ; préparation des dossiers disciplinaires avec la direction.",
+      "Veille juridique du service et conduite des procédures sensibles avec l'avocat de l'entreprise : ruptures conventionnelles, inaptitudes, accords d'entreprise, formation des managers aux règles applicables."
+    ],
+    "Outils SIRH et bureautique": [
+      "",
+      "Utilisation du tableur limitée à la saisie.",
+      "Saisie dans un SIRH sans en extraire de données, tableur de base.",
+      "Tenue quotidienne d'un SIRH et production des extractions demandées, tableur intermédiaire.",
+      "Administration fonctionnelle du SIRH : paramétrage des absences, extractions, tableaux de bord mensuels remis à la direction.",
+      "Migration du SIRH de l'entreprise : reprise des données de 420 dossiers, recette fonctionnelle, formation de quinze managers, tableaux de bord automatisés remplaçant six tableurs manuels."
+    ],
+    "Expression écrite en français": [
+      "",
+      "Courriers courts, formulations approximatives.",
+      "Rédaction assistée par des modèles, reformulation difficile hors modèle.",
+      "Rédaction correcte des courriers courants aux salariés à partir de modèles adaptés au cas.",
+      "Rédaction autonome des courriers engageant l'entreprise : notes de service, réponses aux demandes individuelles, comptes rendus de réunion.",
+      "Rédaction et relecture de l'ensemble des écrits du service : notes de service, communications internes, courriers disciplinaires relus par la direction sans correction."
+    ]
+  }
+}

@@ -1,0 +1,66 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2394 >>
+stream
+BT /F1 10 Tf 40 800 Td (Oscar VASSEUR) Tj ET
+BT /F1 10 Tf 40 786 Td (Ingénieur logiciel - Nantes) Tj ET
+BT /F1 10 Tf 40 772 Td (oscar.vasseur@exemple.invalid - 06 39 98 74 31) Tj ET
+BT /F1 10 Tf 40 758 Td (9 ans d'expérience - candidature au poste : Développeur Full Stack) Tj ET
+BT /F1 10 Tf 40 744 Td () Tj ET
+BT /F1 10 Tf 40 730 Td (EXPÉRIENCE PROFESSIONNELLE) Tj ET
+BT /F1 10 Tf 40 716 Td (2024 - 2026 | Norelec, Vannes) Tj ET
+BT /F1 10 Tf 40 702 Td (  Quelques correctifs sur une application React existante, en JavaScript, accompagné par un) Tj ET
+BT /F1 10 Tf 40 688 Td (collègue.) Tj ET
+BT /F1 10 Tf 40 674 Td (2023 - 2024 | Maline Industries, Rennes) Tj ET
+BT /F1 10 Tf 40 660 Td (  Modélisation de schémas PostgreSQL et écriture des migrations sur les périmètres qui) Tj ET
+BT /F1 10 Tf 40 646 Td (m'étaient confiés.) Tj ET
+BT /F1 10 Tf 40 632 Td (2021 - 2023 | Alcyon Services, Angers) Tj ET
+BT /F1 10 Tf 40 618 Td (  Écriture et maintenance des étapes d'intégration continue de mon projet, conteneurisation des) Tj ET
+BT /F1 10 Tf 40 604 Td (services.) Tj ET
+BT /F1 10 Tf 40 590 Td (2018 - 2021 | Alcyon Services, Angers) Tj ET
+BT /F1 10 Tf 40 576 Td (  Lecture de documentation technique en anglais avec l'aide d'un traducteur.) Tj ET
+BT /F1 10 Tf 40 562 Td (2016 - 2018 | Feldspar, Brest) Tj ET
+BT /F1 10 Tf 40 548 Td (  Tests unitaires systématiques avec pytest, exécutés en intégration continue sur chaque) Tj ET
+BT /F1 10 Tf 40 534 Td (demande de fusion.) Tj ET
+BT /F1 10 Tf 40 520 Td (2014 - 2016 | Pontier & Fils, Rennes) Tj ET
+BT /F1 10 Tf 40 506 Td (  Scripts Python d'automatisation pour mon propre usage, et reprise ponctuelle d'un petit) Tj ET
+BT /F1 10 Tf 40 492 Td (service écrit par un collègue.) Tj ET
+BT /F1 10 Tf 40 478 Td () Tj ET
+BT /F1 10 Tf 40 464 Td (FORMATION) Tj ET
+BT /F1 10 Tf 40 450 Td (Licence professionnelle développement web, Le Mans) Tj ET
+BT /F1 10 Tf 40 436 Td () Tj ET
+BT /F1 10 Tf 40 422 Td (COMPÉTENCES) Tj ET
+BT /F1 10 Tf 40 408 Td (Bases de données relationnelles, Tests automatisés, Intégration continue et déploiement) Tj ET
+BT /F1 10 Tf 40 394 Td () Tj ET
+BT /F1 10 Tf 40 380 Td (LANGUES) Tj ET
+BT /F1 10 Tf 40 366 Td (Français langue maternelle, anglais courant.) Tj ET
+BT /F1 10 Tf 40 352 Td () Tj ET
+BT /F1 10 Tf 40 338 Td (DIVERS) Tj ET
+BT /F1 10 Tf 40 324 Td (Participation régulière à des rencontres de développeurs en région.) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000002687 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+2784
+%%EOF

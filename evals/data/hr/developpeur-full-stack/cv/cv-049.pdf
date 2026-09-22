@@ -1,0 +1,65 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2297 >>
+stream
+BT /F1 10 Tf 40 800 Td (Maxime DAURADE) Tj ET
+BT /F1 10 Tf 40 786 Td (Ingénieur logiciel - Brest) Tj ET
+BT /F1 10 Tf 40 772 Td (maxime.daurade@exemple.invalid - 06 39 98 92 70) Tj ET
+BT /F1 10 Tf 40 758 Td (7 ans d'expérience - candidature au poste : Développeur Full Stack) Tj ET
+BT /F1 10 Tf 40 744 Td () Tj ET
+BT /F1 10 Tf 40 730 Td (EXPÉRIENCE PROFESSIONNELLE) Tj ET
+BT /F1 10 Tf 40 716 Td (2025 - 2026 | Groupe Vasseur, Angers) Tj ET
+BT /F1 10 Tf 40 702 Td (  Scripts Python d'automatisation pour mon propre usage, et reprise ponctuelle d'un petit) Tj ET
+BT /F1 10 Tf 40 688 Td (service écrit par un collègue.) Tj ET
+BT /F1 10 Tf 40 674 Td (2024 - 2025 | Keranel, Vannes) Tj ET
+BT /F1 10 Tf 40 660 Td (  Quelques correctifs sur une application React existante, en JavaScript, accompagné par un) Tj ET
+BT /F1 10 Tf 40 646 Td (collègue.) Tj ET
+BT /F1 10 Tf 40 632 Td (2023 - 2024 | Ternova, Tours) Tj ET
+BT /F1 10 Tf 40 618 Td (  Notions de SQL vues en cours, requêtes simples sur une base d'exercice.) Tj ET
+BT /F1 10 Tf 40 604 Td (2020 - 2023 | Sogedim, Nantes) Tj ET
+BT /F1 10 Tf 40 590 Td (  Tests écrits ponctuellement en fin de projet, à la demande du responsable.) Tj ET
+BT /F1 10 Tf 40 576 Td (2018 - 2020 | Maline Industries, Brest) Tj ET
+BT /F1 10 Tf 40 562 Td (  Écriture et maintenance des étapes d'intégration continue de mon projet, conteneurisation des) Tj ET
+BT /F1 10 Tf 40 548 Td (services.) Tj ET
+BT /F1 10 Tf 40 534 Td (2017 - 2018 | Maline Industries, Rennes) Tj ET
+BT /F1 10 Tf 40 520 Td (  Lecture courante de la documentation technique et rédaction des messages de commit et des) Tj ET
+BT /F1 10 Tf 40 506 Td (tickets en anglais.) Tj ET
+BT /F1 10 Tf 40 492 Td () Tj ET
+BT /F1 10 Tf 40 478 Td (FORMATION) Tj ET
+BT /F1 10 Tf 40 464 Td (BUT informatique, Tours, puis alternance de deux ans) Tj ET
+BT /F1 10 Tf 40 450 Td () Tj ET
+BT /F1 10 Tf 40 436 Td (COMPÉTENCES) Tj ET
+BT /F1 10 Tf 40 422 Td (Intégration continue et déploiement, Anglais technique) Tj ET
+BT /F1 10 Tf 40 408 Td () Tj ET
+BT /F1 10 Tf 40 394 Td (LANGUES) Tj ET
+BT /F1 10 Tf 40 380 Td (Français langue maternelle, anglais courant.) Tj ET
+BT /F1 10 Tf 40 366 Td () Tj ET
+BT /F1 10 Tf 40 352 Td (DIVERS) Tj ET
+BT /F1 10 Tf 40 338 Td (Participation régulière à des rencontres de développeurs en région.) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000002590 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+2687
+%%EOF
