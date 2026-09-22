@@ -48,7 +48,7 @@ echo_note = Tool(
 )
 
 echo_agent = AgentDefinition(
-    name="echo",
+    name="core.echo",
     model_alias="sales.route",  # alias léger (ADR-011)
     prompt_name="echo",
     tools=[echo_read, echo_note],

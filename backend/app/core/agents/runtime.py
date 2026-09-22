@@ -154,6 +154,9 @@ def _assistant_message(content: str | None, tool_calls: list[dict[str, Any]]) ->
     }
 
 
+_NON_CONFIRME = "Action non confirmée par l'utilisateur : elle n'a pas été exécutée."
+
+
 def _pending_tool_calls(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Appels d'outils du dernier message assistant restés sans résultat
     (cas d'une reprise après NeedsConfirmation)."""
@@ -216,7 +219,7 @@ async def _handle_tool_calls(
                 tool=tool.name,
                 args=args_dict,
                 trace_id=ctx.trace_id,
-                preview=tool.render_preview(args),
+                preview=await tool.render_preview(args, ctx),
             )
 
         start = time.perf_counter()
@@ -262,14 +265,31 @@ async def run(
     messages: list[dict[str, Any]] = [{"role": "system", "content": prompt_text}]
     messages += [dict(m) for m in history or []]
     new_messages: list[dict[str, Any]] = []
+    tools_by_name = {t.name: t for t in definition.tools}
+    tool_schemas = [t.to_llm_schema() for t in definition.tools] or None
+    tracer = _Tracer(ctx, observer)
+
     if input is not None:
+        # Un tour précédent a pu s'arrêter sur une confirmation jamais donnée
+        # (l'humain refuse, ou ferme l'onglet). L'appel d'outil reste alors sans
+        # résultat dans l'historique. On le clôt AVANT d'ouvrir le nouveau tour,
+        # pour deux raisons : l'API refuse un message assistant porteur de
+        # tool_calls suivi d'autre chose que ses résultats, et sans cela
+        # l'action écartée serait rejouée au tour suivant. Le refus est
+        # persisté : c'est une décision humaine, elle appartient à la trace
+        # d'audit (ADR-009).
+        for call in _pending_tool_calls(messages):
+            if call["id"] in confirmations:
+                continue
+            refus = {"role": "tool", "tool_call_id": call["id"], "content": _NON_CONFIRME}
+            messages.append(refus)
+            new_messages.append(refus)
+            tracer.add("refused", tool=call["name"], summary=_NON_CONFIRME)
+
         user_msg = {"role": "user", "content": input}
         messages.append(user_msg)
         new_messages.append(user_msg)
 
-    tools_by_name = {t.name: t for t in definition.tools}
-    tool_schemas = [t.to_llm_schema() for t in definition.tools] or None
-    tracer = _Tracer(ctx, observer)
     llm_steps = 0
     has_tool_results = False
 

@@ -15,6 +15,7 @@ Règles :
 import asyncio
 import json
 import os
+import re
 import time
 import uuid
 from collections.abc import Sequence
@@ -50,6 +51,14 @@ class StructuredOutputError(LLMError):
     """Sortie JSON toujours invalide après la nouvelle tentative."""
 
 
+# Un nom d'agent journalisé suit UNE convention : `module.fonction`, en
+# minuscules. La page Usage agrège par ce nom ; deux orthographes pour le même
+# agent (`hr_extract` et `hr.extract`) y produisent deux barres pour une seule
+# réalité. La règle est vérifiée à la construction plutôt que relue à
+# l'affichage : une donnée journalisée ne se corrige plus.
+CONVENTION_AGENT = re.compile(r"^[a-z][a-z0-9_]*(\.[a-z0-9_]+)+$")
+
+
 @dataclass(frozen=True)
 class CallContext:
     """Traçabilité d'un appel. `org_id` vient du contexte, jamais du LLM."""
@@ -58,6 +67,13 @@ class CallContext:
     agent: str
     prompt_version: int | None = None
     trace_id: uuid.UUID = field(default_factory=uuid.uuid4)
+
+    def __post_init__(self) -> None:
+        if not CONVENTION_AGENT.match(self.agent):
+            raise ValueError(
+                f"nom d'agent hors convention : {self.agent!r} "
+                "(attendu `module.fonction`, en minuscules)"
+            )
 
 
 @dataclass

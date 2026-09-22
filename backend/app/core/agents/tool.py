@@ -17,7 +17,10 @@ from app.core.agents.context import RequestContext
 
 ToolHandler = Callable[[BaseModel, RequestContext], Awaitable[Any]]
 # Rendu lisible d'une écriture, montré à l'humain avant confirmation (ADR-009).
-ToolPreview = Callable[[BaseModel], str]
+# Asynchrone et contextuel : un aperçu honnête peut devoir interroger le système
+# distant (chercher les homonymes d'un contact avant de le créer, par exemple).
+# Il s'exécute AVANT la confirmation, donc il ne doit jamais rien écrire.
+ToolPreview = Callable[[BaseModel, RequestContext], Awaitable[str]]
 
 
 @dataclass(frozen=True)
@@ -33,8 +36,8 @@ class Tool:
     async def run(self, args: BaseModel, ctx: RequestContext) -> Any:
         return await self.handler(args, ctx)
 
-    def render_preview(self, args: BaseModel) -> str | None:
-        return self.preview(args) if self.preview is not None else None
+    async def render_preview(self, args: BaseModel, ctx: RequestContext) -> str | None:
+        return await self.preview(args, ctx) if self.preview is not None else None
 
     def to_llm_schema(self) -> dict[str, Any]:
         """Déclaration au format outil OpenAI (compris par litellm)."""

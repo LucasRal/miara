@@ -7,6 +7,7 @@ Aucun module ne doit importer `litellm` directement — tout passe par
 from app.core.llm.deps import gateway_dependency
 from app.core.llm.gateway import (
     CallContext,
+    LLMError,
     LLMGateway,
     LLMResult,
     StructuredOutputError,
@@ -17,6 +18,7 @@ from app.core.llm.prompts import load_prompt
 
 __all__ = [
     "CallContext",
+    "LLMError",
     "LLMGateway",
     "LLMResult",
     "StructuredOutputError",

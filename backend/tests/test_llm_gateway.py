@@ -36,7 +36,7 @@ async def test_un_appel_une_ligne_llm_calls(
     """Critère 1 : 1 appel -> 1 ligne llm_calls complète, prompt_version correcte."""
     org_a, _ = two_orgs
     gw = LLMGateway(config=_config("hr.extract", _mock("mock-light", "bonjour")))
-    ctx = CallContext(org_id=org_a, agent="hr_extract", prompt_version=3)
+    ctx = CallContext(org_id=org_a, agent="hr.extract", prompt_version=3)
 
     result = await gw.complete("hr.extract", [{"role": "user", "content": "salut"}], ctx=ctx)
     await gw.flush_logs()
@@ -51,7 +51,7 @@ async def test_un_appel_une_ligne_llm_calls(
     assert len(rows) == 1
     row = rows[0]
     assert row.organization_id == org_a
-    assert row.agent == "hr_extract"
+    assert row.agent == "hr.extract"
     assert row.alias == "hr.extract"
     assert row.model_used == "mock-light"
     assert row.prompt_version == 3
@@ -75,7 +75,7 @@ async def test_primaire_en_echec_repli_utilise(
             fallbacks=[_mock("mock-fallback", "réponse du repli")],
         )
     )
-    ctx = CallContext(org_id=org_a, agent="sales_route")
+    ctx = CallContext(org_id=org_a, agent="sales.route")
 
     result = await gw.complete("sales.route", [{"role": "user", "content": "hi"}], ctx=ctx)
     await gw.flush_logs()
@@ -125,7 +125,7 @@ async def test_json_invalide_puis_nouvelle_tentative_reussie(
     fake = _FakeRouter(["pas du tout du json", '{"score": 7, "verdict": "solide"}'])
     gw._router = fake  # fournisseur scripté
 
-    ctx = CallContext(org_id=org_a, agent="hr_score", prompt_version=1)
+    ctx = CallContext(org_id=org_a, agent="hr.score", prompt_version=1)
     result = await gw.complete(
         "hr.score",
         [{"role": "user", "content": "note ce CV"}],
@@ -160,7 +160,7 @@ async def test_json_toujours_invalide_structured_output_error(
         await gw.complete(
             "hr.score",
             [{"role": "user", "content": "note"}],
-            ctx=CallContext(org_id=org_a, agent="hr_score"),
+            ctx=CallContext(org_id=org_a, agent="hr.score"),
             response_model=_Verdict,
         )
     await gw.flush_logs()
@@ -172,7 +172,7 @@ async def test_alias_inconnu_refuse(two_orgs: tuple[uuid.UUID, uuid.UUID]) -> No
         await gw.complete(
             "gpt-4o",  # un nom de modèle n'est PAS un alias (ADR-011)
             [{"role": "user", "content": "x"}],
-            ctx=CallContext(org_id=two_orgs[0], agent="test"),
+            ctx=CallContext(org_id=two_orgs[0], agent="core.test"),
         )
 
 

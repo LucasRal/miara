@@ -82,7 +82,7 @@ def _make_agent() -> tuple[AgentDefinition, dict[str, int]]:
         return {"stored": args.note}
 
     definition = AgentDefinition(
-        name="echo_test",
+        name="core.echo_test",
         model_alias="sales.route",
         prompt_name="echo",  # vrai prompt versionné du dépôt
         tools=[
@@ -250,10 +250,10 @@ async def test_historique_persiste_et_recharge(
             ],
         },
     ]
-    conv_id = await save_messages(ctx, "echo_test", batch1)
+    conv_id = await save_messages(ctx, "core.echo_test", batch1)
     await save_messages(
         ctx,
-        "echo_test",
+        "core.echo_test",
         [{"role": "tool", "tool_call_id": "w1", "content": '{"stored": "hello"}'}],
         conversation_id=conv_id,
     )
