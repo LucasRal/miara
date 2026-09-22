@@ -30,9 +30,10 @@ celery_app.conf.update(
     timezone="UTC",
     enable_utc=True,
     # Chargé au démarrage du worker PAR NOM (pas d'import Python ici : core
-    # n'importe jamais un module métier) : enregistre toutes les tables dans
-    # Base.metadata pour résoudre les FK inter-modules (voir app/db_registry.py).
-    imports=["app.db_registry"],
+    # n'importe jamais un module métier). Ce point de composition enregistre
+    # les tables (FK inter-modules) ET les tâches des domaines métier — une
+    # tâche non importée n'existe pas pour le worker. Voir app/celery_tasks.py.
+    imports=["app.celery_tasks"],
 )
 
 

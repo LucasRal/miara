@@ -10,6 +10,10 @@ coût/latence par alias et par organisation du mémoire (chap. 8).
 
 `AgentTrace` / `Conversation` / `Message` : traçabilité et historique du
 runtime d'agent (carte runtime, chap. 5 et 8 du mémoire).
+
+`TaskEvent` : une ligne par exécution de tâche Celery, alimentée par les
+signaux du worker. C'est ce qui rend le pipeline asynchrone observable depuis
+l'interface (file de traitement) au lieu de n'exister que dans les logs.
 """
 
 import uuid
@@ -93,6 +97,10 @@ class Conversation(TenantScoped, Base):
         primary_key=True, server_default=text("gen_random_uuid()")
     )
     agent: Mapped[str] = mapped_column(String(100))
+    # Titre choisi par l'utilisateur. Vide par défaut : la liste retombe alors
+    # sur la première question posée. On ne demande jamais au modèle de nommer
+    # un fil (un appel LLM pour une étiquette ne vaut pas son coût, ADR-011).
+    title: Mapped[str | None] = mapped_column(String(200), nullable=True, default=None)
     user_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), index=True
     )
@@ -120,3 +128,41 @@ class Message(TenantScoped, Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=text("now()")
     )
+
+
+class TaskEvent(TenantScoped, Base):
+    """Exécution d'une tâche Celery, vue depuis l'organisation qui l'a demandée.
+
+    Écrite par les signaux du worker (`app.core.task_events`), jamais par le
+    code métier : une tâche n'a pas à penser à se journaliser, et on ne peut
+    pas oublier d'instrumenter une nouvelle tâche.
+
+    `args_json` ne contient QUE les arguments sérialisés de la tâche, c'est-à-
+    dire des identifiants : les tâches du projet ne reçoivent jamais de contenu
+    de CV ni de texte de conversation (contrainte données personnelles). C'est
+    ce qui permet de rejouer une tâche échouée depuis l'écran.
+    """
+
+    __tablename__ = "task_events"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        primary_key=True, server_default=text("gen_random_uuid()")
+    )
+    # Identifiant Celery : unique par exécution, sert de clé de rapprochement
+    # entre le signal de départ et celui d'arrivée.
+    task_id: Mapped[str] = mapped_column(String(64), index=True)
+    name: Mapped[str] = mapped_column(String(120), index=True)
+    queue: Mapped[str | None] = mapped_column(String(30))
+    # started | succeeded | failed
+    status: Mapped[str] = mapped_column(String(20), index=True)
+    args_json: Mapped[list[Any] | None] = mapped_column(JSONB, nullable=True)
+    # Regroupe les tâches d'une même campagne ou d'un même tour d'agent.
+    trace_id: Mapped[uuid.UUID | None] = mapped_column(index=True)
+    started_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=text("now()")
+    )
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    duration_ms: Mapped[int | None]
+    error: Mapped[str | None] = mapped_column(Text())
+    # Nombre de relances demandées depuis l'écran (pas les retries Celery).
+    retried: Mapped[int] = mapped_column(default=0, server_default=text("0"))
