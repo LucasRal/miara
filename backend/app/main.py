@@ -14,7 +14,10 @@ from app.auth.router import router as auth_router
 from app.config import settings
 from app.core.health import check_broker, check_database, check_redis
 from app.core.logging import configure_logging, request_id_middleware
+from app.dashboard import router as dashboard_router
 from app.hr.jobs import router as hr_jobs_router
+from app.hr.runs import router as hr_runs_router
+from app.queue import router as queue_router
 from app.sales.coaching import router as sales_coaching_router
 from app.sales.conversations import router as sales_conversations_router
 from app.sales.integrations import router as integrations_router
@@ -45,7 +48,10 @@ app.include_router(sales_conversations_router, prefix=api_prefix)
 app.include_router(sales_coaching_router, prefix=api_prefix)
 app.include_router(integrations_router, prefix=api_prefix)
 app.include_router(hr_jobs_router, prefix=api_prefix)
+app.include_router(hr_runs_router, prefix=api_prefix)
 app.include_router(usage_router, prefix=api_prefix)
+app.include_router(dashboard_router, prefix=api_prefix)
+app.include_router(queue_router, prefix=api_prefix)
 
 
 @app.get("/health")
