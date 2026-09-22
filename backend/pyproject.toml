@@ -22,6 +22,8 @@ dependencies = [
     "pyyaml>=6.0.3",
     "httpx>=0.28.1",
     "python-multipart>=0.0.32",
+    "pdfplumber>=0.11.10",
+    "python-docx>=1.2.0",
 ]
 
 [dependency-groups]
@@ -31,6 +33,8 @@ dev = [
     "pytest",
     "pytest-asyncio",
     "httpx",
+    "typer>=0.27.2",
+    "matplotlib>=3.11.2",
 ]
 
 [tool.ruff]
@@ -46,7 +50,7 @@ select = ["E", "F", "I", "UP", "B"]
 "alembic/versions/*" = ["E501"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["app"]
+known-first-party = ["app", "evals", "scripts"]
 
 [tool.ruff.lint.flake8-bugbear]
 # FastAPI's DI idiom puts Depends()/Query() in argument defaults on purpose.
@@ -54,7 +58,14 @@ extend-immutable-calls = ["fastapi.Depends", "fastapi.Query"]
 
 [tool.mypy]
 python_version = "3.12"
-packages = ["app"]
+# `evals` vit à la racine du dépôt et importe `app` : les deux racines sont
+# déclarées ici pour que le harnais soit typé comme le reste du code.
+packages = ["app", "evals"]
+# `scripts.bench` (campagne de charge) est vérifié nommément : les autres
+# scripts sont des outils ponctuels, antérieurs, et les inclure en bloc
+# ferait échouer la commande sur du code que cette carte ne touche pas.
+modules = ["scripts.bench"]
+mypy_path = ".."
 ignore_missing_imports = true
 
 # mypy strict sur core/ uniquement (exigence carte INFRA-1).
@@ -64,6 +75,9 @@ strict = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# `..` : le harnais d'évaluation vit à la racine du dépôt (evals/) et ses
+# parties calculatoires sont testées ici, avec le reste du code.
+pythonpath = [".", ".."]
 asyncio_mode = "auto"
 # Une seule boucle pour toute la session : les moteurs asyncpg partagés
 # (app.core.db) ne survivent pas à un changement de boucle entre tests.

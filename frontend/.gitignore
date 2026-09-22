@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Gabarit d'environnement : committé exprès (aucune valeur réelle dedans).
+!.env.local.example

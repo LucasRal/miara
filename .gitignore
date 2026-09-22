@@ -1,0 +1,14 @@
+# Aucun secret dans le dépôt (CLAUDE.md) : tout fichier d'environnement réel
+# est ignoré partout, seuls les gabarits *.env.example sont committés.
+# Les .gitignore de backend/ et frontend/ restent la référence pour le reste.
+*.env
+!*.env.example
+
+# Sorties de compilation du mémoire
+thesis/build/
+thesis/figures/node_modules/
+
+# Journaux bruts des workers d'une campagne de charge (scripts/bench.py) :
+# volumineux, bavards, et sans valeur pour le mémoire — les mesures vivent
+# dans les CSV et le JSON écrits à côté, qui eux sont committés.
+bench/reports/**/worker-*.log

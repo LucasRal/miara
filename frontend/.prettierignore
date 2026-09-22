@@ -1,3 +1,6 @@
 .next
 node_modules
 package-lock.json
+
+# Généré par openapi-typescript (make types) : ne pas reformater.
+src/lib/api-types.ts
