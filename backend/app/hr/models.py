@@ -25,7 +25,7 @@ import uuid
 from datetime import datetime
 from typing import Any
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, text
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -36,10 +36,24 @@ JOB_DRAFT = "draft"  # créée ; grille absente ou seulement suggérée
 JOB_READY = "ready"  # grille validée par le RH : la notation peut démarrer
 JOB_STATUSES = (JOB_DRAFT, JOB_READY)
 
-# Cycle de vie d'une candidature (les suivants appartiennent au pipeline).
+# Cycle de vie d'une candidature.
 CANDIDATE_UPLOADED = "uploaded"
 CANDIDATE_EXTRACTED = "extracted"
+# Document valide mais sans texte (CV scanné) : distinct d'un fichier cassé.
+CANDIDATE_NEEDS_OCR = "needs_ocr"
 CANDIDATE_ERROR = "error"
+
+# Cycle de vie d'une campagne de présélection.
+RUN_QUEUED = "queued"
+RUN_RUNNING = "running"
+RUN_DONE = "done"
+RUN_FAILED = "failed"
+
+# Issue d'une candidature DANS une campagne donnée. Le même CV peut être noté
+# dans une campagne et en échec dans une autre : l'état vit sur la ligne de
+# résultat, pas sur la candidature.
+SCORE_SCORED = "scored"
+SCORE_FAILED = "failed"
 
 
 class Job(TenantScoped, Base):
@@ -62,6 +76,12 @@ class Job(TenantScoped, Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=text("now()")
     )
+    # Archivage plutôt que suppression : une offre qui porte des candidatures
+    # porte aussi l'historique des analyses. On la sort de la liste courante,
+    # on ne l'efface pas.
+    archived_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True, default=None
+    )
 
 
 class Candidate(TenantScoped, Base):
@@ -70,9 +90,7 @@ class Candidate(TenantScoped, Base):
     id: Mapped[uuid.UUID] = mapped_column(
         primary_key=True, server_default=text("gen_random_uuid()")
     )
-    job_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("jobs.id", ondelete="CASCADE"), index=True
-    )
+    job_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("jobs.id", ondelete="CASCADE"), index=True)
     # Chemin RELATIF dans le FileStore ({org}/{job}/{uuid}.pdf). Interne :
     # l'API ne le renvoie jamais (carte [HR] socle, section NE PAS).
     file_path: Mapped[str] = mapped_column(String(300))
@@ -95,9 +113,7 @@ class ScreeningRun(TenantScoped, Base):
     id: Mapped[uuid.UUID] = mapped_column(
         primary_key=True, server_default=text("gen_random_uuid()")
     )
-    job_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("jobs.id", ondelete="CASCADE"), index=True
-    )
+    job_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("jobs.id", ondelete="CASCADE"), index=True)
     status: Mapped[str] = mapped_column(String(20))
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
@@ -110,6 +126,9 @@ class ScreeningRun(TenantScoped, Base):
 
 class CandidateScore(TenantScoped, Base):
     __tablename__ = "candidate_scores"
+    # Une seule ligne par (campagne, candidature) : deux workers qui rejouent
+    # la même tâche ne peuvent pas produire deux notations.
+    __table_args__ = (UniqueConstraint("run_id", "candidate_id"),)
 
     id: Mapped[uuid.UUID] = mapped_column(
         primary_key=True, server_default=text("gen_random_uuid()")
@@ -121,9 +140,13 @@ class CandidateScore(TenantScoped, Base):
         ForeignKey("candidates.id", ondelete="CASCADE"), index=True
     )
     # Détail par critère : note, preuve citée du CV, justification.
-    score_json: Mapped[dict[str, Any]] = mapped_column(JSONB)
-    overall: Mapped[int] = mapped_column(Integer)  # 0-100, pondéré par la grille
+    # Nul quand la candidature a échoué : la ligne existe quand même, c'est
+    # elle qui porte l'issue et le motif (et qui rend le rejeu idempotent).
+    score_json: Mapped[dict[str, Any] | None] = mapped_column(JSONB, nullable=True)
+    overall: Mapped[int | None] = mapped_column(Integer, nullable=True)  # 0-100, pondéré
     rank: Mapped[int | None] = mapped_column(Integer, nullable=True)  # 1 = meilleur
+    status: Mapped[str] = mapped_column(String(20), server_default=text(f"'{SCORE_SCORED}'"))
+    error: Mapped[str | None] = mapped_column(Text(), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=text("now()")
     )

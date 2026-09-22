@@ -15,10 +15,11 @@ grille validée par un humain.
 """
 
 import uuid
+from datetime import UTC, datetime
 from typing import Annotated, Any
 
 import structlog
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from pydantic import BaseModel, Field
 from sqlalchemy import func, select
 
@@ -27,7 +28,14 @@ from app.auth.deps import require_role
 from app.config import settings
 from app.core.llm import LLMGateway, gateway_dependency
 from app.hr.criteria import Criteria, suggest_criteria
-from app.hr.models import CANDIDATE_UPLOADED, JOB_DRAFT, JOB_READY, Candidate, Job
+from app.hr.models import (
+    CANDIDATE_UPLOADED,
+    JOB_DRAFT,
+    JOB_READY,
+    Candidate,
+    Job,
+    ScreeningRun,
+)
 from app.hr.storage import ALLOWED_KINDS, FileStore, get_file_store, sniff_kind
 
 logger = structlog.get_logger(__name__)
@@ -48,7 +56,42 @@ class JobIn(BaseModel):
     description_text: str = Field(min_length=20, max_length=MAX_DESCRIPTION_CHARS)
 
 
-def _job_out(job: Job, candidates: int = 0) -> dict[str, Any]:
+async def _last_runs(ctx: AuthContext, job_ids: list[uuid.UUID]) -> dict[uuid.UUID, dict[str, Any]]:
+    """Dernière campagne de chaque offre, en une seule requête.
+
+    La liste des offres l'affiche pour chaque ligne : une requête par offre
+    ferait N+1 appels pour une information d'en-tête.
+    """
+    if not job_ids:
+        return {}
+    rows = (
+        (
+            await ctx.session.execute(
+                select(ScreeningRun)
+                .where(ScreeningRun.job_id.in_(job_ids))
+                .order_by(ScreeningRun.created_at.desc())
+            )
+        )
+        .scalars()
+        .all()
+    )
+    dernier: dict[uuid.UUID, dict[str, Any]] = {}
+    for run in rows:
+        dernier.setdefault(
+            run.job_id,
+            {
+                "run_id": str(run.id),
+                "status": run.status,
+                "stats": run.stats_json,
+                "created_at": run.created_at.isoformat() if run.created_at else None,
+            },
+        )
+    return dernier
+
+
+def _job_out(
+    job: Job, candidates: int = 0, last_run: dict[str, Any] | None = None
+) -> dict[str, Any]:
     """Représentation publique d'une offre. `file_path` n'apparaît nulle part."""
     grid = job.criteria_json or {}
     return {
@@ -59,7 +102,9 @@ def _job_out(job: Job, candidates: int = 0) -> dict[str, Any]:
         "criteria": grid.get("criteria", []),
         "criteria_prompt_version": job.criteria_prompt_version,
         "candidates": candidates,
+        "last_run": last_run,
         "created_at": job.created_at.isoformat() if job.created_at else None,
+        "archived_at": job.archived_at.isoformat() if job.archived_at else None,
     }
 
 
@@ -115,21 +160,26 @@ async def create_job(body: JobIn, ctx: HRContext) -> dict[str, Any]:
 
 
 @router.get("/jobs")
-async def list_jobs(ctx: HRContext, limit: int = 50) -> list[dict[str, Any]]:
+async def list_jobs(
+    ctx: HRContext,
+    limit: int = 50,
+    archived: Annotated[
+        bool | None,
+        Query(description="false (défaut) : offres actives · true : archivées · null : toutes"),
+    ] = False,
+) -> list[dict[str, Any]]:
     rows = (
         await ctx.session.execute(select(Candidate.job_id, func.count()).group_by(Candidate.job_id))
     ).all()
     counts: dict[uuid.UUID, int] = {job_id: total for job_id, total in rows}
-    jobs = (
-        (
-            await ctx.session.execute(
-                select(Job).order_by(Job.created_at.desc()).limit(min(limit, 200))
-            )
-        )
-        .scalars()
-        .all()
-    )
-    return [_job_out(job, counts.get(job.id, 0)) for job in jobs]
+    requete = select(Job).order_by(Job.created_at.desc()).limit(min(limit, 200))
+    if archived is True:
+        requete = requete.where(Job.archived_at.is_not(None))
+    elif archived is False:
+        requete = requete.where(Job.archived_at.is_(None))
+    jobs = (await ctx.session.execute(requete)).scalars().all()
+    runs = await _last_runs(ctx, [job.id for job in jobs])
+    return [_job_out(job, counts.get(job.id, 0), runs.get(job.id)) for job in jobs]
 
 
 @router.get("/jobs/{job_id}")
@@ -140,7 +190,32 @@ async def get_job(job_id: uuid.UUID, ctx: HRContext) -> dict[str, Any]:
             select(func.count()).select_from(Candidate).where(Candidate.job_id == job_id)
         )
     ).scalar_one()
-    return _job_out(job, total)
+    runs = await _last_runs(ctx, [job.id])
+    return _job_out(job, total, runs.get(job.id))
+
+
+class ArchiveIn(BaseModel):
+    archived: bool
+
+
+@router.patch("/jobs/{job_id}/archive")
+async def archive_job(job_id: uuid.UUID, data: ArchiveIn, ctx: HRContext) -> dict[str, Any]:
+    """Archive ou désarchive une offre.
+
+    Jamais de suppression : les candidatures et les analyses déjà produites
+    restent consultables, l'offre sort seulement de la liste courante.
+    """
+    job = await _get_job(ctx, job_id)
+    job.archived_at = datetime.now(UTC) if data.archived else None
+    await ctx.session.flush()
+    logger.info("job_archived", job_id=str(job_id), archived=data.archived)
+    total = (
+        await ctx.session.execute(
+            select(func.count()).select_from(Candidate).where(Candidate.job_id == job_id)
+        )
+    ).scalar_one()
+    runs = await _last_runs(ctx, [job.id])
+    return _job_out(job, total, runs.get(job.id))
 
 
 @router.post("/jobs/{job_id}/criteria/suggest")
@@ -252,6 +327,26 @@ async def upload_candidates(
         rejected=len(rejected),
     )
     return {"job_id": str(job.id), "accepted": accepted, "rejected": rejected}
+
+
+@router.delete("/jobs/{job_id}/candidates/{candidate_id}", status_code=204)
+async def delete_candidate(
+    job_id: uuid.UUID, candidate_id: uuid.UUID, ctx: HRContext, store: Store
+) -> None:
+    """Retrait d'une candidature : la ligne ET le fichier.
+
+    Un CV est une donnée personnelle : le supprimer de l'écran doit le
+    supprimer du disque. Le fichier part en premier ; si l'effacement échoue,
+    la ligne reste et l'appel remonte l'erreur, plutôt que de laisser un
+    fichier orphelin qu'aucune interface ne sait plus retrouver.
+    """
+    await _get_job(ctx, job_id)
+    candidate = await ctx.session.get(Candidate, candidate_id)
+    if candidate is None or candidate.job_id != job_id:
+        raise HTTPException(status_code=404, detail="Candidature introuvable")
+    store.delete(candidate.file_path)
+    await ctx.session.delete(candidate)
+    logger.info("hr_candidate_deleted", job_id=str(job_id))
 
 
 @router.get("/jobs/{job_id}/candidates")

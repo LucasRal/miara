@@ -30,3 +30,18 @@ aliases:
     primary: anthropic/claude-sonnet-5
     fallbacks:
       - openai/gpt-4o
+
+  hr.calibrate: # fort, JSON : passe comparative sur le top-K (option ADR-007)
+    primary: anthropic/claude-sonnet-5
+    fallbacks:
+      - openai/gpt-4o
+
+  eval.judge: # fort, JSON : juge du harnais d'évaluation (evals/juge.py)
+    # Volontairement distinct des alias métier : le juge ne doit pas changer de
+    # modèle parce qu'on a changé celui d'un agent, sinon deux rapports ne sont
+    # plus comparables. Un juge de la même famille que l'agent jugé se note
+    # aussi plus généreusement : à surveiller au chapitre 8, et c'est pourquoi
+    # un échantillon de ses verdicts est relu à la main.
+    primary: anthropic/claude-sonnet-5
+    fallbacks:
+      - openai/gpt-4o

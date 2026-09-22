@@ -360,3 +360,25 @@ async def test_role_commercial_refuse(
         )
     assert (await client.post("/api/v1/hr/jobs", json=OFFRE)).status_code == 403
     assert (await client.get("/api/v1/hr/jobs")).status_code == 403
+
+
+async def test_archivage_d_une_offre(hr_client: tuple[httpx.AsyncClient, uuid.UUID]) -> None:
+    """Archiver, c'est sortir de la liste courante — jamais effacer."""
+    client, _ = hr_client
+    job_id = (await client.post("/api/v1/hr/jobs", json=OFFRE)).json()["id"]
+
+    assert job_id in [j["id"] for j in (await client.get("/api/v1/hr/jobs")).json()]
+
+    r = await client.patch(f"/api/v1/hr/jobs/{job_id}/archive", json={"archived": True})
+    assert r.status_code == 200 and r.json()["archived_at"] is not None
+
+    # Sortie de la liste par défaut, retrouvable via le filtre.
+    assert job_id not in [j["id"] for j in (await client.get("/api/v1/hr/jobs")).json()]
+    archivees = (await client.get("/api/v1/hr/jobs?archived=true")).json()
+    assert job_id in [j["id"] for j in archivees]
+    # L'offre reste lisible : les candidatures et analyses ne disparaissent pas.
+    assert (await client.get(f"/api/v1/hr/jobs/{job_id}")).status_code == 200
+
+    r = await client.patch(f"/api/v1/hr/jobs/{job_id}/archive", json={"archived": False})
+    assert r.status_code == 200 and r.json()["archived_at"] is None
+    assert job_id in [j["id"] for j in (await client.get("/api/v1/hr/jobs")).json()]

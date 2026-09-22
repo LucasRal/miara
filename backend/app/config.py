@@ -54,6 +54,24 @@ class Settings(BaseSettings):
     # Bornes du dépôt de CV, imposées par la plateforme (carte [HR] socle).
     HR_MAX_UPLOAD_FILES: int = 20
     HR_MAX_FILE_MB: int = 10
+    # Débit LLM par organisation, fenêtre d'une minute, partagé par tous les
+    # workers. 0 = pas de limite (tests et mesures de performance).
+    HR_LLM_CALLS_PER_MINUTE: int = 60
+    # Nombre de CV notés en parallèle, borne appliquée au lancement d'une
+    # campagne. La concurrence réelle reste celle du worker (option -c).
+    HR_SCREENING_CONCURRENCY: int = 8
+    # Passe de calibration comparative sur le top-K (ADR-007, option écartée
+    # par défaut). 0 = désactivée.
+    HR_CALIBRATE_TOP_K: int = 0
+
+    # --- Tableau de bord ---------------------------------------------------
+    # Temps de tri manuel d'un CV, référence du gain affiché. Paramétrable
+    # parce que c'est une HYPOTHÈSE de l'organisation, pas une mesure : elle
+    # doit pouvoir être contestée sans toucher au code (chap. 8, H1).
+    DASHBOARD_MINUTES_PER_CV: int = 6
+    # Durée du cache Redis de l'agrégat. Les requêtes d'agrégation ne doivent
+    # pas être rejouées à chaque affichage (carte, section NE PAS).
+    DASHBOARD_CACHE_SECONDS: int = 60
 
     # --- Agent commercial (ADR-008) ---------------------------------------
     # Budget de jetons du contexte structuré injecté au modèle. Fixé par la
