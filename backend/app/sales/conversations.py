@@ -28,7 +28,7 @@ import structlog
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
-from sqlalchemy import select
+from sqlalchemy import delete, func, select
 
 from app.auth.deps import RequestContext as AuthContext
 from app.auth.deps import require_role
@@ -44,6 +44,9 @@ from app.core.agents import (
 from app.core.llm import LLMGateway, gateway_dependency
 from app.core.models import AgentTrace, Conversation, Message
 from app.sales.agents.assistant import AGENT_NAME, sales_assistant
+from app.sales.crm.factory import get_crm
+from app.sales.crm.port import CRMError
+from app.sales.tools.read import escaper_soql
 
 logger = structlog.get_logger(__name__)
 
@@ -130,6 +133,83 @@ async def _turn(
 
 
 # --- endpoints -----------------------------------------------------------
+
+
+@router.get("/conversations")
+async def list_conversations(ctx: SalesContext, limit: int = 30) -> list[dict[str, Any]]:
+    """Conversations de l'utilisateur courant, la plus récente d'abord.
+
+    Le titre affiché est le premier message humain : on ne demande pas au
+    modèle de nommer les fils (un appel LLM par conversation pour une étiquette
+    ne vaut pas son coût, ADR-011).
+    """
+    premier = (
+        select(
+            Message.conversation_id,
+            func.min(Message.position).label("pos"),
+        )
+        .where(Message.role == "user")
+        .group_by(Message.conversation_id)
+        .subquery()
+    )
+    titres = (
+        select(Message.conversation_id, Message.content)
+        .join(
+            premier,
+            (Message.conversation_id == premier.c.conversation_id)
+            & (Message.position == premier.c.pos),
+        )
+        .subquery()
+    )
+    rows = (
+        await ctx.session.execute(
+            select(Conversation, titres.c.content, func.count(Message.id))
+            .outerjoin(titres, titres.c.conversation_id == Conversation.id)
+            .outerjoin(Message, Message.conversation_id == Conversation.id)
+            .where(Conversation.agent == AGENT_NAME, Conversation.user_id == ctx.user_id)
+            .group_by(Conversation.id, titres.c.content)
+            .order_by(Conversation.created_at.desc())
+            .limit(min(limit, 100))
+        )
+    ).all()
+    return [
+        {
+            "id": str(c.id),
+            "created_at": c.created_at.isoformat(),
+            "title": (c.title or titre or "Nouvelle conversation")[:120],
+            "messages": total,
+        }
+        for c, titre, total in rows
+    ]
+
+
+class TitreIn(BaseModel):
+    title: str = Field(min_length=1, max_length=200)
+
+
+@router.patch("/conversations/{conversation_id}")
+async def rename_conversation(
+    conversation_id: uuid.UUID, body: TitreIn, ctx: SalesContext
+) -> dict[str, Any]:
+    """Renomme un fil. Le titre vient de l'utilisateur, jamais du modèle."""
+    conversation = await _require_conversation(ctx, conversation_id)
+    conversation.title = body.title.strip()
+    await ctx.session.flush()
+    return {"id": str(conversation_id), "title": conversation.title}
+
+
+@router.delete("/conversations/{conversation_id}", status_code=204)
+async def delete_conversation(conversation_id: uuid.UUID, ctx: SalesContext) -> None:
+    """Supprime un fil et ses messages.
+
+    Les traces d'agent et les écritures CRM ne sont PAS supprimées : elles
+    racontent ce qui a été fait dans le CRM, et cet historique ne doit pas
+    disparaître avec une conversation de travail.
+    """
+    conversation = await _require_conversation(ctx, conversation_id)
+    await ctx.session.execute(delete(Message).where(Message.conversation_id == conversation_id))
+    await ctx.session.delete(conversation)
+    await ctx.session.flush()
 
 
 @router.post("/conversations", status_code=201)
@@ -274,3 +354,103 @@ async def post_message_stream(
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
+
+# --------------------------------------------------------------------------
+# Recherche de comptes (saisie assistée)
+# --------------------------------------------------------------------------
+
+
+@router.get("/accounts")
+async def search_accounts(ctx: SalesContext, q: str = "") -> list[dict[str, Any]]:
+    """Comptes de l'org dont le nom contient `q`, pour une saisie assistée.
+
+    Aucun commercial ne connaît par cœur un identifiant Salesforce de 18
+    caractères : l'écran du coach faisait pourtant saisir `001...` à la main.
+    Cet endpoint permet de choisir un compte par son NOM ; l'identifiant reste
+    interne à la requête suivante.
+
+    C'est une lecture plate et bornée, jamais un appel de modèle : `org_id` et
+    credentials viennent du contexte de requête, comme partout ailleurs.
+    """
+    terme = q.strip()
+    if len(terme) < 2:
+        return []
+    try:
+        crm = await get_crm(ctx)
+    except CRMError:
+        return []
+    try:
+        rows = await crm.query(
+            "SELECT Id, Name, Industry FROM Account "
+            f"WHERE Name LIKE '%{escaper_soql(terme)}%' ORDER BY Name LIMIT 10"
+        )
+    except CRMError as exc:
+        logger.warning("sales_accounts_search_failed", error=str(exc))
+        return []
+    finally:
+        await crm.aclose()
+    return [
+        {
+            "id": str(ligne["Id"]),
+            "name": str(ligne.get("Name") or ""),
+            "industry": ligne.get("Industry") or None,
+        }
+        for ligne in rows
+    ]
+
+
+# --------------------------------------------------------------------------
+# Suggestions de l'état vide
+# --------------------------------------------------------------------------
+
+# Repli sans nom propre : vrai pour toute organisation, y compris sans CRM.
+SUGGESTIONS_GENERIQUES = [
+    "Quelles opportunités se ferment ce mois-ci ?",
+    "Quels comptes n'ont eu aucune activité depuis 30 jours ?",
+]
+
+
+@router.get("/suggestions")
+async def suggestions(ctx: SalesContext) -> dict[str, Any]:
+    """Questions proposées dans l'état vide, construites sur les données de l'org.
+
+    Une suggestion qui nomme un compte absent du CRM échoue au premier clic :
+    les noms viennent donc d'une requête SOQL, jamais d'une liste écrite en
+    dur, et jamais d'un appel de modèle (une requête suffit, ADR-011).
+    """
+    try:
+        crm = await get_crm(ctx)
+    except CRMError:
+        return {"connected": False, "suggestions": SUGGESTIONS_GENERIQUES}
+
+    try:
+        # Deux requêtes plates plutôt qu'une jointure `Account.Name` : la
+        # traversée de relation n'est pas portable (le CRM simulé du mode démo
+        # ne la connaît pas), et deux SELECT bornés restent moins chers qu'un
+        # appel de modèle.
+        opportunites = await crm.query(
+            "SELECT Id, AccountId, CloseDate FROM Opportunity "
+            "WHERE IsClosed = false ORDER BY CloseDate ASC LIMIT 20"
+        )
+        comptes = {
+            str(ligne["Id"]): str(ligne.get("Name") or "")
+            for ligne in await crm.query("SELECT Id, Name FROM Account")
+        }
+    except CRMError as exc:
+        logger.warning("sales_suggestions_crm_failed", error=str(exc))
+        return {"connected": True, "suggestions": SUGGESTIONS_GENERIQUES}
+    finally:
+        await crm.aclose()
+
+    noms: list[str] = []
+    for ligne in opportunites:
+        nom = comptes.get(str(ligne.get("AccountId") or ""))
+        if nom and nom not in noms:
+            noms.append(nom)
+        if len(noms) == 2:
+            break
+
+    propositions = [f"Que dois-je savoir avant d'appeler {nom} ?" for nom in noms]
+    propositions.extend(SUGGESTIONS_GENERIQUES[: 3 - len(propositions)])
+    return {"connected": True, "suggestions": propositions}

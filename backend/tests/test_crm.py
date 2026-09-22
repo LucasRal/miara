@@ -283,7 +283,7 @@ async def test_parcours_oauth_callback_stocke_les_jetons_chiffres(
         follow_redirects=False,
     )
     assert r.status_code == 302
-    assert r.headers["location"] == "/?salesforce=connected"
+    assert r.headers["location"] == "/settings?salesforce=connected"
 
     # Rejeu du même state : le verifier a été consommé (GETDEL) -> 400.
     r = await client.get(

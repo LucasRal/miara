@@ -379,3 +379,184 @@ async def test_conversation_d_une_autre_org_est_invisible(
     # Un id inexistant et un id d'une autre org donnent le même résultat : 404.
     assert (await client.get(f"/api/v1/sales/conversations/{uuid.uuid4()}")).status_code == 404
     assert (await client.get(f"/api/v1/sales/conversations/{conversation_id}")).status_code == 200
+
+
+async def test_liste_des_conversations_titre_et_compte(
+    sales_client: tuple[httpx.AsyncClient, uuid.UUID, dict[str, str]],
+    scripted: Callable[..., ScriptedGateway],
+) -> None:
+    """Panneau de gauche de l'écran commercial : fils du commercial, titrés par
+    leur première question, la plus récente d'abord."""
+    client, _, _ = sales_client
+    scripted(Step(content="Rien à signaler."))
+
+    vide = await _new_conversation(client)
+    parlante = await _new_conversation(client)
+    r = await client.post(
+        f"/api/v1/sales/conversations/{parlante}/messages",
+        json={"message": "Prépare mon appel avec TechStart"},
+    )
+    assert r.status_code == 200
+
+    r = await client.get("/api/v1/sales/conversations")
+    assert r.status_code == 200
+    fils = {c["id"]: c for c in r.json()}
+    assert fils[str(parlante)]["title"] == "Prépare mon appel avec TechStart"
+    assert fils[str(parlante)]["messages"] == 2
+    # Un fil sans message garde un titre de repli, jamais « null ».
+    assert fils[str(vide)]["title"] == "Nouvelle conversation"
+    assert fils[str(vide)]["messages"] == 0
+    # Ordre : le plus récent d'abord.
+    assert [c["id"] for c in r.json()][0] == str(parlante)
+
+
+async def test_action_refusee_puis_nouvelle_question(
+    sales_client: tuple[httpx.AsyncClient, uuid.UUID, dict[str, str]],
+    scripted: Callable[..., ScriptedGateway],
+) -> None:
+    """Refuser une action ne doit ni écrire, ni rejouer l'action, ni casser le fil.
+
+    L'appel d'outil laissé sans résultat est clos comme « non confirmé » avant
+    le tour suivant : sans cela l'historique devient invalide (un message
+    assistant porteur de tool_calls suivi d'un message utilisateur) et l'action
+    écartée serait exécutée à la question d'après.
+    """
+    from app.sales.crm.factory import _fakes
+
+    client, org_id, ids = sales_client
+    scripted(
+        # Tour 1 : l'agent propose une écriture, l'humain refuse (aucun appel
+        # de confirmation n'est fait, on enchaîne sur une autre question).
+        Step(
+            tool_calls=[
+                tool_call(
+                    "w1",
+                    "create_task",
+                    subject="Relance",
+                    due_date="2026-10-01",
+                    related_record_id=ids["techstart"],
+                )
+            ]
+        ),
+        # Tour 2 : nouvelle question, réponse directe.
+        Step(content="Aucune tâche créée."),
+    )
+    conversation_id = await _new_conversation(client)
+
+    r = await client.post(
+        f"/api/v1/sales/conversations/{conversation_id}/messages",
+        json={"message": "Crée une tâche de relance pour TechStart"},
+    )
+    assert r.json()["type"] == "needs_confirmation"
+    avant = len(await _fakes[org_id].query("SELECT Id FROM Task"))
+
+    r = await client.post(
+        f"/api/v1/sales/conversations/{conversation_id}/messages",
+        json={"message": "Finalement non. Quelles opportunités sont ouvertes ?"},
+    )
+    assert r.status_code == 200, r.text
+    assert r.json()["type"] == "final"
+    # Rien d'écrit : l'action refusée n'est pas rejouée.
+    assert len(await _fakes[org_id].query("SELECT Id FROM Task")) == avant
+
+    # Le refus est tracé dans l'historique, en face de l'appel resté en attente.
+    detail = (await client.get(f"/api/v1/sales/conversations/{conversation_id}")).json()
+    refus = [m for m in detail["messages"] if m["role"] == "tool" and m["tool_call_id"] == "w1"]
+    assert len(refus) == 1 and "non confirmée" in refus[0]["content"]
+    # Ordre valide : chaque appel d'outil est suivi de son résultat.
+    roles = [m["role"] for m in detail["messages"]]
+    assert roles.index("tool") == roles.index("assistant") + 1
+
+
+async def test_conversation_renommee_puis_supprimee(
+    sales_client: tuple[httpx.AsyncClient, uuid.UUID, dict[str, str]],
+) -> None:
+    """Le titre vient de l'utilisateur ; la suppression emporte les messages."""
+    client, _, _ = sales_client
+    conversation_id = await _new_conversation(client)
+
+    r = await client.patch(
+        f"/api/v1/sales/conversations/{conversation_id}", json={"title": "Renouvellement Edge"}
+    )
+    assert r.status_code == 200 and r.json()["title"] == "Renouvellement Edge"
+    liste = (await client.get("/api/v1/sales/conversations")).json()
+    assert next(c for c in liste if c["id"] == conversation_id)["title"] == "Renouvellement Edge"
+
+    assert (
+        await client.delete(f"/api/v1/sales/conversations/{conversation_id}")
+    ).status_code == 204
+    assert conversation_id not in [
+        c["id"] for c in (await client.get("/api/v1/sales/conversations")).json()
+    ]
+    # Un fil supprimé n'est plus lisible, et il l'est toujours pour le RLS.
+    assert (await client.get(f"/api/v1/sales/conversations/{conversation_id}")).status_code == 404
+
+
+async def test_suggestions_nomment_des_comptes_reels_de_l_org(
+    sales_client: tuple[httpx.AsyncClient, uuid.UUID, dict[str, str]],
+) -> None:
+    """L'état vide ne propose jamais un compte absent du CRM de l'organisation."""
+    client, org_id, _ = sales_client
+    body = (await client.get("/api/v1/sales/suggestions")).json()
+    assert body["connected"] is True
+    assert 1 <= len(body["suggestions"]) <= 3
+    assert all(s.endswith("?") for s in body["suggestions"])
+
+    # Chaque suggestion qui nomme un compte nomme un compte QUI EXISTE dans le
+    # CRM de cette organisation : c'est tout l'objet de la carte (une
+    # suggestion codée en dur échouait au premier clic).
+    from app.sales.crm import FakeCRM
+    from app.sales.crm.factory import _fakes
+
+    crm = _fakes[org_id]
+    assert isinstance(crm, FakeCRM)
+    reels = {
+        str(ligne["Name"])
+        for ligne in await crm.query("SELECT Id, Name FROM Account")
+        if ligne.get("Name")
+    }
+    nommees = [s for s in body["suggestions"] if s.startswith("Que dois-je savoir")]
+    assert nommees, "le jeu de démonstration a des opportunités ouvertes"
+    for suggestion in nommees:
+        compte = suggestion.removeprefix("Que dois-je savoir avant d'appeler ").removesuffix(" ?")
+        assert compte in reels
+
+
+async def test_recherche_de_comptes_par_nom(
+    sales_client: tuple[httpx.AsyncClient, uuid.UUID, dict[str, str]],
+) -> None:
+    """Un compte se trouve par son nom — l'identifiant reste interne.
+
+    L'écran du coach demandait un `001...` de dix-huit caractères tapé à la
+    main. C'est cet endpoint qui le remplace : il rend le nom à montrer ET
+    l'identifiant à envoyer, pour que la sélection reste un geste de
+    l'utilisateur et non une résolution confiée au modèle.
+    """
+    client, org_id, _ = sales_client
+    from app.sales.crm import FakeCRM
+    from app.sales.crm.factory import _fakes
+
+    crm = _fakes[org_id]
+    assert isinstance(crm, FakeCRM)
+    comptes = await crm.query("SELECT Id, Name FROM Account")
+    cible = next(c for c in comptes if c.get("Name"))
+    nom = str(cible["Name"])
+
+    # Un fragment suffit, et la casse est indifférente : personne ne tape le
+    # nom exact d'un compte.
+    r = await client.get(f"/api/v1/sales/accounts?q={nom[:4].lower()}")
+    assert r.status_code == 200
+    trouves = r.json()
+    assert str(cible["Id"]) in [c["id"] for c in trouves]
+    assert all(set(c) == {"id", "name", "industry"} for c in trouves)
+    assert len(trouves) <= 10
+
+    # Sous deux caractères, on n'interroge pas le CRM : la frappe en cours
+    # n'est pas une recherche.
+    assert (await client.get("/api/v1/sales/accounts?q=a")).json() == []
+    assert (await client.get("/api/v1/sales/accounts")).json() == []
+
+    # L'apostrophe est un caractère de nom d'entreprise, pas une fin de
+    # chaîne SOQL : elle est échappée, jamais renvoyée en erreur.
+    r = await client.get("/api/v1/sales/accounts?q=l%27Or%C3%A9al%27")
+    assert r.status_code == 200 and r.json() == []

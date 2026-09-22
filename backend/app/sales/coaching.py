@@ -57,14 +57,14 @@ class CoachRequest(BaseModel):
     )
 
 
-def _pending_write_payload(
-    session_id: uuid.UUID, args: LogCallNoteArgs
+async def _pending_write_payload(
+    session_id: uuid.UUID, args: LogCallNoteArgs, ctx: RequestContext
 ) -> dict[str, Any]:
     """Écriture proposée, telle qu'elle sera montrée à l'humain."""
     return {
         "tool": log_call_note.name,
         "args": args.model_dump(mode="json"),
-        "preview": log_call_note.render_preview(args),
+        "preview": await log_call_note.render_preview(args, ctx),
         "confirm_url": f"/sales/coach/{session_id}/confirm",
     }
 
@@ -121,7 +121,7 @@ async def coach(body: CoachRequest, ctx: CoachContext, gateway: Gateway) -> dict
             summary=feedback.summary_line(),
             outcome=feedback.suggested_next_step,
         )
-        pending = _pending_write_payload(session.id, args)
+        pending = await _pending_write_payload(session.id, args, agent_ctx)
         session.pending_write_json = pending["args"]
 
     logger.info(

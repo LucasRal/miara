@@ -75,9 +75,7 @@ async def test_get_opportunity_par_nom_et_homonymes(
     org_id, ids = seeded_org
     ctx = _ctx(org_id)
 
-    found = await get_opportunity.run(
-        get_opportunity.args_schema(opportunity_name="Licences"), ctx
-    )
+    found = await get_opportunity.run(get_opportunity.args_schema(opportunity_name="Licences"), ctx)
     assert found["id"] == ids["opp_open"] and found["stage"] == "Proposition"
 
     absent = await get_opportunity.run(

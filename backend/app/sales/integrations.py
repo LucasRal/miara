@@ -95,7 +95,7 @@ async def salesforce_callback(
     org_id, user_id, nonce = _read_state(state)
     if error or code is None:
         logger.warning("sf_oauth_denied", org_id=str(org_id), error=error)
-        return RedirectResponse("/?salesforce=error", status_code=302)
+        return RedirectResponse("/settings?salesforce=error", status_code=302)
 
     # GETDEL : le state ne peut servir qu'une fois (et le verifier PKCE ne
     # transite jamais par le navigateur).
@@ -106,14 +106,14 @@ async def salesforce_callback(
     try:
         tokens = await salesforce.exchange_code(code, str(verifier))
     except CRMAuthError:
-        return RedirectResponse("/?salesforce=error", status_code=302)
+        return RedirectResponse("/settings?salesforce=error", status_code=302)
 
     refresh_token = tokens.get("refresh_token")
     if not refresh_token:
         # Connected App sans scope refresh_token/offline_access : connexion
         # inutilisable (le jeton d'accès expirerait sans recours).
         logger.warning("sf_oauth_no_refresh_token", org_id=str(org_id))
-        return RedirectResponse("/?salesforce=error", status_code=302)
+        return RedirectResponse("/settings?salesforce=error", status_code=302)
 
     credentials = {
         "access_token": str(tokens["access_token"]),
@@ -140,7 +140,7 @@ async def salesforce_callback(
             existing.instance_url = credentials["instance_url"]
 
     logger.info("sf_connected", org_id=str(org_id), instance_url=credentials["instance_url"])
-    return RedirectResponse("/?salesforce=connected", status_code=302)
+    return RedirectResponse("/settings?salesforce=connected", status_code=302)
 
 
 @router.post("/salesforce/disconnect")

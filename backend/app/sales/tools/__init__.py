@@ -10,6 +10,9 @@ from app.sales.tools.read import (
 )
 from app.sales.tools.write import (
     WRITE_TOOLS,
+    create_account,
+    create_contact,
+    create_opportunity,
     create_task,
     log_call_note,
     update_opportunity_stage,
@@ -18,6 +21,9 @@ from app.sales.tools.write import (
 __all__ = [
     "READ_TOOLS",
     "WRITE_TOOLS",
+    "create_account",
+    "create_contact",
+    "create_opportunity",
     "create_task",
     "find_account",
     "find_contact",

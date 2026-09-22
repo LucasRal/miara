@@ -16,11 +16,17 @@ from app.sales.crm.factory import _fakes
 from app.sales.models import CrmWrite
 from app.sales.tools import (
     WRITE_TOOLS,
+    create_account,
+    create_contact,
+    create_opportunity,
     create_task,
     log_call_note,
     update_opportunity_stage,
 )
 from app.sales.tools.write import (
+    CreateAccountArgs,
+    CreateContactArgs,
+    CreateOpportunityArgs,
     CreateTaskArgs,
     LogCallNoteArgs,
     UpdateOpportunityStageArgs,
@@ -75,7 +81,7 @@ async def test_appel_non_confirme_n_ecrit_rien(
     """Critère 1 : sans confirmation → NeedsConfirmation, aucune écriture."""
     org_id, ids = seeded_org
     agent = AgentDefinition(
-        name="sales_write_test",
+        name="sales.write_test",
         model_alias="sales.route",
         prompt_name="echo",
         tools=[create_task],
@@ -206,10 +212,209 @@ async def test_schemas_et_previews_des_outils_ecriture() -> None:
         assert schema["function"]["name"] == tool.name
         assert tool.preview is not None  # rendu de confirmation obligatoire
 
-    preview = create_task.render_preview(
+    preview = await create_task.render_preview(
         CreateTaskArgs(
             subject="Relance TechStart", due_date="2026-09-08", related_record_id="006xx"
-        )
+        ),
+        _ctx(uuid.uuid4()),
     )
     assert preview is not None
     assert "Relance TechStart" in preview and "08/09/2026" in preview
+
+
+# --- créations CRM (contact, compte, opportunité) ------------------------
+
+
+async def test_creation_contact_exige_une_confirmation(
+    seeded_org: tuple[uuid.UUID, dict[str, str]],
+    admin_sessions: async_sessionmaker[AsyncSession],
+) -> None:
+    """Créer un contact est une écriture : la boucle s'arrête avant d'écrire,
+    et l'aperçu montre déjà les homonymes présents dans le CRM."""
+    org_id, _ = seeded_org
+    agent = AgentDefinition(
+        name="sales.write_test",
+        model_alias="sales.route",
+        prompt_name="echo",
+        tools=[create_contact],
+    )
+    gw = _WriteGateway(
+        "create_contact",
+        {"last_name": "Razafy", "first_name": "Hanta", "title": "Directrice des achats"},
+    )
+    before = len(await _fakes[org_id].query("SELECT Id FROM Contact"))
+    result = await run(agent, "Crée le contact Hanta Razafy.", _ctx(org_id), gateway=gw)
+
+    assert isinstance(result, NeedsConfirmation)
+    assert result.tool == "create_contact"
+    assert result.preview is not None
+    # L'homonyme déjà présent est nommé, avec de quoi le reconnaître. On vise
+    # l'e-mail et l'id : ils ne viennent que du CRM, jamais des arguments, donc
+    # l'assertion échouerait si la recherche d'homonymes ne tournait pas.
+    assert "Contacts déjà présents portant ce nom :" in result.preview
+    assert "h.razafy@techstart.example" in result.preview
+    razafy = (await _fakes[org_id].query("SELECT Id FROM Contact"))[0]["Id"]
+    assert razafy in result.preview
+    # Rien n'a été créé, rien n'a été tenté.
+    assert len(await _fakes[org_id].query("SELECT Id FROM Contact")) == before
+    assert await _crm_writes_count(admin_sessions, org_id) == 0
+
+
+async def test_apercu_compte_montre_les_homonymes(
+    seeded_org: tuple[uuid.UUID, dict[str, str]],
+) -> None:
+    """Le garde-fou anti-doublon informe, il ne bloque pas : l'aperçu liste les
+    comptes proches et la création reste possible après confirmation."""
+    org_id, _ = seeded_org
+    preview = await create_account.render_preview(
+        CreateAccountArgs(name="TechStart", industry="Logiciel"),
+        _ctx(org_id),
+    )
+    assert preview is not None
+    assert "Créer le compte « TechStart »" in preview
+    assert "TechStart SAS" in preview
+
+
+async def test_apercu_dit_explicitement_quand_il_n_y_a_pas_d_homonyme(
+    seeded_org: tuple[uuid.UUID, dict[str, str]],
+) -> None:
+    """Un aperçu muet laisserait croire que la recherche n'a pas eu lieu."""
+    org_id, _ = seeded_org
+    preview = await create_contact.render_preview(
+        CreateContactArgs(last_name="Rakotobe", first_name="Naina"),
+        _ctx(org_id),
+    )
+    assert preview is not None
+    assert "Aucun enregistrement proche trouvé." in preview
+
+
+async def test_apercu_opportunite_liste_celles_du_compte(
+    seeded_org: tuple[uuid.UUID, dict[str, str]],
+) -> None:
+    org_id, ids = seeded_org
+    preview = await create_opportunity.render_preview(
+        CreateOpportunityArgs(
+            name="TechStart - Licences 2027",
+            account_id=ids["techstart"],
+            stage="Proposition",
+            close_date="2027-03-31",
+            amount=52000,
+        ),
+        _ctx(org_id),
+    )
+    assert preview is not None
+    assert "clôture au 31/03/2027, montant 52 000" in preview
+    assert "TechStart - Licences 2026" in preview  # l'opportunité déjà ouverte
+
+
+async def test_creation_contact_rejouee_ne_duplique_pas(
+    seeded_org: tuple[uuid.UUID, dict[str, str]],
+    admin_sessions: async_sessionmaker[AsyncSession],
+) -> None:
+    """Une confirmation rejouée (double clic, reprise réseau) ne crée qu'un
+    contact, et une seule ligne d'audit."""
+    org_id, ids = seeded_org
+    ctx = _ctx(org_id, call_id="ct1")
+    args = CreateContactArgs(
+        last_name="Rakotobe",
+        first_name="Naina",
+        account_id=ids["techstart"],
+        email="n.rakotobe@techstart.example",
+    )
+    before = len(await _fakes[org_id].query("SELECT Id FROM Contact"))
+
+    first = await create_contact.run(args, ctx)
+    second = await create_contact.run(args, ctx)
+
+    assert first["status"] == "created"
+    assert second == first
+    assert len(await _fakes[org_id].query("SELECT Id FROM Contact")) - before == 1
+    contact = await _fakes[org_id].get("Contact", first["sf_record_id"])
+    assert contact["LastName"] == "Rakotobe" and contact["AccountId"] == ids["techstart"]
+    assert await _crm_writes_count(admin_sessions, org_id) == 1
+
+
+async def test_creation_compte_ecrit_et_trace(
+    seeded_org: tuple[uuid.UUID, dict[str, str]],
+    admin_sessions: async_sessionmaker[AsyncSession],
+) -> None:
+    org_id, _ = seeded_org
+    result = await create_account.run(
+        CreateAccountArgs(name="Initech SARL", industry="Conseil", website="initech.example"),
+        _ctx(org_id, call_id="ca1"),
+    )
+    compte = await _fakes[org_id].get("Account", result["sf_record_id"])
+    assert compte["Name"] == "Initech SARL" and compte["Industry"] == "Conseil"
+    async with admin_sessions() as s:
+        row = (
+            await s.execute(select(CrmWrite).where(CrmWrite.organization_id == org_id))
+        ).scalar_one()
+    assert row.tool == "create_account" and row.status == "created"
+
+
+async def test_creation_opportunite_valide_ecrit(
+    seeded_org: tuple[uuid.UUID, dict[str, str]],
+    admin_sessions: async_sessionmaker[AsyncSession],
+) -> None:
+    """À la création, montant et date de clôture sont légitimes : ce sont des
+    valeurs de départ, pas la réécriture d'un engagement existant (ADR-009)."""
+    org_id, ids = seeded_org
+    result = await create_opportunity.run(
+        CreateOpportunityArgs(
+            name="TechStart - Licences 2027",
+            account_id=ids["techstart"],
+            stage="Proposition",
+            close_date="2027-03-31",
+            amount=52000,
+        ),
+        _ctx(org_id, call_id="co1"),
+    )
+    opp = await _fakes[org_id].get("Opportunity", result["sf_record_id"])
+    assert opp["StageName"] == "Proposition" and opp["CloseDate"] == "2027-03-31"
+    assert opp["Amount"] == 52000 and opp["AccountId"] == ids["techstart"]
+    assert await _crm_writes_count(admin_sessions, org_id) == 1
+
+
+async def test_creation_opportunite_etape_inactive_refusee(
+    seeded_org: tuple[uuid.UUID, dict[str, str]],
+    admin_sessions: async_sessionmaker[AsyncSession],
+) -> None:
+    org_id, ids = seeded_org
+    before = len(await _fakes[org_id].query("SELECT Id FROM Opportunity"))
+
+    result = await create_opportunity.run(
+        CreateOpportunityArgs(
+            name="TechStart - Licences 2027",
+            account_id=ids["techstart"],
+            stage="Inexistante",
+            close_date="2027-03-31",
+        ),
+        _ctx(org_id, call_id="co2"),
+    )
+
+    assert "error" in result and "Inexistante" in result["error"]
+    assert len(await _fakes[org_id].query("SELECT Id FROM Opportunity")) == before
+    assert await _crm_writes_count(admin_sessions, org_id) == 0
+
+
+async def test_creation_opportunite_date_mal_formee_refusee(
+    seeded_org: tuple[uuid.UUID, dict[str, str]],
+    admin_sessions: async_sessionmaker[AsyncSession],
+) -> None:
+    """La date est refusée AVANT l'appel au CRM : ni écriture, ni tentative."""
+    org_id, ids = seeded_org
+    before = len(await _fakes[org_id].query("SELECT Id FROM Opportunity"))
+
+    result = await create_opportunity.run(
+        CreateOpportunityArgs(
+            name="TechStart - Licences 2027",
+            account_id=ids["techstart"],
+            stage="Proposition",
+            close_date="31/03/2027",
+        ),
+        _ctx(org_id, call_id="co3"),
+    )
+
+    assert "error" in result and "AAAA-MM-JJ" in result["error"]
+    assert len(await _fakes[org_id].query("SELECT Id FROM Opportunity")) == before
+    assert await _crm_writes_count(admin_sessions, org_id) == 0

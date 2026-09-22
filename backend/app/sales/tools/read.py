@@ -42,7 +42,7 @@ _ACCOUNT_FIELDS = "Id, Name, Industry, Phone, Website"
 _OPPORTUNITY_FIELDS = "Id, Name, StageName, Amount, CloseDate, AccountId"
 
 
-def _esc(value: str) -> str:
+def escaper_soql(value: str) -> str:
     """Échappe une valeur pour l'interpoler sans risque dans un littéral SOQL."""
     return value.replace("\\", "\\\\").replace("'", "\\'")
 
@@ -111,10 +111,11 @@ async def _find_contact(args: BaseModel, ctx: RequestContext) -> list[dict[str, 
     async def produce() -> list[dict[str, Any]]:
         crm = await get_crm(ctx)
         try:
-            conditions = [f"Name LIKE '%{_esc(args.name)}%'"]
+            conditions = [f"Name LIKE '%{escaper_soql(args.name)}%'"]
             if args.account_name:
+                motif = escaper_soql(args.account_name)
                 accounts = await crm.query(
-                    f"SELECT Id FROM Account WHERE Name LIKE '%{_esc(args.account_name)}%' LIMIT 1"
+                    f"SELECT Id FROM Account WHERE Name LIKE '%{motif}%' LIMIT 1"
                 )
                 if not accounts:
                     return []
@@ -138,7 +139,7 @@ async def _find_account(args: BaseModel, ctx: RequestContext) -> list[dict[str, 
         try:
             rows = await crm.query(
                 "SELECT Id, Name, Industry, Phone, Website FROM Account "
-                f"WHERE Name LIKE '%{_esc(args.name)}%' LIMIT {MAX_MATCHES}"
+                f"WHERE Name LIKE '%{escaper_soql(args.name)}%' LIMIT {MAX_MATCHES}"
             )
         finally:
             await crm.aclose()
@@ -160,7 +161,7 @@ async def _get_opportunity(args: BaseModel, ctx: RequestContext) -> dict[str, An
             name = args.opportunity_name or ""
             rows = await crm.query(
                 f"SELECT {_OPPORTUNITY_FIELDS} FROM Opportunity "
-                f"WHERE Name LIKE '%{_esc(name)}%' LIMIT {MAX_MATCHES}"
+                f"WHERE Name LIKE '%{escaper_soql(name)}%' LIMIT {MAX_MATCHES}"
             )
         finally:
             await crm.aclose()
@@ -183,7 +184,7 @@ async def _activities_since(
     crm: CRMPort, where_id_field: str, record_id: str, days: int
 ) -> list[ActivityInfo]:
     cutoff = (date.today() - timedelta(days=days)).isoformat()
-    base = f"WHERE {where_id_field} = '{_esc(record_id)}' AND ActivityDate >= {cutoff}"
+    base = f"WHERE {where_id_field} = '{escaper_soql(record_id)}' AND ActivityDate >= {cutoff}"
     tasks, events = await asyncio.gather(
         crm.query(
             f"SELECT Id, Subject, ActivityDate, Status FROM Task {base} "
@@ -226,7 +227,7 @@ async def _resolve_account(
         return (None, args.account_id), None
     name = args.account_name or ""
     rows = await crm.query(
-        f"SELECT {_ACCOUNT_FIELDS} FROM Account WHERE Name LIKE '%{_esc(name)}%' LIMIT 2"
+        f"SELECT {_ACCOUNT_FIELDS} FROM Account WHERE Name LIKE '%{escaper_soql(name)}%' LIMIT 2"
     )
     if not rows:
         return None, {"error": f"Aucun compte ne correspond à « {name} »."}
@@ -253,7 +254,7 @@ async def fetch_account_context(args: GetAccountContextArgs, ctx: RequestContext
                 return error
             assert resolved is not None
             account_row, account_id = resolved
-            aid = _esc(account_id)
+            aid = escaper_soql(account_id)
 
             async def account_fiche() -> dict[str, Any]:
                 # Déjà en main si le compte a été résolu par son nom.
