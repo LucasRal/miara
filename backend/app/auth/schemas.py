@@ -41,6 +41,19 @@ class MembershipOut(BaseModel):
     role: MembershipRole
 
 
+class RoleUpdateIn(BaseModel):
+    role: MembershipRole
+
+
+class MemberOut(BaseModel):
+    """Un membre de l'organisation courante (page Paramètres)."""
+
+    user_id: uuid.UUID
+    email: str
+    full_name: str
+    role: MembershipRole
+
+
 class MeOut(BaseModel):
     id: uuid.UUID
     email: str

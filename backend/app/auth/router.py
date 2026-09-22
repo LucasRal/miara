@@ -13,16 +13,18 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 
 from app.auth import service, tokens
-from app.auth.deps import Claims, RequestContext, require_role
+from app.auth.deps import Claims, Context, RequestContext, require_role
 from app.auth.models import MembershipRole
 from app.auth.schemas import (
     InviteIn,
     LoginIn,
+    MemberOut,
     MembershipOut,
     MeOut,
     OrgCreateIn,
     OrgOut,
     RegisterIn,
+    RoleUpdateIn,
 )
 from app.auth.security import create_access_token
 from app.config import settings
@@ -152,3 +154,43 @@ async def invite(
     if org_id != ctx.org_id:
         raise HTTPException(status_code=403, detail="Organisation hors contexte actif")
     return await service.invite_member(ctx.session, org_id, data.email, data.role)
+
+
+@router.get("/orgs/{org_id}/members")
+async def list_members(org_id: uuid.UUID, ctx: Context) -> list[MemberOut]:
+    """Membres de l'organisation ACTIVE (page Paramètres).
+
+    Lisible par tout membre ; `org_id` d'URL doit correspondre au contexte —
+    c'est le token, pas l'URL, qui décide de l'organisation consultée.
+    """
+    if org_id != ctx.org_id:
+        raise HTTPException(status_code=403, detail="Organisation hors contexte actif")
+    return await service.list_members(ctx.session, org_id)
+
+
+@router.patch("/orgs/{org_id}/members/{user_id}")
+async def update_member_role(
+    org_id: uuid.UUID,
+    user_id: uuid.UUID,
+    data: RoleUpdateIn,
+    ctx: Annotated[RequestContext, Depends(require_role("owner", "admin"))],
+) -> MemberOut:
+    if org_id != ctx.org_id:
+        raise HTTPException(status_code=403, detail="Organisation hors contexte actif")
+    return await service.update_member_role(ctx.session, org_id, ctx.user_id, user_id, data.role)
+
+
+@router.delete("/orgs/{org_id}/members/{user_id}", status_code=204)
+async def remove_member(
+    org_id: uuid.UUID,
+    user_id: uuid.UUID,
+    ctx: Annotated[RequestContext, Depends(require_role("owner", "admin"))],
+) -> None:
+    """Retire un membre de l'organisation active.
+
+    Le rôle est relu à chaque requête : le retrait prend effet immédiatement,
+    y compris pour une session déjà ouverte.
+    """
+    if org_id != ctx.org_id:
+        raise HTTPException(status_code=403, detail="Organisation hors contexte actif")
+    await service.remove_member(ctx.session, org_id, ctx.user_id, user_id)

@@ -13,13 +13,14 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import HTTPException
-from sqlalchemy import select, text
+from sqlalchemy import func, select, text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth import tokens
 from app.auth.models import Membership, MembershipRole, Organization, User
 from app.auth.schemas import (
+    MemberOut,
     MembershipOut,
     MeOut,
     OrgCreateIn,
@@ -194,3 +195,105 @@ async def invite_member(
         organization_slug=org.slug,
         role=role,
     )
+
+
+async def list_members(session: AsyncSession, org_id: uuid.UUID) -> list[MemberOut]:
+    """Membres de l'organisation courante, triés par nom.
+
+    `session` vient du contexte de requête : `tenant_isolation_memberships`
+    borne déjà la lecture à l'org active, la jointure ne fait que rapatrier
+    l'identité (les users ne sont pas tenant-scopés).
+    """
+    rows = (
+        await session.execute(
+            select(User.id, User.email, User.full_name, Membership.role)
+            .join(Membership, Membership.user_id == User.id)
+            .where(Membership.organization_id == org_id)
+            .order_by(User.full_name)
+        )
+    ).all()
+    return [
+        MemberOut(user_id=r.id, email=r.email, full_name=r.full_name, role=r.role) for r in rows
+    ]
+
+
+async def update_member_role(
+    session: AsyncSession,
+    org_id: uuid.UUID,
+    actor_id: uuid.UUID,
+    target_id: uuid.UUID,
+    role: MembershipRole,
+) -> MemberOut:
+    """Change le rôle d'un membre. Deux garde-fous anti-impasse.
+
+    1. On ne modifie pas son propre rôle (un owner ne peut pas se rétrograder
+       et perdre l'accès à cet écran).
+    2. L'organisation garde au moins un owner.
+    """
+    if actor_id == target_id:
+        raise HTTPException(status_code=409, detail="Impossible de modifier son propre rôle")
+
+    membership = await session.get(Membership, (target_id, org_id))
+    if membership is None:
+        raise HTTPException(status_code=404, detail="Membre inconnu")
+
+    if membership.role is MembershipRole.owner and role is not MembershipRole.owner:
+        owners = (
+            await session.execute(
+                select(func.count())
+                .select_from(Membership)
+                .where(
+                    Membership.organization_id == org_id,
+                    Membership.role == MembershipRole.owner,
+                )
+            )
+        ).scalar_one()
+        if owners <= 1:
+            raise HTTPException(
+                status_code=409, detail="L'organisation doit garder au moins un owner"
+            )
+
+    membership.role = role
+    await session.flush()
+    user = await session.get(User, target_id)
+    assert user is not None  # FK memberships.user_id
+    return MemberOut(user_id=user.id, email=user.email, full_name=user.full_name, role=role)
+
+
+async def remove_member(
+    session: AsyncSession,
+    org_id: uuid.UUID,
+    actor_id: uuid.UUID,
+    target_id: uuid.UUID,
+) -> None:
+    """Retire un membre de l'organisation. Mêmes garde-fous que le changement de rôle.
+
+    Retirer quelqu'un qui quitte l'entreprise est la première opération
+    d'administration ; se retirer soi-même, ou retirer le dernier owner, sont
+    deux façons de rendre l'organisation ingérable.
+    """
+    if actor_id == target_id:
+        raise HTTPException(status_code=409, detail="Impossible de se retirer soi-même")
+
+    membership = await session.get(Membership, (target_id, org_id))
+    if membership is None:
+        raise HTTPException(status_code=404, detail="Membre inconnu")
+
+    if membership.role is MembershipRole.owner:
+        owners = (
+            await session.execute(
+                select(func.count())
+                .select_from(Membership)
+                .where(
+                    Membership.organization_id == org_id,
+                    Membership.role == MembershipRole.owner,
+                )
+            )
+        ).scalar_one()
+        if owners <= 1:
+            raise HTTPException(
+                status_code=409, detail="L'organisation doit garder au moins un owner"
+            )
+
+    await session.delete(membership)
+    await session.flush()
