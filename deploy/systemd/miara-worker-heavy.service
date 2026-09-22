@@ -1,0 +1,36 @@
+# Worker Celery, file `heavy` : extraction de texte et scoring LLM des CV.
+# File séparée de `light` pour qu'un lot de 500 CV n'affame pas le CRM (ADR-006).
+[Unit]
+Description=Miara Celery worker (queue heavy)
+Documentation=file:///srv/miara/deploy/README.md
+After=network-online.target postgresql.service rabbitmq-server.service redis-server.service
+Wants=network-online.target
+[Service]
+Type=exec
+User=miara
+Group=miara
+WorkingDirectory=/srv/miara/backend
+EnvironmentFile=/etc/miara/.env
+# `%%h` : systemd remplace %h par le répertoire home ; le doubler passe un
+# littéral `%h` à Celery, qui y met le nom d'hôte (identité du worker).
+ExecStart=/srv/miara/backend/.venv/bin/celery -A app.core.celery_app worker \
+    -Q heavy \
+    -c ${WORKER_HEAVY_CONCURRENCY} \
+    -n heavy@%%h \
+    --loglevel info
+Restart=always
+RestartSec=10
+# Les tâches sont en acks_late : on laisse le worker finir le CV en cours
+# plutôt que de le tuer, sinon le message repart en file et on repaie un
+# appel LLM (les tâches sont idempotentes, mais pas gratuites).
+KillSignal=SIGTERM
+TimeoutStopSec=300
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=miara-worker-heavy
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ReadWritePaths=/var/lib/miara /var/log/miara
+[Install]
+WantedBy=multi-user.target

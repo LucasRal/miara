@@ -1,0 +1,51 @@
+# API FastAPI (uvicorn) - port fixe 8010, en loopback : seul nginx l'expose.
+# Installé dans /etc/systemd/system/ par scripts/setup_vps.sh.
+[Unit]
+Description=Miara API (FastAPI/uvicorn)
+Documentation=file:///srv/miara/deploy/README.md
+# L'API vérifie BDD, broker et Redis dans /health : la démarrer après eux
+# évite une rafale de redémarrages au boot.
+After=network-online.target postgresql.service rabbitmq-server.service redis-server.service
+Wants=network-online.target
+# Bornes de la boucle de redémarrage : 10 tentatives par minute au lieu des 5
+# en 10 s par défaut. Avec RestartSec=2, le défaut condamnerait le service au
+# bout de 10 s de panne passagère (broker qui redémarre, par exemple).
+StartLimitIntervalSec=60
+StartLimitBurst=10
+[Service]
+Type=exec
+User=miara
+Group=miara
+WorkingDirectory=/srv/miara/backend
+# Un seul fichier de secrets, en 640 root:miara (cf. deploy/.env.example).
+EnvironmentFile=/etc/miara/.env
+# On appelle le binaire du venv, pas `uv run` : au démarrage d'un service on
+# ne veut ni résolution de dépendances ni accès réseau. C'est deploy.sh qui
+# synchronise le venv (uv sync --frozen) avant le restart.
+# --proxy-headers + --forwarded-allow-ips : l'IP client et le schéma https
+# viennent de nginx (X-Forwarded-*), sinon les liens générés seraient en http.
+ExecStart=/srv/miara/backend/.venv/bin/uvicorn app.main:app \
+    --host 127.0.0.1 \
+    --port 8010 \
+    --workers ${API_WORKERS} \
+    --proxy-headers \
+    --forwarded-allow-ips 127.0.0.1
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+# 2 s et non 5 : l'import de l'application (litellm, sqlalchemy) prend déjà
+# ~6 s, et le critère de la carte est un retour en service en moins de 10 s
+# après un `systemctl kill`. Mesuré à 11,7 s avec RestartSec=5, 8,3 s avec 2.
+RestartSec=2
+# Journaux structurés (structlog JSON) envoyés à journald, préfixés miara-api.
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=miara-api
+# Durcissement raisonnable : le service n'écrit que dans le stockage RH.
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+ReadWritePaths=/var/lib/miara /var/log/miara
+[Install]
+WantedBy=multi-user.target

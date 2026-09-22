@@ -1,0 +1,28 @@
+# Frontend Next.js en mode production (`next start`) - port fixe 3010,
+# en loopback : c'est nginx qui l'expose sur 80/443.
+[Unit]
+Description=Miara web (Next.js)
+Documentation=file:///srv/miara/deploy/README.md
+# Pas de dépendance dure à l'API : le front doit pouvoir servir une page
+# d'erreur propre si le backend est en train de redémarrer.
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=exec
+User=miara
+Group=miara
+WorkingDirectory=/srv/miara/frontend
+EnvironmentFile=/etc/miara/.env
+# `npm run start` = `next start -p 3010` (port figé dans package.json).
+ExecStart=/usr/bin/npm run start
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=miara-web
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ReadWritePaths=/var/log/miara
+[Install]
+WantedBy=multi-user.target

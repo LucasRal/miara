@@ -1,0 +1,15 @@
+# Rotation des journaux applicatifs écrits sur disque (sauvegardes, déploiements).
+# Les journaux de l'API, des workers et du front ne sont PAS ici : ils vont à
+# journald, dont la rétention est réglée dans deploy/journald/miara.conf.
+# Installé dans /etc/logrotate.d/miara par scripts/setup_vps.sh.
+/var/log/miara/*.log {
+    daily
+    rotate 14
+    missingok
+    notifempty
+    compress
+    delaycompress
+    copytruncate
+    create 0640 root miara
+    su root miara
+}

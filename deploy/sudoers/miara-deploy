@@ -1,0 +1,30 @@
+# Droits minimaux pour que l'utilisateur `miara` puisse dérouler un déploiement
+# sans être root : redémarrer/consulter SES services, et rien d'autre.
+# Installé dans /etc/sudoers.d/miara-deploy (mode 0440) par setup_vps.sh,
+# après validation par `visudo -cf` : un fichier sudoers invalide casse sudo
+# pour tout le monde.
+#
+# Les noms d'unités sont écrits un par un, SANS joker : sudo refuse désormais
+# les caractères génériques dans les arguments d'une commande (« wildcards are
+# not allowed in command arguments »), et un `miara-*` autoriserait de toute
+# façon plus que les quatre services du projet.
+Cmnd_Alias MIARA_RESTART = /usr/bin/systemctl restart miara-api miara-worker-heavy miara-worker-light miara-web, \
+                           /usr/bin/systemctl restart miara-api, \
+                           /usr/bin/systemctl restart miara-worker-heavy, \
+                           /usr/bin/systemctl restart miara-worker-light, \
+                           /usr/bin/systemctl restart miara-web
+
+Cmnd_Alias MIARA_INSPECT = /usr/bin/systemctl status miara-api, \
+                           /usr/bin/systemctl status miara-worker-heavy, \
+                           /usr/bin/systemctl status miara-worker-light, \
+                           /usr/bin/systemctl status miara-web, \
+                           /usr/bin/systemctl is-active miara-api, \
+                           /usr/bin/systemctl is-active miara-worker-heavy, \
+                           /usr/bin/systemctl is-active miara-worker-light, \
+                           /usr/bin/systemctl is-active miara-web, \
+                           /usr/bin/systemctl show miara-api, \
+                           /usr/bin/systemctl show miara-worker-heavy, \
+                           /usr/bin/systemctl show miara-worker-light, \
+                           /usr/bin/systemctl show miara-web
+
+miara ALL=(root) NOPASSWD: MIARA_RESTART, MIARA_INSPECT

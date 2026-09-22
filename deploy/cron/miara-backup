@@ -1,0 +1,11 @@
+# Sauvegarde quotidienne de la base Miara (rotation 14 jours dans le script).
+# Installé dans /etc/cron.d/miara-backup par scripts/setup_vps.sh.
+# Lancé en root : le script redescend ensuite sur l'utilisateur `postgres`
+# (authentification peer), ce qui évite de stocker un mot de passe pour la
+# sauvegarde. Fichier de conf facultatif : /etc/miara/backup.env.
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+MAILTO=""
+# 03h17 UTC : creux d'activité, et décalé des minutes rondes où tout le monde
+# lance ses tâches (moins de contention disque sur un VPS mutualisé).
+17 3 * * * root /srv/miara/scripts/backup_db.sh >> /var/log/miara/backup.log 2>&1

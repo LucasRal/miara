@@ -1,0 +1,31 @@
+# Worker Celery, file `light` : synchronisation CRM et notifications.
+# Concurrence basse : ces tâches sont courtes et surtout en attente réseau.
+[Unit]
+Description=Miara Celery worker (queue light)
+Documentation=file:///srv/miara/deploy/README.md
+After=network-online.target postgresql.service rabbitmq-server.service redis-server.service
+Wants=network-online.target
+[Service]
+Type=exec
+User=miara
+Group=miara
+WorkingDirectory=/srv/miara/backend
+EnvironmentFile=/etc/miara/.env
+ExecStart=/srv/miara/backend/.venv/bin/celery -A app.core.celery_app worker \
+    -Q light \
+    -c ${WORKER_LIGHT_CONCURRENCY} \
+    -n light@%%h \
+    --loglevel info
+Restart=always
+RestartSec=10
+KillSignal=SIGTERM
+TimeoutStopSec=60
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=miara-worker-light
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ReadWritePaths=/var/lib/miara /var/log/miara
+[Install]
+WantedBy=multi-user.target
