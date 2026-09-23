@@ -1,20 +1,27 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+import { Unplug } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 import { api, type Integration, type Role } from "@/lib/api";
+import { notifierErreur, notifierSucces } from "@/lib/notifications";
 
 /**
  * Connexion Salesforce de l'organisation (carte SALES OAuth).
  * « Connecter » est une navigation complète (pas un fetch) : le backend
  * redirige vers le consentement Salesforce, qui revient sur /callback.
  */
-export function SalesforceCard({ role }: { role: Role | null }) {
+export function SalesforceCard({ role, orgName }: { role: Role | null; orgName: string }) {
   const [integrations, setIntegrations] = useState<Integration[] | null>(null);
   const [notice, setNotice] = useState<"connected" | "error" | null>(null);
+  const [aDeconnecter, setADeconnecter] = useState(false);
+  const boutonRef = useRef<HTMLButtonElement>(null);
 
   const load = useCallback(async () => {
     try {
@@ -28,12 +35,12 @@ export function SalesforceCard({ role }: { role: Role | null }) {
     // Fetch initial : setState seulement après l'await (jamais synchrone).
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
-    // Retour du flux OAuth : /?salesforce=connected|error (lu hors rendu
-    // pour éviter la contrainte Suspense de useSearchParams).
+    // Retour du flux OAuth : /settings?salesforce=connected|error (lu hors
+    // rendu pour éviter la contrainte Suspense de useSearchParams).
     const status = new URLSearchParams(window.location.search).get("salesforce");
     if (status === "connected" || status === "error") {
       setNotice(status);
-      window.history.replaceState(null, "", "/");
+      window.history.replaceState(null, "", "/settings");
     }
   }, [load]);
 
@@ -41,8 +48,14 @@ export function SalesforceCard({ role }: { role: Role | null }) {
   const canManage = role === "owner" || role === "admin";
 
   async function disconnect() {
-    await api.post("/integrations/salesforce/disconnect");
+    try {
+      await api.post("/integrations/salesforce/disconnect");
+      notifierSucces("Salesforce déconnecté pour l'organisation.");
+    } catch {
+      notifierErreur("La déconnexion n'a pas abouti. L'intégration est inchangée.");
+    }
     setNotice(null);
+    setADeconnecter(false);
     await load();
   }
 
@@ -51,7 +64,12 @@ export function SalesforceCard({ role }: { role: Role | null }) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Salesforce</CardTitle>
-          {salesforce ? (
+          {/* Tant que l'état n'est pas connu, on n'affirme pas « Non
+              connecté » : c'est faux une fois sur deux, et le badge changeait
+              sous les yeux. */}
+          {integrations === null ? (
+            <Skeleton className="h-6 w-28 rounded-4xl" />
+          ) : salesforce ? (
             <Badge>Connecté</Badge>
           ) : (
             <Badge variant="outline">Non connecté</Badge>
@@ -75,8 +93,16 @@ export function SalesforceCard({ role }: { role: Role | null }) {
         {canManage && (
           <div className="flex gap-2">
             {salesforce ? (
-              <Button variant="outline" size="sm" onClick={() => void disconnect()}>
-                Déconnecter
+              // Destructive, et confirmé : c'est la seule action de cet écran
+              // qui coupe l'agent commercial et le coach pour TOUS les membres.
+              <Button
+                ref={boutonRef}
+                variant="destructive"
+                size="sm"
+                onClick={() => setADeconnecter(true)}
+              >
+                <Unplug aria-hidden />
+                Déconnecter Salesforce
               </Button>
             ) : (
               <Button size="sm" asChild>
@@ -91,6 +117,18 @@ export function SalesforceCard({ role }: { role: Role | null }) {
           </p>
         )}
       </CardContent>
+
+      <ConfirmDialog
+        open={aDeconnecter}
+        onOpenChange={setADeconnecter}
+        title="Déconnecter Salesforce de cette organisation ?"
+        description={`L'agent commercial et le coach ne pourront plus lire ni écrire dans Salesforce pour ${orgName}, pour tous les membres. Reconnecter exige un administrateur Salesforce et un nouveau consentement.`}
+        preview={salesforce?.instance_url}
+        confirmLabel="Déconnecter"
+        cancelLabel="Annuler"
+        retourFocus={boutonRef}
+        onConfirm={disconnect}
+      />
     </Card>
   );
 }
