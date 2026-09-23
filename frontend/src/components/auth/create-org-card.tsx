@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -15,8 +16,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api, ApiError, type Org } from "@/lib/api";
 
-/** Onboarding : l'utilisateur sans organisation en crée une (il en devient owner). */
-export function CreateOrgCard({ onCreated }: { onCreated: () => void }) {
+/**
+ * Onboarding : l'utilisateur sans organisation en crée une (il en devient owner).
+ * Par défaut on rafraîchit le rendu serveur — les cookies réémis par le backend
+ * portent déjà le nouveau contexte (org + rôle owner).
+ */
+export function CreateOrgCard({ onCreated }: { onCreated?: () => void }) {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -27,7 +33,8 @@ export function CreateOrgCard({ onCreated }: { onCreated: () => void }) {
     setPending(true);
     try {
       await api.post<Org>("/orgs", { name });
-      onCreated();
+      if (onCreated) onCreated();
+      else router.refresh();
     } catch (err) {
       setError(
         err instanceof ApiError && err.status === 409
