@@ -162,7 +162,10 @@ export function DataTable<T extends RowData>({
         </ul>
       )}
 
-      <Table label={caption} className={cn(carte && "hidden sm:table")}>
+      {/* `borne` : le tableau défile dans son cadre à partir de `sm`, au lieu
+          d'étirer la page sur mille pixels et d'emporter sa pagination avec
+          lui. Sous `sm`, ce sont les cartes qui s'affichent. */}
+      <Table borne sommet={pageCourante} label={caption} className={cn(carte && "hidden sm:table")}>
         <TableCaption className={cn(!captionVisible && "sr-only")}>{caption}</TableCaption>
         <TableHeader>
           {table.getHeaderGroups().map((groupe) => (
@@ -224,7 +227,11 @@ export function DataTable<T extends RowData>({
       </Table>
 
       {nbPages > 1 && (
-        <div className="flex flex-wrap items-center justify-between gap-2">
+        // Collante : sur la liste en cartes d'un téléphone, la pagination
+        // était à vingt-cinq blocs du premier écran. Elle reste au bas de la
+        // fenêtre tant que la liste est en vue, et redevient une barre
+        // ordinaire dès que tout tient à l'écran.
+        <div className="sticky bottom-0 z-10 flex flex-wrap items-center justify-between gap-2 border-t bg-background py-2 sm:static sm:border-0 sm:py-0">
           <p className="text-xs text-muted-foreground">
             {paginationServeur?.total != null
               ? `${paginationServeur.total} au total · page ${pageCourante + 1} sur ${nbPages}`

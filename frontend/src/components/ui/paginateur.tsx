@@ -63,7 +63,10 @@ export function Paginateur({
   const dernier = Math.min((page + 1) * taille, total);
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2">
+    // Collante : une liste de vingt éléments repoussait sa pagination hors de
+    // l'écran, et changer de page demandait d'abord de tout faire défiler.
+    // Elle reste au bas de la fenêtre tant que la liste est en vue.
+    <div className="sticky bottom-0 z-10 flex flex-wrap items-center justify-between gap-2 border-t bg-background py-2">
       <p className="text-sm text-muted-foreground" role="status">
         {nom} {premier} à {dernier} sur {total}
       </p>

@@ -8,13 +8,22 @@ import { cn } from "@/lib/utils";
 function Table({
   className,
   label = "Tableau",
+  borne = false,
+  sommet,
   ...props
 }: React.ComponentProps<"table"> & {
   /** Nom de la zone défilante, annoncé quand le tableau déborde. */
   label?: string;
+  /**
+   * Borner la hauteur du tableau et le faire défiler dans son cadre (≥ `sm`).
+   * Ce qui suit — la pagination au premier chef — reste alors à l'écran.
+   */
+  borne?: boolean;
+  /** Valeur qui, en changeant, ramène le cadre en haut (numéro de page). */
+  sommet?: unknown;
 }) {
   return (
-    <ScrollX data-slot="table-container" label={label}>
+    <ScrollX data-slot="table-container" label={label} borne={borne} entete sommet={sommet}>
       <table
         data-slot="table"
         className={cn("w-full caption-bottom text-sm", className)}
@@ -28,8 +37,9 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      // Collant : sur une page longue, la colonne lue reste identifiable.
-      className={cn("sticky top-0 z-10 bg-background [&_tr]:border-b", className)}
+      // Collant : que le cadre défile ou que ce soit la page, la colonne lue
+      // reste identifiable. L'ombre de bord du cadre passe dessous.
+      className={cn("sticky top-0 z-20 bg-background [&_tr]:border-b", className)}
       {...props}
     />
   );
