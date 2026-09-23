@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Slot } from "radix-ui";
 
 import { cn } from "@/lib/utils";
 
@@ -33,9 +34,20 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
+/**
+ * Titre d'une carte. `asChild` permet de le rendre comme le niveau de titre
+ * qui convient à la page — sur `/login`, la carte EST la page, son titre doit
+ * donc être le `h1` (axe `page-has-heading-one`). Ailleurs, un `div` reste le
+ * bon choix : une carte au milieu d'un écran n'est pas une section de titre.
+ */
+function CardTitle({
+  className,
+  asChild,
+  ...props
+}: React.ComponentProps<"div"> & { asChild?: boolean }) {
+  const Composant = asChild ? Slot.Root : "div";
   return (
-    <div
+    <Composant
       data-slot="card-title"
       className={cn(
         "font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm",

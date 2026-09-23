@@ -32,7 +32,14 @@ const Toaster = ({ ...props }: ToasterProps) => {
           "--border-radius": "var(--radius)",
         } as React.CSSProperties
       }
+      // Bouton de fermeture : sans lui, un toast persistant n'est renvoyable
+      // que par le raccourci Alt+T de sonner, que rien n'annonce.
+      closeButton
       toastOptions={{
+        // 4 s par défaut : trop court pour une phrase de deux lignes. Les
+        // erreurs, elles, ne partent pas toutes seules (voir lib/notifications).
+        duration: 6000,
+        closeButtonAriaLabel: "Fermer la notification",
         classNames: {
           toast: "cn-toast",
         },

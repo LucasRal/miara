@@ -2,22 +2,37 @@
 
 import * as React from "react";
 
+import { ScrollX } from "@/components/ui/scroll-x";
 import { cn } from "@/lib/utils";
 
-function Table({ className, ...props }: React.ComponentProps<"table">) {
+function Table({
+  className,
+  label = "Tableau",
+  ...props
+}: React.ComponentProps<"table"> & {
+  /** Nom de la zone défilante, annoncé quand le tableau déborde. */
+  label?: string;
+}) {
   return (
-    <div data-slot="table-container" className="relative w-full overflow-x-auto">
+    <ScrollX data-slot="table-container" label={label}>
       <table
         data-slot="table"
         className={cn("w-full caption-bottom text-sm", className)}
         {...props}
       />
-    </div>
+    </ScrollX>
   );
 }
 
 function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
-  return <thead data-slot="table-header" className={cn("[&_tr]:border-b", className)} {...props} />;
+  return (
+    <thead
+      data-slot="table-header"
+      // Collant : sur une page longue, la colonne lue reste identifiable.
+      className={cn("sticky top-0 z-10 bg-background [&_tr]:border-b", className)}
+      {...props}
+    />
+  );
 }
 
 function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
