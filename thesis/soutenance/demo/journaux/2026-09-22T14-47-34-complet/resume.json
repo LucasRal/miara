@@ -1,0 +1,204 @@
+{
+  "horodatage": "2026-09-22T14-47-34",
+  "debut": "2026-09-22T14:47:35.000Z",
+  "fin": "2026-09-22T14:49:53.549Z",
+  "volet": "complet",
+  "resultat": "reussite",
+  "erreur": null,
+  "duree_totale_ms": 133325,
+  "duree_totale_s": 133.3,
+  "campagne_de_charge_en_cours_au_depart": false,
+  "campagne_de_charge_en_cours_a_la_fin": false,
+  "nb_cv": 20,
+  "captures": [
+    {
+      "fichier": "captures/00-tableau-de-bord.png",
+      "date": "2026-09-22T14:47:38.007Z",
+      "commentaire": "Tableau de bord après connexion du compte de démonstration."
+    },
+    {
+      "fichier": "captures/01-briefing-et-trace.png",
+      "date": "2026-09-22T14:48:01.176Z",
+      "commentaire": "Briefing sourcé rendu par l'agent commercial, avec la trace des outils appelés sous la réponse."
+    },
+    {
+      "fichier": "captures/02-confirmation-ecriture.png",
+      "date": "2026-09-22T14:48:20.643Z",
+      "commentaire": "Dialogue de confirmation : l'agent propose create_task, rien n'est écrit tant que l'humain n'a pas confirmé (ADR-009)."
+    },
+    {
+      "fichier": "captures/03-ecriture-confirmee.png",
+      "date": "2026-09-22T14:48:29.502Z",
+      "commentaire": "Accusé d'écriture : l'identifiant de l'enregistrement créé dans Salesforce, relu dans la trace d'exécution."
+    },
+    {
+      "fichier": "captures/04-grille-de-criteres.png",
+      "date": "2026-09-22T14:48:49.947Z",
+      "commentaire": "Grille de critères proposée à partir du texte de l'offre, avant validation humaine."
+    },
+    {
+      "fichier": "captures/05-cv-deposes.png",
+      "date": "2026-09-22T14:48:51.061Z",
+      "commentaire": "Les 20 CV du jeu doré déposés sur l'offre, prêts à être analysés."
+    },
+    {
+      "fichier": "captures/06-progression.png",
+      "date": "2026-09-22T14:49:06.033Z",
+      "commentaire": "Progression de la présélection : la barre est relue en base, la campagne survit à un rafraîchissement."
+    },
+    {
+      "fichier": "captures/07-classement.png",
+      "date": "2026-09-22T14:49:48.050Z",
+      "commentaire": "Classement des candidats : note globale, critères et preuves citées, CV par CV."
+    }
+  ],
+  "video": "/home/ubuntu/projects/thesis/thesis/soutenance/demo/journaux/2026-09-22T14-47-34-complet/video/demonstration-complet-2026-09-22T14-47-34.webm",
+  "video_duree_s_mesuree": 134.72,
+  "rythme": "demo",
+  "etapes": [
+    {
+      "horodatage": "2026-09-22T14:47:35.000Z",
+      "depuis_debut_ms": 64,
+      "etape": "debut",
+      "detail": "volet=complet video=true campagne_de_charge=false"
+    },
+    {
+      "horodatage": "2026-09-22T14:47:37.997Z",
+      "depuis_debut_ms": 3061,
+      "etape": "connexion",
+      "duree_ms": 2694,
+      "resultat": "ok"
+    },
+    {
+      "horodatage": "2026-09-22T14:47:38.432Z",
+      "depuis_debut_ms": 3496,
+      "etape": "capture 00-tableau-de-bord",
+      "detail": "Tableau de bord après connexion du compte de démonstration."
+    },
+    {
+      "horodatage": "2026-09-22T14:47:40.238Z",
+      "depuis_debut_ms": 5302,
+      "etape": "ouverture agent commercial",
+      "duree_ms": 1806,
+      "resultat": "ok"
+    },
+    {
+      "horodatage": "2026-09-22T14:48:01.172Z",
+      "depuis_debut_ms": 26236,
+      "etape": "question de lecture",
+      "duree_ms": 20931,
+      "resultat": "ok"
+    },
+    {
+      "horodatage": "2026-09-22T14:48:01.313Z",
+      "depuis_debut_ms": 26377,
+      "etape": "capture 01-briefing-et-trace",
+      "detail": "Briefing sourcé rendu par l'agent commercial, avec la trace des outils appelés sous la réponse."
+    },
+    {
+      "horodatage": "2026-09-22T14:48:20.642Z",
+      "depuis_debut_ms": 45706,
+      "etape": "demande d'écriture",
+      "duree_ms": 19327,
+      "resultat": "ok"
+    },
+    {
+      "horodatage": "2026-09-22T14:48:21.123Z",
+      "depuis_debut_ms": 46187,
+      "etape": "capture 02-confirmation-ecriture",
+      "detail": "Dialogue de confirmation : l'agent propose create_task, rien n'est écrit tant que l'humain n'a pas confirmé (ADR-009)."
+    },
+    {
+      "horodatage": "2026-09-22T14:48:29.501Z",
+      "depuis_debut_ms": 54565,
+      "etape": "confirmation humaine",
+      "duree_ms": 8378,
+      "resultat": "ok"
+    },
+    {
+      "horodatage": "2026-09-22T14:48:29.662Z",
+      "depuis_debut_ms": 54726,
+      "etape": "capture 03-ecriture-confirmee",
+      "detail": "Accusé d'écriture : l'identifiant de l'enregistrement créé dans Salesforce, relu dans la trace d'exécution."
+    },
+    {
+      "horodatage": "2026-09-22T14:48:35.836Z",
+      "depuis_debut_ms": 60900,
+      "etape": "création de l'offre",
+      "duree_ms": 6173,
+      "resultat": "ok"
+    },
+    {
+      "horodatage": "2026-09-22T14:48:49.946Z",
+      "depuis_debut_ms": 75010,
+      "etape": "proposition de la grille",
+      "duree_ms": 14109,
+      "resultat": "ok"
+    },
+    {
+      "horodatage": "2026-09-22T14:48:50.094Z",
+      "depuis_debut_ms": 75158,
+      "etape": "capture 04-grille-de-criteres",
+      "detail": "Grille de critères proposée à partir du texte de l'offre, avant validation humaine."
+    },
+    {
+      "horodatage": "2026-09-22T14:48:50.717Z",
+      "depuis_debut_ms": 75781,
+      "etape": "validation de la grille",
+      "duree_ms": 623,
+      "resultat": "ok"
+    },
+    {
+      "horodatage": "2026-09-22T14:48:51.060Z",
+      "depuis_debut_ms": 76124,
+      "etape": "dépôt de 20 CV",
+      "duree_ms": 343,
+      "resultat": "ok"
+    },
+    {
+      "horodatage": "2026-09-22T14:48:51.219Z",
+      "depuis_debut_ms": 76283,
+      "etape": "capture 05-cv-deposes",
+      "detail": "Les 20 CV du jeu doré déposés sur l'offre, prêts à être analysés."
+    },
+    {
+      "horodatage": "2026-09-22T14:48:54.026Z",
+      "depuis_debut_ms": 79090,
+      "etape": "lancement de l'analyse",
+      "duree_ms": 2806,
+      "resultat": "ok"
+    },
+    {
+      "horodatage": "2026-09-22T14:49:06.249Z",
+      "depuis_debut_ms": 91313,
+      "etape": "capture 06-progression",
+      "detail": "Progression de la présélection : la barre est relue en base, la campagne survit à un rafraîchissement."
+    },
+    {
+      "horodatage": "2026-09-22T14:49:37.775Z",
+      "depuis_debut_ms": 122839,
+      "etape": "analyse terminée",
+      "duree_ms": 31526,
+      "resultat": "ok"
+    },
+    {
+      "horodatage": "2026-09-22T14:49:48.049Z",
+      "depuis_debut_ms": 133113,
+      "etape": "affichage du classement",
+      "duree_ms": 10274,
+      "resultat": "ok"
+    },
+    {
+      "horodatage": "2026-09-22T14:49:48.261Z",
+      "depuis_debut_ms": 133325,
+      "etape": "capture 07-classement",
+      "detail": "Classement des candidats : note globale, critères et preuves citées, CV par CV."
+    },
+    {
+      "horodatage": "2026-09-22T14:49:53.548Z",
+      "depuis_debut_ms": 138612,
+      "etape": "durée de la vidéo mesurée",
+      "detail": "134.72 s (Duration: 00:02:14.72, start: 0.000000, bitrate: 652 kb/s)"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+2026-09-22T14:50:09.145Z  +    71 ms  debut — volet=complet video=false campagne_de_charge=false
+2026-09-22T14:50:11.870Z  +  2795 ms  connexion (2439 ms)
+2026-09-22T14:50:12.060Z  +  2985 ms  capture 00-tableau-de-bord — Tableau de bord après connexion du compte de démonstration.
+2026-09-22T14:50:13.652Z  +  4578 ms  ouverture agent commercial (1592 ms)
+2026-09-22T14:50:19.751Z  + 10676 ms  question de lecture (6098 ms)
+2026-09-22T14:50:19.910Z  + 10836 ms  capture 01-briefing-et-trace — Briefing sourcé rendu par l'agent commercial, avec la trace des outils appelés sous la réponse.
+2026-09-22T14:50:22.372Z  + 13297 ms  demande d'écriture (2461 ms)
+2026-09-22T14:50:22.833Z  + 13758 ms  capture 02-confirmation-ecriture — Dialogue de confirmation : l'agent propose create_task, rien n'est écrit tant que l'humain n'a pas confirmé (ADR-009).
+2026-09-22T14:50:26.103Z  + 17029 ms  confirmation humaine (3270 ms)
+2026-09-22T14:50:26.258Z  + 17183 ms  capture 03-ecriture-confirmee — Accusé d'écriture : l'identifiant de l'enregistrement créé dans Salesforce, relu dans la trace d'exécution.
+2026-09-22T14:50:27.176Z  + 18101 ms  création de l'offre (915 ms)
+2026-09-22T14:50:32.110Z  + 23035 ms  proposition de la grille (4932 ms)
+2026-09-22T14:50:32.282Z  + 23207 ms  capture 04-grille-de-criteres — Grille de critères proposée à partir du texte de l'offre, avant validation humaine.
+2026-09-22T14:50:32.911Z  + 23837 ms  validation de la grille (629 ms)
+2026-09-22T14:50:33.153Z  + 24078 ms  dépôt de 20 CV (241 ms)
+2026-09-22T14:50:33.316Z  + 24241 ms  capture 05-cv-deposes — Les 20 CV du jeu doré déposés sur l'offre, prêts à être analysés.
+2026-09-22T14:50:34.007Z  + 24933 ms  lancement de l'analyse (691 ms)
+2026-09-22T14:50:40.164Z  + 31090 ms  capture 06-progression — Progression de la présélection : la barre est relue en base, la campagne survit à un rafraîchissement.
+2026-09-22T14:51:29.940Z  + 80865 ms  analyse terminée (49775 ms)
+2026-09-22T14:51:32.206Z  + 83132 ms  affichage du classement (2265 ms)
+2026-09-22T14:51:32.346Z  + 83271 ms  capture 07-classement — Classement des candidats : note globale, critères et preuves citées, CV par CV.

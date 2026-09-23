@@ -1,0 +1,15 @@
+[105 ms] debut — volet=commercial video=true campagne_de_charge=true
+[2904 ms] connexion
+[3135 ms] capture 00-tableau-de-bord — Tableau de bord après connexion du compte de démonstration.
+[4737 ms] ouverture agent commercial
+[23296 ms] question de lecture
+[23503 ms] capture 01-briefing-et-trace — Briefing sourcé rendu par l'agent commercial, avec la trace des outils appelés sous la réponse.
+[42495 ms] demande d'écriture
+[42901 ms] capture 02-confirmation-ecriture — Dialogue de confirmation : l'agent propose create_task, rien n'est écrit tant que l'humain n'a pas confirmé (ADR-009).
+[50899 ms] confirmation humaine
+[51101 ms] capture 03-ecriture-confirmee — Accusé d'écriture : l'identifiant de l'enregistrement créé dans Salesforce, relu dans la trace d'exécution.
+[53350 ms] durée de la vidéo mesurée — 52.28 s (Duration: 00:00:52.28, start: 0.000000, bitrate: 726 kb/s)
+
+-> /home/ubuntu/projects/thesis/thesis/soutenance/demo/journaux/2026-09-22T14-12-20-commercial
+   réussite en 51.1 s
+   vidéo : /home/ubuntu/projects/thesis/thesis/soutenance/demo/journaux/2026-09-22T14-12-20-commercial/video/demonstration-commercial-2026-09-22T14-12-20.webm

@@ -1,0 +1,10 @@
+{"horodatage":"2026-09-22T14:10:34.673Z","depuis_debut_ms":60,"etape":"debut","detail":"volet=commercial video=true campagne_de_charge=true"}
+{"horodatage":"2026-09-22T14:10:37.426Z","depuis_debut_ms":2813,"etape":"connexion","duree_ms":2473,"resultat":"ok"}
+{"horodatage":"2026-09-22T14:10:37.629Z","depuis_debut_ms":3017,"etape":"capture 00-tableau-de-bord","detail":"Tableau de bord après connexion du compte de démonstration."}
+{"horodatage":"2026-09-22T14:10:39.291Z","depuis_debut_ms":4679,"etape":"ouverture agent commercial","duree_ms":1662,"resultat":"ok"}
+{"horodatage":"2026-09-22T14:10:45.403Z","depuis_debut_ms":10790,"etape":"question de lecture","duree_ms":6111,"resultat":"ok"}
+{"horodatage":"2026-09-22T14:10:45.589Z","depuis_debut_ms":10977,"etape":"capture 01-briefing-et-trace","detail":"Briefing sourcé rendu par l'agent commercial, avec la trace des outils appelés sous la réponse."}
+{"horodatage":"2026-09-22T14:10:48.962Z","depuis_debut_ms":14350,"etape":"demande d'écriture","duree_ms":3372,"resultat":"ok"}
+{"horodatage":"2026-09-22T14:10:49.382Z","depuis_debut_ms":14769,"etape":"capture 02-confirmation-ecriture","detail":"Dialogue de confirmation : l'agent propose create_task, rien n'est écrit tant que l'humain n'a pas confirmé (ADR-009)."}
+{"horodatage":"2026-09-22T14:10:52.656Z","depuis_debut_ms":18044,"etape":"confirmation humaine","duree_ms":3274,"resultat":"ok"}
+{"horodatage":"2026-09-22T14:10:52.800Z","depuis_debut_ms":18187,"etape":"capture 03-ecriture-confirmee","detail":"Accusé d'écriture : l'identifiant de l'enregistrement créé dans Salesforce, relu dans la trace d'exécution."}

@@ -1,0 +1,10 @@
+{"horodatage":"2026-09-22T14:17:41.227Z","depuis_debut_ms":112,"etape":"debut","detail":"volet=rh video=false campagne_de_charge=true"}
+{"horodatage":"2026-09-22T14:17:43.992Z","depuis_debut_ms":2877,"etape":"connexion","duree_ms":2401,"resultat":"ok"}
+{"horodatage":"2026-09-22T14:17:44.206Z","depuis_debut_ms":3090,"etape":"capture 00-tableau-de-bord","detail":"Tableau de bord après connexion du compte de démonstration."}
+{"horodatage":"2026-09-22T14:17:45.035Z","depuis_debut_ms":3920,"etape":"création de l'offre","duree_ms":828,"resultat":"ok"}
+{"horodatage":"2026-09-22T14:17:50.103Z","depuis_debut_ms":8987,"etape":"proposition de la grille","duree_ms":5066,"resultat":"ok"}
+{"horodatage":"2026-09-22T14:17:50.254Z","depuis_debut_ms":9139,"etape":"capture 04-grille-de-criteres","detail":"Grille de critères proposée à partir du texte de l'offre, avant validation humaine."}
+{"horodatage":"2026-09-22T14:17:51.952Z","depuis_debut_ms":10837,"etape":"validation de la grille","duree_ms":1698,"resultat":"ok"}
+{"horodatage":"2026-09-22T14:17:52.258Z","depuis_debut_ms":11142,"etape":"dépôt de 20 CV","duree_ms":305,"resultat":"ok"}
+{"horodatage":"2026-09-22T14:17:52.455Z","depuis_debut_ms":11339,"etape":"capture 05-cv-deposes","detail":"Les 20 CV du jeu doré déposés sur l'offre, prêts à être analysés."}
+{"horodatage":"2026-09-22T14:17:52.456Z","depuis_debut_ms":11340,"etape":"arrêt avant lancement (--sans-lancement)"}

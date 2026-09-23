@@ -1,0 +1,10 @@
+2026-09-22T14:17:41.227Z  +   112 ms  debut — volet=rh video=false campagne_de_charge=true
+2026-09-22T14:17:43.992Z  +  2877 ms  connexion (2401 ms)
+2026-09-22T14:17:44.206Z  +  3090 ms  capture 00-tableau-de-bord — Tableau de bord après connexion du compte de démonstration.
+2026-09-22T14:17:45.035Z  +  3920 ms  création de l'offre (828 ms)
+2026-09-22T14:17:50.103Z  +  8987 ms  proposition de la grille (5066 ms)
+2026-09-22T14:17:50.254Z  +  9139 ms  capture 04-grille-de-criteres — Grille de critères proposée à partir du texte de l'offre, avant validation humaine.
+2026-09-22T14:17:51.952Z  + 10837 ms  validation de la grille (1698 ms)
+2026-09-22T14:17:52.258Z  + 11142 ms  dépôt de 20 CV (305 ms)
+2026-09-22T14:17:52.455Z  + 11339 ms  capture 05-cv-deposes — Les 20 CV du jeu doré déposés sur l'offre, prêts à être analysés.
+2026-09-22T14:17:52.456Z  + 11340 ms  arrêt avant lancement (--sans-lancement)

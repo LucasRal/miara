@@ -1,0 +1,10 @@
+2026-09-22T14:10:34.673Z  +    60 ms  debut — volet=commercial video=true campagne_de_charge=true
+2026-09-22T14:10:37.426Z  +  2813 ms  connexion (2473 ms)
+2026-09-22T14:10:37.629Z  +  3017 ms  capture 00-tableau-de-bord — Tableau de bord après connexion du compte de démonstration.
+2026-09-22T14:10:39.291Z  +  4679 ms  ouverture agent commercial (1662 ms)
+2026-09-22T14:10:45.403Z  + 10790 ms  question de lecture (6111 ms)
+2026-09-22T14:10:45.589Z  + 10977 ms  capture 01-briefing-et-trace — Briefing sourcé rendu par l'agent commercial, avec la trace des outils appelés sous la réponse.
+2026-09-22T14:10:48.962Z  + 14350 ms  demande d'écriture (3372 ms)
+2026-09-22T14:10:49.382Z  + 14769 ms  capture 02-confirmation-ecriture — Dialogue de confirmation : l'agent propose create_task, rien n'est écrit tant que l'humain n'a pas confirmé (ADR-009).
+2026-09-22T14:10:52.656Z  + 18044 ms  confirmation humaine (3274 ms)
+2026-09-22T14:10:52.800Z  + 18187 ms  capture 03-ecriture-confirmee — Accusé d'écriture : l'identifiant de l'enregistrement créé dans Salesforce, relu dans la trace d'exécution.

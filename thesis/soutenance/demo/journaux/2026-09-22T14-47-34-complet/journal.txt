@@ -1,0 +1,22 @@
+2026-09-22T14:47:35.000Z  +    64 ms  debut — volet=complet video=true campagne_de_charge=false
+2026-09-22T14:47:37.997Z  +  3061 ms  connexion (2694 ms)
+2026-09-22T14:47:38.432Z  +  3496 ms  capture 00-tableau-de-bord — Tableau de bord après connexion du compte de démonstration.
+2026-09-22T14:47:40.238Z  +  5302 ms  ouverture agent commercial (1806 ms)
+2026-09-22T14:48:01.172Z  + 26236 ms  question de lecture (20931 ms)
+2026-09-22T14:48:01.313Z  + 26377 ms  capture 01-briefing-et-trace — Briefing sourcé rendu par l'agent commercial, avec la trace des outils appelés sous la réponse.
+2026-09-22T14:48:20.642Z  + 45706 ms  demande d'écriture (19327 ms)
+2026-09-22T14:48:21.123Z  + 46187 ms  capture 02-confirmation-ecriture — Dialogue de confirmation : l'agent propose create_task, rien n'est écrit tant que l'humain n'a pas confirmé (ADR-009).
+2026-09-22T14:48:29.501Z  + 54565 ms  confirmation humaine (8378 ms)
+2026-09-22T14:48:29.662Z  + 54726 ms  capture 03-ecriture-confirmee — Accusé d'écriture : l'identifiant de l'enregistrement créé dans Salesforce, relu dans la trace d'exécution.
+2026-09-22T14:48:35.836Z  + 60900 ms  création de l'offre (6173 ms)
+2026-09-22T14:48:49.946Z  + 75010 ms  proposition de la grille (14109 ms)
+2026-09-22T14:48:50.094Z  + 75158 ms  capture 04-grille-de-criteres — Grille de critères proposée à partir du texte de l'offre, avant validation humaine.
+2026-09-22T14:48:50.717Z  + 75781 ms  validation de la grille (623 ms)
+2026-09-22T14:48:51.060Z  + 76124 ms  dépôt de 20 CV (343 ms)
+2026-09-22T14:48:51.219Z  + 76283 ms  capture 05-cv-deposes — Les 20 CV du jeu doré déposés sur l'offre, prêts à être analysés.
+2026-09-22T14:48:54.026Z  + 79090 ms  lancement de l'analyse (2806 ms)
+2026-09-22T14:49:06.249Z  + 91313 ms  capture 06-progression — Progression de la présélection : la barre est relue en base, la campagne survit à un rafraîchissement.
+2026-09-22T14:49:37.775Z  +122839 ms  analyse terminée (31526 ms)
+2026-09-22T14:49:48.049Z  +133113 ms  affichage du classement (10274 ms)
+2026-09-22T14:49:48.261Z  +133325 ms  capture 07-classement — Classement des candidats : note globale, critères et preuves citées, CV par CV.
+2026-09-22T14:49:53.548Z  +138612 ms  durée de la vidéo mesurée — 134.72 s (Duration: 00:02:14.72, start: 0.000000, bitrate: 652 kb/s)
