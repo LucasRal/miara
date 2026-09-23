@@ -1,0 +1,77 @@
+{
+  "date": "2026-09-22T13:52:53.787Z",
+  "revision": "e6ebfc6",
+  "base": "http://127.0.0.1:3010",
+  "captures": [
+    {
+      "nom": "ecran-connexion",
+      "adresse": "/login",
+      "fichier": "captures/out/ecran-connexion.png",
+      "largeur": 1440,
+      "hauteur": 900
+    },
+    {
+      "nom": "ecran-tableau-de-bord",
+      "adresse": "/",
+      "fichier": "captures/out/ecran-tableau-de-bord.png",
+      "largeur": 1440,
+      "hauteur": 900
+    },
+    {
+      "nom": "ecran-agent-commercial",
+      "adresse": "/sales",
+      "fichier": "captures/out/ecran-agent-commercial.png",
+      "largeur": 1440,
+      "hauteur": 900
+    },
+    {
+      "nom": "ecran-coach",
+      "adresse": "/sales/coach",
+      "fichier": "captures/out/ecran-coach.png",
+      "largeur": 1440,
+      "hauteur": 900
+    },
+    {
+      "nom": "ecran-hr-offres",
+      "adresse": "/hr",
+      "fichier": "captures/out/ecran-hr-offres.png",
+      "largeur": 1440,
+      "hauteur": 900
+    },
+    {
+      "nom": "ecran-hr-grille",
+      "adresse": "/hr/5f73d59c-ed74-4013-9197-6a3d2d1e54a8/criteria",
+      "fichier": "captures/out/ecran-hr-grille.png",
+      "largeur": 1440,
+      "hauteur": 900
+    },
+    {
+      "nom": "ecran-hr-classement",
+      "adresse": "/hr/5f73d59c-ed74-4013-9197-6a3d2d1e54a8/runs/42a89450-7534-4deb-918a-4c88f68a05fe",
+      "fichier": "captures/out/ecran-hr-classement.png",
+      "largeur": 1440,
+      "hauteur": 900
+    },
+    {
+      "nom": "ecran-file-traitement",
+      "adresse": "/queue",
+      "fichier": "captures/out/ecran-file-traitement.png",
+      "largeur": 1440,
+      "hauteur": 900
+    },
+    {
+      "nom": "ecran-usage",
+      "adresse": "/usage",
+      "fichier": "captures/out/ecran-usage.png",
+      "largeur": 1440,
+      "hauteur": 900
+    },
+    {
+      "nom": "ecran-parametres",
+      "adresse": "/settings",
+      "fichier": "captures/out/ecran-parametres.png",
+      "largeur": 1440,
+      "hauteur": 900
+    }
+  ]
+}

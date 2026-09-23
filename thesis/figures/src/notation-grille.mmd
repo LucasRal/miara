@@ -1,0 +1,16 @@
+%% Le modele decrit, le code decide. Source : app/hr/schemas.py,
+%% align_with_grid et compute_overall, app/hr/criteria.py.
+flowchart TB
+    offre["Offre : titre et description"]
+    sugg["suggest_criteria, alias hr.extract<br/>5 a 8 criteres ponderes 1 a 5"]
+    humain{{"Le recruteur edite et valide<br/>job.status passe a ready"}}
+    grille[("jobs.criteria_json<br/>grille figee")]
+    cv["Texte du CV, borne a 40 000 caracteres<br/>encadre par des delimiteurs"]
+    score["Appel hr.score<br/>CandidateAssessment"]
+    align["align_with_grid<br/>critere absent : note 0 et preuve manquante<br/>critere invente : ignore<br/>must_have recalcule, seuil < 2"]
+    calc["compute_overall<br/>0 si un must_have echoue<br/>sinon somme ponderee ramenee sur 100"]
+    out[("candidate_scores<br/>score_json, overall, rank")]
+    offre --> sugg --> humain --> grille
+    grille --> score
+    cv --> score
+    score --> align --> calc --> out

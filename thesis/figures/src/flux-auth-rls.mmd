@@ -1,0 +1,25 @@
+%% Pose du contexte d'organisation a chaque requete.
+%% Source : app/auth/deps.py, app/core/tenant.py, alembic 404c0385dd08.
+sequenceDiagram
+    autonumber
+    participant N as Navigateur
+    participant A as FastAPI
+    participant D as get_context
+    participant P as PostgreSQL, role miara_app
+    N->>A: requete + cookie access ou en-tete Bearer
+    A->>D: get_token_claims
+    D->>D: decode_access_token, HS256, 15 min
+    Note over D: claims sub et org<br/>le claim role n est pas cru
+    D->>P: BEGIN
+    D->>P: set_config('app.current_org', org, true)
+    D->>P: set_config('app.current_user', user, true)
+    D->>P: SELECT sur memberships
+    P-->>D: ligne visible seulement si la politique passe
+    alt membership absente
+        D-->>N: 401 Acces a l organisation revoque
+    else membership presente
+        D-->>A: RequestContext org_id, user_id, role, session
+        A->>P: requetes metier, toutes filtrees par la politique
+        A-->>N: reponse
+    end
+    Note over P: COMMIT, les reglages locaux<br/>disparaissent avec la transaction

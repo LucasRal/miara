@@ -1,0 +1,8 @@
+{
+  "name": "miara-thesis-figures",
+  "private": true,
+  "description": "Rendu des figures Mermaid du memoire (voir render.sh).",
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "11.17.0"
+  }
+}

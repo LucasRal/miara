@@ -1,0 +1,25 @@
+%% Un tour de l'agent commercial, flux A. Source : app/sales/conversations.py,
+%% app/core/agents/runtime.py, app/sales/tools/read.py, app/sales/context_builder.py.
+sequenceDiagram
+    autonumber
+    participant U as Commercial
+    participant A as API, /sales/conversations
+    participant R as runtime.run
+    participant G as Passerelle LLM
+    participant T as get_account_context
+    participant S as Salesforce
+    participant C as context_builder.build
+    U->>A: question en langue naturelle
+    A->>R: RequestContext issu du JWT
+    R->>G: alias sales.route, catalogue d outils
+    G-->>R: appel d outil get_account_context
+    R->>T: arguments valides par Pydantic
+    T->>S: 4 requetes SOQL, compte, contacts,<br/>opportunites ouvertes, cas ouverts
+    S-->>T: enregistrements
+    T->>C: budget SALES_CONTEXT_BUDGET_TOKENS
+    C-->>T: texte, tokens_used, items_dropped
+    T-->>R: resultat d outil
+    R->>G: alias sales.synthesize, resultats d outils
+    G-->>R: briefing cite les identifiants
+    R-->>A: Final + traces
+    A-->>U: reponse et trace des etapes

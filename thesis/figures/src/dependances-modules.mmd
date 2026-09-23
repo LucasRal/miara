@@ -1,0 +1,22 @@
+%% Genere par thesis/figures/gen/dependances_modules.py - ne pas editer a la main
+flowchart LR
+    subgraph composition["points de composition (hors paquets)"]
+        app["app/ : main, celery_tasks, db_registry, queue, usage, dashboard"]
+    end
+    subgraph metier["modules metier"]
+        auth["auth/"]
+        hr["hr/"]
+        sales["sales/"]
+    end
+    core["core/ : runtime, passerelle LLM, infra"]
+    app -->|5| auth
+    app -->|6| core
+    app -->|4| hr
+    app -->|3| sales
+    auth -->|3| core
+    hr -->|2| auth
+    hr -->|5| core
+    sales -->|4| auth
+    sales -->|9| core
+    classDef ok fill:#eef7ee,stroke:#4a7c4a;
+    class core ok

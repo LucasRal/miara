@@ -1,0 +1,23 @@
+%% Connexion Salesforce par organisation. Source : app/sales/integrations.py,
+%% app/sales/crm/salesforce.py, app/core/crypto.py.
+sequenceDiagram
+    autonumber
+    participant U as Administrateur d une organisation
+    participant A as API, /integrations/salesforce
+    participant R as Redis
+    participant S as Salesforce
+    participant D as PostgreSQL
+    U->>A: GET /connect
+    A->>A: make_pkce, verifier et challenge S256
+    A->>R: SETEX sf:pkce:{nonce}, 10 min
+    A->>A: state = JWT signe, claims type, org, sub, nonce, exp
+    A-->>U: 302 vers l ecran de consentement
+    U->>S: consentement
+    S-->>A: GET /callback?code&state
+    A->>A: _read_state, verifie signature et expiration
+    A->>R: GETDEL sf:pkce:{nonce}
+    A->>S: exchange_code, code + code_verifier
+    S-->>A: access_token, refresh_token, instance_url
+    A->>A: encrypt_credentials, Fernet
+    A->>D: tenant_session(org), INSERT ou UPDATE integrations
+    A-->>U: 302 /settings?salesforce=connected

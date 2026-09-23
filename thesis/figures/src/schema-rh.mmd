@@ -1,0 +1,52 @@
+%% Genere par thesis/figures/gen/schema_bdd.py - ne pas editer a la main
+erDiagram
+    jobs {
+        uuid id PK
+        varchar_200 title "NOT NULL"
+        text description_text "NOT NULL"
+        jsonb criteria_json
+        integer criteria_prompt_version
+        varchar_20 status "NOT NULL"
+        uuid created_by FK
+        timestamptz created_at "NOT NULL"
+        uuid organization_id FK "NOT NULL"
+    }
+    candidates {
+        uuid id PK
+        uuid job_id FK "NOT NULL"
+        varchar_300 file_path "NOT NULL"
+        varchar_255 original_filename "NOT NULL"
+        varchar_100 mime "NOT NULL"
+        integer size_bytes "NOT NULL"
+        text extracted_text
+        jsonb profile_json
+        varchar_20 status "NOT NULL"
+        timestamptz created_at "NOT NULL"
+        uuid organization_id FK "NOT NULL"
+    }
+    screening_runs {
+        uuid id PK
+        uuid job_id FK "NOT NULL"
+        varchar_20 status "NOT NULL"
+        timestamptz started_at
+        timestamptz finished_at
+        jsonb stats_json
+        timestamptz created_at "NOT NULL"
+        uuid organization_id FK "NOT NULL"
+    }
+    candidate_scores {
+        uuid id PK
+        uuid run_id FK "NOT NULL"
+        uuid candidate_id FK "NOT NULL"
+        jsonb score_json
+        integer overall
+        integer rank
+        varchar_20 status "NOT NULL"
+        text error
+        timestamptz created_at "NOT NULL"
+        uuid organization_id FK "NOT NULL"
+    }
+    candidates ||--o{ candidate_scores : candidate_id
+    jobs ||--o{ candidates : job_id
+    jobs ||--o{ screening_runs : job_id
+    screening_runs ||--o{ candidate_scores : run_id

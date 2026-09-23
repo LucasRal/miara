@@ -1,0 +1,28 @@
+%% Ecriture CRM a validation humaine, ADR-009. Source : app/core/agents/runtime.py,
+%% app/sales/conversations.py, app/sales/tools/write.py.
+sequenceDiagram
+    autonumber
+    participant U as Commercial
+    participant A as API
+    participant R as runtime.run
+    participant W as create_task
+    participant S as Salesforce
+    U->>A: envoie un message
+    A->>R: run sans confirmation
+    R->>R: is_write et call_id absent de confirmations
+    R-->>A: NeedsConfirmation<br/>tool, args, preview
+    A-->>U: phrase de confirmation en francais
+    Note over U: l outil n a PAS ete execute
+    U->>A: POST /confirm/{call_id}
+    A->>R: run avec confirmations = {call_id}<br/>trace_id = uuid5(conversation_id, call_id)
+    R->>W: execution
+    W->>W: cle Redis crm:write:{org}:{trace}:{call}
+    alt deja executee
+        W-->>R: resultat memorise, aucun appel
+    else premiere fois
+        W->>S: create Task
+        S-->>W: identifiant
+        W->>W: ligne d audit dans crm_writes
+    end
+    R-->>A: Final
+    A-->>U: confirmation

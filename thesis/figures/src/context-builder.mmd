@@ -1,0 +1,25 @@
+%% Construction de contexte deterministe sous budget.
+%% Source : app/sales/context_builder.py, fonction build().
+flowchart TB
+    src["AccountContext<br/>compte, contacts, opportunites, activites, cas"]
+    hdr["En-tete du compte<br/>jamais tronque"]
+    p1["OPPORTUNITES OUVERTES"]
+    p2["ACTIVITES DES 30 DERNIERS JOURS"]
+    p3["CONTACTS"]
+    p4["CAS OUVERTS"]
+    p5["ACTIVITES PLUS ANCIENNES"]
+    mes["Apres chaque element ajoute :<br/>comptage du texte assemble<br/>tiktoken cl100k_base"]
+    stop{"plafond atteint ?<br/>budget moins la reserve de note"}
+    coupe["la section s arrete,<br/>items_dropped augmente"]
+    out["BuiltContext<br/>text, tokens_used, items_dropped, sections"]
+    log["journal sales_context_built"]
+    src --> hdr --> p1 --> p2 --> p3 --> p4 --> p5
+    p1 -.-> mes
+    p2 -.-> mes
+    p3 -.-> mes
+    p4 -.-> mes
+    p5 -.-> mes
+    mes --> stop
+    stop -- oui --> coupe --> out
+    stop -- non --> out
+    out --> log

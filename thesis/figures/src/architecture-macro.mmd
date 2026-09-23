@@ -1,0 +1,36 @@
+%% Architecture macro de Miara. Source : deploy/nginx/miara.conf,
+%% deploy/systemd/*.service, backend/app/main.py, backend/app/core/celery_app.py.
+flowchart TB
+    nav["Navigateur"]
+    subgraph vps["VPS Ubuntu, services natifs, sans conteneur"]
+        nginx["nginx<br/>TLS, 80 et 443"]
+        web["miara-web<br/>Next.js, 127.0.0.1:3010"]
+        api["miara-api<br/>FastAPI et uvicorn, 127.0.0.1:8010"]
+        wh["miara-worker-heavy<br/>Celery, file heavy"]
+        wl["miara-worker-light<br/>Celery, file light"]
+        pg[("PostgreSQL<br/>RLS par organisation")]
+        mq[("RabbitMQ<br/>courtier")]
+        rd[("Redis<br/>resultats, caches, quotas")]
+        fs[["/var/lib/miara/storage<br/>CV deposes"]]
+    end
+    llm["Fournisseurs de modeles<br/>via LiteLLM Router"]
+    sf["API Salesforce<br/>une connexion par organisation"]
+
+    nav -->|https| nginx
+    nginx -->|"/"| web
+    nginx -->|"/api/ et /health"| api
+    web -.->|"reecriture /api/*"| api
+    api --> pg
+    api --> rd
+    api -->|publie| mq
+    mq --> wh
+    mq --> wl
+    wh --> pg
+    wl --> pg
+    wh --> rd
+    wh --> fs
+    api --> fs
+    api --> llm
+    wh --> llm
+    api --> sf
+    wl --> sf

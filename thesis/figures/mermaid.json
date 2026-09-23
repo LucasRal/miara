@@ -1,0 +1,10 @@
+{
+  "theme": "neutral",
+  "themeVariables": {
+    "fontFamily": "DejaVu Sans, sans-serif",
+    "fontSize": "15px"
+  },
+  "flowchart": { "curve": "linear", "nodeSpacing": 30, "rankSpacing": 45 },
+  "er": { "layoutDirection": "TB", "entityPadding": 10 },
+  "sequence": { "actorFontFamily": "DejaVu Sans", "noteFontFamily": "DejaVu Sans", "messageFontFamily": "DejaVu Sans" }
+}

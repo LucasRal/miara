@@ -1,0 +1,24 @@
+%% Deux files des le depart, ADR-006. Source : app/core/celery_app.py,
+%% app/hr/tasks.py, deploy/systemd/miara-worker-*.service.
+flowchart LR
+    api["API FastAPI<br/>publie les taches"]
+    subgraph broker["RabbitMQ"]
+        eh["exchange heavy<br/>cle heavy"]
+        el["exchange light<br/>cle light, file par defaut"]
+        qh[["file heavy<br/>hr.extract_text, hr.score_candidate"]]
+        ql[["file light<br/>hr.rank_run, core.ping"]]
+        eh --> qh
+        el --> ql
+    end
+    wh["miara-worker-heavy<br/>prefork, WORKER_HEAVY_CONCURRENCY<br/>acks_late, arret doux 300 s"]
+    wl["miara-worker-light<br/>WORKER_LIGHT_CONCURRENCY<br/>arret doux 60 s"]
+    redis[("Redis<br/>resultats du chord,<br/>compteurs hr:runstats,<br/>quota hr:llmrate")]
+    pg[("PostgreSQL<br/>task_events, candidate_scores")]
+    api --> eh
+    api --> el
+    qh --> wh
+    ql --> wl
+    wh --> redis
+    wh --> pg
+    wl --> redis
+    wl --> pg

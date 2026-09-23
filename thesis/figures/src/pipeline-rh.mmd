@@ -1,0 +1,29 @@
+%% Presélection RH : un chord de N chaines independantes.
+%% Source : app/hr/tasks.py dispatch_run, app/hr/pipeline.py.
+flowchart LR
+    api["POST /hr/jobs/{id}/runs<br/>reponse 202 immediate"]
+    bg["BackgroundTasks<br/>publication apres la reponse"]
+    subgraph heavy["file heavy"]
+        direction TB
+        c1["hr.extract_text CV 1<br/>pdfplumber ou python-docx"]
+        s1["hr.score_candidate CV 1<br/>hr.extract puis hr.score"]
+        c2["hr.extract_text CV 2"]
+        s2["hr.score_candidate CV 2"]
+        cn["hr.extract_text CV N"]
+        sn["hr.score_candidate CV N"]
+        c1 --> s1
+        c2 --> s2
+        cn --> sn
+    end
+    subgraph light["file light"]
+        rank["hr.rank_run<br/>classement relu en base"]
+    end
+    db[("candidate_scores<br/>unique (run_id, candidate_id)")]
+    api --> bg --> heavy
+    s1 --> db
+    s2 --> db
+    sn --> db
+    s1 -. chord .-> rank
+    s2 -. chord .-> rank
+    sn -. chord .-> rank
+    db --> rank

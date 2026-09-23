@@ -1,0 +1,20 @@
+%% Genere par thesis/figures/gen/catalogue_outils.py - ne pas editer a la main
+flowchart TB
+    ctx["RequestContext<br/>org_id, user_id, role, trace_id, call_id"]
+    subgraph lecture["outils de lecture (executes sans confirmation)"]
+        direction TB
+        r0["find_account<br/>name"]
+        r1["find_contact<br/>name, account_name"]
+        r2["get_opportunity<br/>opportunity_id, opportunity_name"]
+        r3["search_activities<br/>record_id, days"]
+        r4["get_account_context<br/>account_id, account_name, window_days"]
+    end
+    subgraph ecriture["outils d ecriture (confirmation humaine, ADR-009)"]
+        direction TB
+        w0["create_task<br/>subject, due_date, related_record_id, contact_id, priority"]
+        w1["log_call_note<br/>record_id, summary, outcome"]
+        w2["update_opportunity_stage<br/>opportunity_id, stage, next_step"]
+    end
+    ctx --> verdict["aucun argument d outil ne porte d identite ni de secret"]
+    verdict --> lecture
+    verdict --> ecriture

@@ -1,0 +1,31 @@
+%% Boucle bornee du runtime d'agent. Source : app/core/agents/runtime.py, run().
+flowchart TB
+    depart(["run(definition, input, ctx)"])
+    prompt["load_prompt : prompts/agent/vN.md<br/>prompt_version retenue"]
+    init["messages = systeme + historique<br/>llm_steps = 0, has_tool_results = faux"]
+    attente{"appels d outils<br/>en attente ?"}
+    validation["validation Pydantic des arguments"]
+    valide{"arguments<br/>valides ?"}
+    erreur["trace tool_error<br/>le message d erreur repart au modele"]
+    ecriture{"outil d ecriture<br/>non confirme ?"}
+    confirmation(["NeedsConfirmation"])
+    execution["execution avec ctx.call_id<br/>trace tool_exec"]
+    borne{"llm_steps >= max_steps ?"}
+    arret(["StepLimitExceeded"])
+    escalade["alias_for_step : route, puis synthesize<br/>des qu un outil a repondu"]
+    appel["gateway.complete, trace llm_call"]
+    outils{"le modele demande<br/>des outils ?"}
+    final(["Final"])
+    ecrit["flush : ecriture des traces<br/>dans agent_traces"]
+
+    depart --> prompt --> init --> attente
+    attente -- oui --> validation --> valide
+    valide -- non --> erreur --> attente
+    valide -- oui --> ecriture
+    ecriture -- oui --> confirmation --> ecrit
+    ecriture -- non --> execution --> attente
+    attente -- non --> borne
+    borne -- oui --> arret --> ecrit
+    borne -- non --> escalade --> appel --> outils
+    outils -- oui --> attente
+    outils -- non --> final --> ecrit

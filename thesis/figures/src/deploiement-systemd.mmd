@@ -1,0 +1,27 @@
+%% Quatre unites systemd pour un seul deployable. Source : deploy/systemd/,
+%% deploy/nginx/miara.conf, scripts/deploy.sh, deploy/README.md.
+flowchart LR
+    subgraph depot["/srv/miara, le depot"]
+        code["code backend et frontend"]
+    end
+    subgraph units["unites systemd, Restart=always"]
+        api["miara-api<br/>uvicorn, API_WORKERS<br/>RestartSec=2"]
+        wh["miara-worker-heavy<br/>celery -Q heavy<br/>TimeoutStopSec=300"]
+        wl["miara-worker-light<br/>celery -Q light<br/>TimeoutStopSec=60"]
+        web["miara-web<br/>next start"]
+    end
+    env["/etc/miara/.env<br/>640 root:miara"]
+    nginx["nginx<br/>seul processus expose"]
+    deploy["scripts/deploy.sh<br/>uv sync --frozen, migrate,<br/>npm ci, build, restart"]
+
+    code --> deploy
+    deploy --> api
+    deploy --> wh
+    deploy --> wl
+    deploy --> web
+    env -.-> api
+    env -.-> wh
+    env -.-> wl
+    env -.-> web
+    nginx --> api
+    nginx --> web

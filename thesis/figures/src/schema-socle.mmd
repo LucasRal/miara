@@ -1,0 +1,28 @@
+%% Genere par thesis/figures/gen/schema_bdd.py - ne pas editer a la main
+erDiagram
+    organizations {
+        uuid id PK
+        varchar_200 name "NOT NULL"
+        varchar_80 slug "NOT NULL"
+    }
+    users {
+        uuid id PK
+        varchar_320 email "NOT NULL"
+        varchar_255 password_hash "NOT NULL"
+        varchar_200 full_name "NOT NULL"
+    }
+    memberships {
+        uuid user_id PK
+        uuid organization_id PK
+        membership_role role "NOT NULL"
+    }
+    integrations {
+        uuid id PK
+        varchar_50 provider "NOT NULL"
+        bytea encrypted_credentials "NOT NULL"
+        varchar_500 instance_url
+        uuid organization_id FK "NOT NULL"
+    }
+    organizations ||--o{ integrations : organization_id
+    organizations ||--o{ memberships : organization_id
+    users ||--o{ memberships : user_id

@@ -1,0 +1,14 @@
+%% Cycle de vie d'une ligne de task_events. Source : app/core/task_events.py,
+%% app/queue.py, migration 67e3bb86641c.
+stateDiagram-v2
+    direction LR
+    [*] --> started : task_prerun, ligne ouverte<br/>org_id lu dans les arguments
+    started --> succeeded : task_postrun, state different de FAILURE<br/>duration_ms renseigne
+    started --> failed : task_failure, type et message tronques a 500
+    started --> started : reessai Celery, meme task_id<br/>la ligne est reouverte
+    failed --> failed : POST /queue/tasks/{id}/retry<br/>retried incremente, nouvelle ligne publiee
+    succeeded --> [*]
+    note right of failed
+        Aucune suppression : la table
+        ne recoit que SELECT, INSERT, UPDATE
+    end note

@@ -1,0 +1,40 @@
+%% Genere par thesis/figures/gen/versions_prompts.py - ne pas editer a la main
+flowchart LR
+    subgraph g0["prompts/echo/"]
+        direction LR
+        g0v1["v1<br/>62 mots (chargee)"]
+    end
+    subgraph g1["prompts/hr.calibrate/"]
+        direction LR
+        g1v1["v1<br/>248 mots (chargee)"]
+    end
+    subgraph g2["prompts/hr.criteria/"]
+        direction LR
+        g2v1["v1<br/>392 mots (chargee)"]
+    end
+    subgraph g3["prompts/hr.profile/"]
+        direction LR
+        g3v1["v1<br/>300 mots (chargee)"]
+    end
+    subgraph g4["prompts/hr.score/"]
+        direction LR
+        g4v1["v1<br/>479 mots"]
+        g4v2["v2<br/>710 mots (chargee)"]
+        g4v1 --> g4v2
+    end
+    subgraph g5["prompts/sales.assistant/"]
+        direction LR
+        g5v1["v1<br/>283 mots"]
+        g5v2["v2<br/>363 mots"]
+        g5v1 --> g5v2
+        g5v3["v3<br/>406 mots"]
+        g5v2 --> g5v3
+        g5v4["v4<br/>441 mots (chargee)"]
+        g5v3 --> g5v4
+    end
+    subgraph g6["prompts/sales.coach/"]
+        direction LR
+        g6v1["v1<br/>594 mots"]
+        g6v2["v2<br/>634 mots (chargee)"]
+        g6v1 --> g6v2
+    end

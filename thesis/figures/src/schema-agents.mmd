@@ -1,0 +1,52 @@
+%% Genere par thesis/figures/gen/schema_bdd.py - ne pas editer a la main
+erDiagram
+    conversations {
+        uuid id PK
+        varchar_100 agent "NOT NULL"
+        uuid user_id FK "NOT NULL"
+        timestamptz created_at "NOT NULL"
+        uuid organization_id FK "NOT NULL"
+    }
+    messages {
+        uuid id PK
+        uuid conversation_id FK "NOT NULL"
+        integer position "NOT NULL"
+        varchar_20 role "NOT NULL"
+        text content
+        jsonb tool_calls_json
+        varchar_100 tool_call_id
+        timestamptz created_at "NOT NULL"
+        uuid organization_id FK "NOT NULL"
+    }
+    agent_traces {
+        uuid id PK
+        uuid trace_id "NOT NULL"
+        uuid conversation_id FK
+        integer step "NOT NULL"
+        varchar_30 kind "NOT NULL"
+        varchar_100 tool
+        jsonb args_json
+        text result_summary
+        integer latency_ms
+        timestamptz created_at "NOT NULL"
+        uuid organization_id FK "NOT NULL"
+    }
+    llm_calls {
+        uuid id PK
+        uuid trace_id "NOT NULL"
+        varchar_100 agent "NOT NULL"
+        varchar_100 alias "NOT NULL"
+        varchar_200 model_used "NOT NULL"
+        integer prompt_version
+        integer input_tokens "NOT NULL"
+        integer output_tokens "NOT NULL"
+        integer latency_ms "NOT NULL"
+        numeric_12_6 cost_usd
+        jsonb tool_calls_json
+        varchar_20 status "NOT NULL"
+        text error
+        timestamptz created_at "NOT NULL"
+        uuid organization_id FK "NOT NULL"
+    }
+    conversations ||--o{ agent_traces : conversation_id
+    conversations ||--o{ messages : conversation_id
