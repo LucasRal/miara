@@ -143,6 +143,13 @@
 
   --radius: 0.625rem;
 
+  /* Hauteur maximale d'un panneau de données (tableau, longue liste) avant
+     qu'il ne défile dans son cadre. Assez haut pour qu'une page de résultats
+     s'y lise, assez bas pour que sa pagination et ce qui suit restent à
+     l'écran. Borné en rem pour qu'un très grand écran ne déroule pas
+     cinquante lignes d'un coup. */
+  --zone-donnees: min(65vh, 38rem);
+
   /* --- Barre latérale ----------------------------------------------------- */
   --sidebar: #f7f9fa;
   --sidebar-foreground: var(--ink);
