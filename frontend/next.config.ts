@@ -4,6 +4,12 @@ import type { NextConfig } from "next";
 const BACKEND_URL = process.env.BACKEND_URL ?? "http://localhost:8010";
 
 const nextConfig: NextConfig = {
+  // Compression déléguée à nginx (deploy/nginx/miara.conf). Next gzippe aussi
+  // les réponses proxifiées, y compris le flux SSE de l'agent : la trace
+  // n'arrivait alors au navigateur qu'une fois le tour terminé, au lieu de
+  // s'afficher étape par étape. C'est le seul endroit où le choix se fait.
+  compress: false,
+
   // Same-origin proxy: the browser calls /api/* on this app (port 3010) and
   // Next forwards to the FastAPI backend. No CORS, works from remote browsers.
   async rewrites() {

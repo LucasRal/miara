@@ -6,6 +6,8 @@
  * leave NEXT_PUBLIC_API_URL empty so calls stay same-origin.
  */
 
+import type { components } from "@/lib/api-types";
+
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "";
 const API_PREFIX = "/api/v1";
 
@@ -19,11 +21,27 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * La ressource n'existe pas (ou pas pour cette organisation) — par opposition
+ * à une panne passagère.
+ *
+ * 403 est rangé ici avec 404 volontairement : sous RLS, une ressource d'une
+ * autre organisation est indistinguable d'une ressource inexistante, et c'est
+ * bien ce que l'on veut dire à l'utilisateur. Dans les deux cas, réessayer ne
+ * changera rien.
+ */
+export function estIntrouvable(err: unknown): boolean {
+  return err instanceof ApiError && (err.status === 404 || err.status === 403);
+}
+
 async function request<T>(path: string, init?: RequestInit, allowRefresh = true): Promise<T> {
+  // FormData : c'est le navigateur qui pose le Content-Type (avec la frontière
+  // multipart). Le forcer casserait l'envoi de fichiers.
+  const isForm = init?.body instanceof FormData;
   const res = await fetch(`${BASE}${API_PREFIX}${path}`, {
     ...init,
     headers: {
-      "Content-Type": "application/json",
+      ...(isForm ? {} : { "Content-Type": "application/json" }),
       ...init?.headers,
     },
   });
@@ -55,32 +73,33 @@ export const api = {
       method: "POST",
       body: body === undefined ? undefined : JSON.stringify(body),
     }),
+  put: <T>(path: string, body: unknown) =>
+    request<T>(path, { method: "PUT", body: JSON.stringify(body) }),
   patch: <T>(path: string, body: unknown) =>
     request<T>(path, { method: "PATCH", body: JSON.stringify(body) }),
   delete: <T>(path: string) => request<T>(path, { method: "DELETE" }),
+  /** Envoi de fichiers : le navigateur pose lui-même le Content-Type multipart. */
+  upload: <T>(path: string, form: FormData) => request<T>(path, { method: "POST", body: form }),
 };
 
-// --- Contrats du module auth (backend/app/auth/schemas.py) ---
+// --- Contrats GÉNÉRÉS depuis l'OpenAPI FastAPI ---------------------------
+// `src/lib/api-types.ts` est produit par `make types` (openapi-typescript).
+// Ne jamais retyper à la main un schéma que le backend expose : un champ
+// renommé côté Python doit casser la compilation ici.
 
-export type Role = "owner" | "admin" | "sales" | "hr";
+type Schemas = components["schemas"];
 
-export interface MembershipInfo {
-  organization_id: string;
-  organization_name: string;
-  organization_slug: string;
-  role: Role;
-}
+export type Role = Schemas["MembershipRole"];
+export type MembershipInfo = Schemas["MembershipOut"];
+export type Me = Schemas["MeOut"];
+export type Member = Schemas["MemberOut"];
 
-export interface Me {
-  id: string;
-  email: string;
-  full_name: string;
-  org_id: string | null;
-  role: Role | null;
-  memberships: MembershipInfo[];
-}
+// --- Contrats écrits à la main -------------------------------------------
+// Ces endpoints renvoient `dict[str, Any]` côté FastAPI : l'OpenAPI n'en dit
+// rien. Les types ci-dessous sont donc un contrat de lecture, à garder aligné
+// avec les modules concernés (chemin cité au-dessus de chaque bloc).
 
-// --- Contrats du module sales (backend/app/sales/integrations.py) ---
+// backend/app/sales/integrations.py
 
 export interface Integration {
   provider: string;
