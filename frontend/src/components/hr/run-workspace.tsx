@@ -13,6 +13,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Paginateur } from "@/components/ui/paginateur";
+import { ScrollX } from "@/components/ui/scroll-x";
 import { SqueletteClassement } from "@/components/ui/skeletons";
 import { ErrorState, NotFoundState } from "@/components/ui/states";
 import { api, estIntrouvable } from "@/lib/api";
@@ -473,7 +474,9 @@ export function RunWorkspace({ jobId, runId }: { jobId: string; runId: string })
             />
           ) : (
             <>
-              <Ranking rows={visibles} onRetry={(id) => void relancer(id)} />
+              <ScrollX borne sommet={page} label="Classement des CV">
+                <Ranking rows={visibles} onRetry={(id) => void relancer(id)} />
+              </ScrollX>
               <Paginateur
                 page={page}
                 taille={TAILLE_PAGE}

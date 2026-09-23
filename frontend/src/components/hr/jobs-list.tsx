@@ -12,6 +12,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Paginateur } from "@/components/ui/paginateur";
+import { ScrollX } from "@/components/ui/scroll-x";
 import { SqueletteListe } from "@/components/ui/skeletons";
 import { ErrorState } from "@/components/ui/states";
 import { api } from "@/lib/api";
@@ -234,68 +235,70 @@ export function JobsList() {
           />
         )
       ) : (
-        <ul className="flex flex-col gap-3">
-          {affichees.map((job) => {
-            const cible =
-              job.status === "draft"
-                ? `/hr/${job.id}/criteria`
-                : job.last_run
-                  ? `/hr/${job.id}/runs/${job.last_run.run_id}`
-                  : `/hr/${job.id}/candidates`;
-            const statut = statutOffre(job.status);
-            // Deux offres peuvent porter le même intitulé : la date de création
-            // et le résumé — tous deux visibles — sont ce qui les distingue.
-            // Ils complètent donc le nom accessible des deux liens de la carte,
-            // qui seraient sinon identiques (WCAG 2.4.6).
-            const resume = `créée le ${dateLongue(job.created_at)} · ${job.candidates} CV déposé${
-              job.candidates > 1 ? "s" : ""
-            }${
-              job.last_run
-                ? ` · dernière analyse ${RUN_LIBELLE[job.last_run.status] ?? job.last_run.status} le ${dateCourte(job.last_run.created_at)}`
-                : " · aucune analyse"
-            }`;
-            const archivee = job.archived_at !== null;
-            return (
-              <li key={job.id}>
-                <Card className="transition-colors hover:border-primary/50">
-                  <CardContent className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <Link href={cible} className="font-medium hover:underline">
-                        {job.title}
-                        <span className="sr-only"> — {resume}</span>
-                      </Link>
-                      <p className="text-xs text-muted-foreground">{resume}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {archivee && <Badge variant="outline">Archivée</Badge>}
-                      <Badge variant={statut.variant}>{statut.libelle}</Badge>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        disabled={enCours === job.id}
-                        onClick={() => void basculerArchive(job)}
-                      >
-                        {archivee ? <ArchiveRestore aria-hidden /> : <Archive aria-hidden />}
-                        <span className="sr-only">
-                          {archivee ? "Rétablir" : "Archiver"} l&apos;offre {job.title} — {resume}
-                        </span>
-                      </Button>
-                      <Button asChild variant="outline" size="sm">
-                        <Link href={cible}>
-                          Ouvrir
-                          <span className="sr-only">
-                            {" "}
-                            l&apos;offre {job.title} — {resume}
-                          </span>
+        <ScrollX borne sommet={pageSure} label="Offres">
+          <ul className="flex flex-col gap-3">
+            {affichees.map((job) => {
+              const cible =
+                job.status === "draft"
+                  ? `/hr/${job.id}/criteria`
+                  : job.last_run
+                    ? `/hr/${job.id}/runs/${job.last_run.run_id}`
+                    : `/hr/${job.id}/candidates`;
+              const statut = statutOffre(job.status);
+              // Deux offres peuvent porter le même intitulé : la date de création
+              // et le résumé — tous deux visibles — sont ce qui les distingue.
+              // Ils complètent donc le nom accessible des deux liens de la carte,
+              // qui seraient sinon identiques (WCAG 2.4.6).
+              const resume = `créée le ${dateLongue(job.created_at)} · ${job.candidates} CV déposé${
+                job.candidates > 1 ? "s" : ""
+              }${
+                job.last_run
+                  ? ` · dernière analyse ${RUN_LIBELLE[job.last_run.status] ?? job.last_run.status} le ${dateCourte(job.last_run.created_at)}`
+                  : " · aucune analyse"
+              }`;
+              const archivee = job.archived_at !== null;
+              return (
+                <li key={job.id}>
+                  <Card className="transition-colors hover:border-primary/50">
+                    <CardContent className="flex flex-wrap items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <Link href={cible} className="font-medium hover:underline">
+                          {job.title}
+                          <span className="sr-only"> — {resume}</span>
                         </Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </li>
-            );
-          })}
-        </ul>
+                        <p className="text-xs text-muted-foreground">{resume}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {archivee && <Badge variant="outline">Archivée</Badge>}
+                        <Badge variant={statut.variant}>{statut.libelle}</Badge>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          disabled={enCours === job.id}
+                          onClick={() => void basculerArchive(job)}
+                        >
+                          {archivee ? <ArchiveRestore aria-hidden /> : <Archive aria-hidden />}
+                          <span className="sr-only">
+                            {archivee ? "Rétablir" : "Archiver"} l&apos;offre {job.title} — {resume}
+                          </span>
+                        </Button>
+                        <Button asChild variant="outline" size="sm">
+                          <Link href={cible}>
+                            Ouvrir
+                            <span className="sr-only">
+                              {" "}
+                              l&apos;offre {job.title} — {resume}
+                            </span>
+                          </Link>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </li>
+              );
+            })}
+          </ul>
+        </ScrollX>
       )}
 
       <Paginateur

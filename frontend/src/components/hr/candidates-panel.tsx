@@ -15,6 +15,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Paginateur } from "@/components/ui/paginateur";
+import { ScrollX } from "@/components/ui/scroll-x";
 import {
   Select,
   SelectContent,
@@ -457,34 +458,36 @@ export function CandidatesPanel({ jobId }: { jobId: string }) {
               }
             />
           ) : (
-            <ul ref={listeRef} className="flex flex-col divide-y rounded-lg border">
-              {affiches.map((cv) => {
-                const statut = STATUT[cv.status] ?? { libelle: cv.status, variant: "secondary" };
-                return (
-                  <li key={cv.id} className="flex items-center justify-between gap-3 px-4 py-2">
-                    <div className="min-w-0">
-                      <p className="truncate text-sm">{cv.original_filename}</p>
-                      <p className="text-xs text-muted-foreground">{taille(cv.size_bytes)}</p>
-                    </div>
-                    <div className="flex shrink-0 items-center gap-2">
-                      <Badge variant={statut.variant}>{statut.libelle}</Badge>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        data-supprimer=""
-                        aria-label={`Supprimer ${cv.original_filename}`}
-                        onClick={(e) => {
-                          retourRef.current = e.currentTarget;
-                          setASupprimer(cv);
-                        }}
-                      >
-                        <Trash2 aria-hidden />
-                      </Button>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
+            <ScrollX borne sommet={pageSure} label="CV déposés" className="rounded-lg border">
+              <ul ref={listeRef} className="flex flex-col divide-y">
+                {affiches.map((cv) => {
+                  const statut = STATUT[cv.status] ?? { libelle: cv.status, variant: "secondary" };
+                  return (
+                    <li key={cv.id} className="flex items-center justify-between gap-3 px-4 py-2">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm">{cv.original_filename}</p>
+                        <p className="text-xs text-muted-foreground">{taille(cv.size_bytes)}</p>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-2">
+                        <Badge variant={statut.variant}>{statut.libelle}</Badge>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          data-supprimer=""
+                          aria-label={`Supprimer ${cv.original_filename}`}
+                          onClick={(e) => {
+                            retourRef.current = e.currentTarget;
+                            setASupprimer(cv);
+                          }}
+                        >
+                          <Trash2 aria-hidden />
+                        </Button>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </ScrollX>
           )}
 
           <Paginateur

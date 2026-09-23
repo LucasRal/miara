@@ -7,6 +7,7 @@ import { ActivityList } from "@/components/dashboard/activity-list";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Label } from "@/components/ui/label";
 import { Paginateur } from "@/components/ui/paginateur";
+import { ScrollX } from "@/components/ui/scroll-x";
 import {
   Select,
   SelectContent,
@@ -102,7 +103,9 @@ export function ActivityWorkspace() {
           description="Une analyse de CV, une écriture confirmée dans Salesforce ou un texte soumis au coach apparaîtront ici."
         />
       ) : (
-        <ActivityList events={donnees.events} instanceUrl={donnees.crm_instance_url} />
+        <ScrollX borne sommet={page} label="Activité">
+          <ActivityList events={donnees.events} instanceUrl={donnees.crm_instance_url} />
+        </ScrollX>
       )}
 
       <Paginateur
