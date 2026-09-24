@@ -4,6 +4,7 @@ import { Clock } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 import { ActivityList } from "@/components/dashboard/activity-list";
+import { FiltreEspace, TOUT } from "@/components/layout/filtre-espace";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Label } from "@/components/ui/label";
 import { Paginateur } from "@/components/ui/paginateur";
@@ -18,6 +19,7 @@ import {
 import { SqueletteListe } from "@/components/ui/skeletons";
 import { ErrorState } from "@/components/ui/states";
 import { api } from "@/lib/api";
+import { useEspace } from "@/lib/espace";
 import { SOURCE_LIBELLE, type ActivityPage } from "@/lib/dashboard";
 
 const TAILLE_PAGE = 25;
@@ -38,6 +40,11 @@ export function ActivityWorkspace() {
   const [erreur, setErreur] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [source, setSource] = useState("toutes");
+  const { espace } = useEspace();
+  const [tout, setTout] = useState(false);
+  // Dérivé plutôt que copié dans un état : changer d'espace change le
+  // périmètre sans qu'un effet ait à le rattraper.
+  const perimetre = tout || !espace ? TOUT : espace;
 
   const charger = useCallback(async () => {
     setErreur(null);
@@ -46,12 +53,13 @@ export function ActivityWorkspace() {
       offset: String(page * TAILLE_PAGE),
     });
     if (source !== "toutes") params.set("kind", source);
+    if (perimetre !== TOUT) params.set("espace", perimetre);
     try {
       setDonnees(await api.get<ActivityPage>(`/dashboard/activity?${params}`));
     } catch {
       setErreur("Impossible de charger l'activité.");
     }
-  }, [page, source]);
+  }, [page, source, perimetre]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -90,6 +98,14 @@ export function ActivityWorkspace() {
             ))}
           </SelectContent>
         </Select>
+        <FiltreEspace
+          valeur={perimetre}
+          onChange={(v) => {
+            setTout(v === TOUT);
+            setSource("toutes");
+            setPage(0);
+          }}
+        />
       </div>
 
       {donnees.events.length === 0 ? (

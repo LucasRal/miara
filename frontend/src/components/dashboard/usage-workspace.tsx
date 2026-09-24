@@ -15,6 +15,7 @@ import {
   YAxis,
 } from "recharts";
 
+import { FiltreEspace, TOUT } from "@/components/layout/filtre-espace";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DataTable, type Colonne } from "@/components/ui/data-table";
@@ -30,6 +31,7 @@ import { SqueletteTableau } from "@/components/ui/skeletons";
 import { ErrorState } from "@/components/ui/states";
 import { libelleAgent, parLibelle, type AgentAgrege } from "@/lib/agents";
 import { api } from "@/lib/api";
+import { useEspace } from "@/lib/espace";
 import { downloadCsv } from "@/lib/hr";
 import {
   duree,
@@ -82,15 +84,23 @@ export function UsageWorkspace() {
   const [appels, setAppels] = useState<{ calls: UsageCall[]; total: number } | null>(null);
   const [pageAppels, setPageAppels] = useState(0);
   const [erreur, setErreur] = useState<string | null>(null);
+  const { espace } = useEspace();
+  const [tout, setTout] = useState(false);
+  // Les quatre vues de l'écran partagent ce périmètre : le total en haut de
+  // page contredirait les lignes du bas si chacune choisissait le sien.
+  const perimetre = tout || !espace ? TOUT : espace;
 
   const charger = useCallback(async () => {
     setErreur(null);
     try {
+      const cadre = perimetre === TOUT ? "" : `&espace=${perimetre}`;
       const [daily, parAgent, derniers] = await Promise.all([
-        api.get<{ series: UsageDay[] }>(`/usage/daily?days=${jours}`),
-        api.get<{ by_agent: UsageAgent[]; by_agent_alias: UsageAgentAlias[] }>("/usage/by-agent"),
+        api.get<{ series: UsageDay[] }>(`/usage/daily?days=${jours}${cadre}`),
+        api.get<{ by_agent: UsageAgent[]; by_agent_alias: UsageAgentAlias[] }>(
+          `/usage/by-agent?${cadre.slice(1)}`
+        ),
         api.get<{ calls: UsageCall[]; total: number }>(
-          `/usage/calls?limit=${TAILLE_PAGE}&offset=${pageAppels * TAILLE_PAGE}`
+          `/usage/calls?limit=${TAILLE_PAGE}&offset=${pageAppels * TAILLE_PAGE}${cadre}`
         ),
       ]);
       setSerie(daily.series);
@@ -100,7 +110,7 @@ export function UsageWorkspace() {
     } catch {
       setErreur("Impossible de charger l'usage.");
     }
-  }, [jours, pageAppels]);
+  }, [jours, pageAppels, perimetre]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -264,6 +274,13 @@ export function UsageWorkspace() {
               ))}
             </SelectContent>
           </Select>
+          <FiltreEspace
+            valeur={perimetre}
+            onChange={(v) => {
+              setTout(v === TOUT);
+              setPageAppels(0);
+            }}
+          />
           <p className="text-sm text-muted-foreground">
             {usd(total)} · {jetons.toLocaleString("fr-FR")} jetons
           </p>

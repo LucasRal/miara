@@ -3,6 +3,7 @@
 import { ChevronDown, RotateCcw } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
+import { FiltreEspace, TOUT } from "@/components/layout/filtre-espace";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable, type Colonne } from "@/components/ui/data-table";
@@ -17,6 +18,7 @@ import {
 import { SqueletteTableau } from "@/components/ui/skeletons";
 import { ErrorState } from "@/components/ui/states";
 import { api, ApiError } from "@/lib/api";
+import { useEspace } from "@/lib/espace";
 import { duree, heure, type TaskEvent, type TaskPage } from "@/lib/dashboard";
 import type { Role } from "@/lib/api";
 import { notifierErreur, notifierSucces } from "@/lib/notifications";
@@ -79,6 +81,9 @@ export function QueueTable({ role }: { role: Role | null }) {
   const [numero, setNumero] = useState(0);
   const [erreur, setErreur] = useState<string | null>(null);
   const [relance, setRelance] = useState<string | null>(null);
+  const { espace } = useEspace();
+  const [tout, setTout] = useState(false);
+  const perimetre = tout || !espace ? TOUT : espace;
 
   const charger = useCallback(async () => {
     const params = new URLSearchParams({
@@ -86,13 +91,14 @@ export function QueueTable({ role }: { role: Role | null }) {
       offset: String(numero * TAILLE_PAGE),
     });
     if (filtre !== "toutes") params.set("status", filtre);
+    if (perimetre !== TOUT) params.set("espace", perimetre);
     try {
       setPage(await api.get<TaskPage>(`/queue/tasks?${params}`));
       setErreur(null);
     } catch {
       setErreur("Impossible de charger la file.");
     }
-  }, [filtre, numero]);
+  }, [filtre, numero, perimetre]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -243,6 +249,13 @@ export function QueueTable({ role }: { role: Role | null }) {
             <SelectItem value="failed">En échec</SelectItem>
           </SelectContent>
         </Select>
+        <FiltreEspace
+          valeur={perimetre}
+          onChange={(v) => {
+            setTout(v === TOUT);
+            setNumero(0);
+          }}
+        />
         <p className="text-sm text-muted-foreground">
           {page.total} tâche{page.total > 1 ? "s" : ""} sur les 24 dernières heures
         </p>

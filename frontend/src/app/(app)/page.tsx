@@ -1,10 +1,18 @@
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { DashboardMetrics } from "@/components/dashboard/metrics";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { canAccess, sectionFor } from "@/lib/navigation";
+import {
+  canAccess,
+  COOKIE_ESPACE,
+  espaceActif,
+  espaceFor,
+  sectionFor,
+  type Espace,
+} from "@/lib/navigation";
 import { getMe } from "@/lib/server-api";
 import { reprendreSession } from "@/lib/session";
 
@@ -24,6 +32,9 @@ export default async function DashboardPage() {
   // Session valide sans organisation : la coquille propose d'en créer une.
   if (!me.org_id) redirect("/");
 
+  const choisi = (await cookies()).get(COOKIE_ESPACE)?.value as Espace | undefined;
+  const espace = espaceActif("/", choisi ?? null, me.role);
+
   const raccourcis = [
     {
       href: "/hr",
@@ -35,14 +46,22 @@ export default async function DashboardPage() {
       titre: "Préparer un appel",
       texte: "Demandez un briefing sourcé sur un compte Salesforce.",
     },
-  ].filter((r) => canAccess(sectionFor(r.href), me.role));
+    // Deux raccourcis pour deux métiers : l'espace actif décide lequel est
+    // proposé, le rôle décide s'il existe.
+  ].filter(
+    (r) => canAccess(sectionFor(r.href), me.role) && (!espace || espaceFor(r.href) === espace)
+  );
 
   return (
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="font-heading text-xl font-semibold">Bonjour {me.full_name}</h1>
         <p className="text-sm text-muted-foreground">
-          Vos agents commerciaux et RH, sur les données de votre organisation.
+          {espace === "rh"
+            ? "Votre agent RH, sur les données de votre organisation."
+            : espace === "commercial"
+              ? "Votre agent commercial, sur les données de votre organisation."
+              : "Vos agents commerciaux et RH, sur les données de votre organisation."}
         </p>
       </div>
 
