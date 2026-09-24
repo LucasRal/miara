@@ -13,8 +13,9 @@ from typing import Annotated, Any
 
 import structlog
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 
+from app import espaces
 from app.auth.deps import Context, RequestContext, require_role
 from app.core.celery_app import celery_app
 from app.core.models import TaskEvent
@@ -89,6 +90,9 @@ async def list_tasks(
     since_hours: Annotated[
         int | None, Query(description="Fenêtre d'observation, en heures (défaut : 24)")
     ] = 24,
+    espace: Annotated[
+        str | None, Query(description=f"Espace de travail parmi {list(espaces.ESPACES)}")
+    ] = None,
 ) -> dict[str, Any]:
     """Tâches de l'organisation courante, la plus récente en tête.
 
@@ -99,9 +103,17 @@ async def list_tasks(
     if status is not None and status not in STATUTS:
         raise HTTPException(status_code=422, detail="Statut inconnu")
 
+    espaces.valider(espace)
+
     filtres = []
     if status is not None:
         filtres.append(TaskEvent.status == status)
+    # Les noms de tâches suivent `module.fonction` : l'espace RH ne montre que
+    # `hr.*`. Les tâches techniques (`core.*`) n'ont pas d'espace et
+    # n'apparaissent donc que sans filtre.
+    prefixes = espaces.prefixes(espace)
+    if prefixes is not None:
+        filtres.append(or_(*(TaskEvent.name.startswith(p) for p in prefixes)))
     if since_hours is not None and since_hours > 0:
         filtres.append(TaskEvent.started_at >= datetime.now(UTC) - timedelta(hours=since_hours))
 

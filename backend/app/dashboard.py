@@ -29,6 +29,7 @@ from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app import espaces
 from app.auth.deps import Context
 from app.config import settings
 from app.core.crypto import decrypt_credentials
@@ -127,7 +128,7 @@ async def _activite(
     session: AsyncSession,
     limite: int = ACTIVITE,
     decalage: int = 0,
-    kind: str | None = None,
+    kinds: tuple[str, ...] | None = None,
 ) -> list[dict[str, Any]]:
     """Événements les plus récents, toutes sources confondues.
 
@@ -218,8 +219,8 @@ async def _activite(
             }
         )
 
-    if kind is not None:
-        evenements = [e for e in evenements if e["kind"] == kind]
+    if kinds is not None:
+        evenements = [e for e in evenements if e["kind"] in kinds]
     evenements.sort(key=lambda e: e["at"], reverse=True)
     return evenements[decalage : decalage + limite]
 
@@ -279,6 +280,9 @@ async def activity(
     limit: Annotated[int, Query(ge=1, le=ACTIVITE_MAX)] = 25,
     offset: Annotated[int, Query(ge=0)] = 0,
     kind: Annotated[str | None, Query(description=f"Une source parmi {sorted(SOURCES)}")] = None,
+    espace: Annotated[
+        str | None, Query(description=f"Espace de travail parmi {list(espaces.ESPACES)}")
+    ] = None,
 ) -> dict[str, Any]:
     """Activité complète de l'organisation, paginée.
 
@@ -292,8 +296,17 @@ async def activity(
     """
     if kind is not None and kind not in SOURCES:
         raise HTTPException(status_code=422, detail=f"Source inconnue : {kind}")
+    espaces.valider(espace)
 
-    tables = [SOURCES[kind]] if kind else list(SOURCES.values())
+    # L'espace restreint le champ ; la source, quand elle est demandée, le
+    # restreint encore. Demander une source hors de l'espace actif ne renvoie
+    # rien plutôt qu'une erreur : l'écran change les deux filtres l'un après
+    # l'autre, et un état transitoire ne doit pas casser la page.
+    retenues = espaces.sources(espace) or tuple(SOURCES)
+    if kind is not None:
+        retenues = tuple(k for k in retenues if k == kind)
+
+    tables = [SOURCES[k] for k in retenues]
     total = 0
     for table in tables:
         total += (await ctx.session.execute(select(func.count()).select_from(table))).scalar_one()
@@ -307,10 +320,10 @@ async def activity(
         )
 
     return {
-        "events": await _activite(ctx.session, limite=limit, decalage=offset, kind=kind),
+        "events": await _activite(ctx.session, limite=limit, decalage=offset, kinds=retenues),
         "total": total,
         "limit": limit,
         "offset": offset,
-        "kinds": sorted(SOURCES),
+        "kinds": sorted(retenues),
         "crm_instance_url": await _instance_url(ctx.session),
     }

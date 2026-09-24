@@ -391,3 +391,94 @@ async def test_usage_ferme_a_un_commercial(
         )
     for chemin in ("/usage", "/usage/daily", "/usage/by-agent", "/usage/calls"):
         assert (await client.get(f"/api/v1{chemin}")).status_code == 403, chemin
+
+
+# --- espaces de travail ---------------------------------------------------
+
+
+async def test_espace_filtre_activite_file_et_usage(
+    make_client: Callable[[], httpx.AsyncClient],
+    admin_sessions: async_sessionmaker[AsyncSession],
+    auth_cleanup: dict[str, list],
+) -> None:
+    """L'espace actif restreint les trois écrans transverses, côté serveur.
+
+    Filtrer la page déjà rendue ne suffirait pas : ces écrans sont paginés par
+    le backend, et le total afficherait « 15 événements » en n'en montrant
+    que trois. Le filtre porte donc sur le total autant que sur la page.
+    """
+    client, org_id = await _client_owner(make_client, auth_cleanup, "espace")
+    async with admin_sessions() as s, s.begin():
+        job = Job(
+            organization_id=org_id,
+            title="Offre pour les espaces",
+            description_text="Poste de test pour la séparation des espaces." * 2,
+            status="ready",
+        )
+        s.add(job)
+        await s.flush()
+        s.add(
+            ScreeningRun(
+                organization_id=org_id,
+                job_id=job.id,
+                status="done",
+                stats_json={"candidates": 1, "scored": 1, "failed": 0},
+            )
+        )
+        s.add(
+            CrmWrite(
+                organization_id=org_id,
+                trace_id=uuid.uuid4(),
+                tool="create_task",
+                sf_record_id="00T000000000042",
+                status="created",
+            )
+        )
+        s.add(_tache(org_id, "hr.rank_run", "succeeded"))
+        s.add(_tache(org_id, "sales.sync_crm", "succeeded"))
+        s.add(_tache(org_id, "core.ping", "succeeded"))
+        s.add(_appel(org_id, "hr.score", "hr.score", "0.030000"))
+        s.add(_appel(org_id, "sales.assistant", "sales.synthesize", "0.010000"))
+        s.add(_appel(org_id, "core.echo", "sales.route", "0.001000"))
+
+    # Activité : l'espace RH ne connaît que les présélections, l'espace
+    # commercial les écritures CRM et les analyses du coach.
+    rh = (await client.get("/api/v1/dashboard/activity?espace=rh")).json()
+    assert rh["total"] == 1
+    assert {e["kind"] for e in rh["events"]} == {"hr_run"}
+    assert rh["kinds"] == ["hr_run"]
+    commercial = (await client.get("/api/v1/dashboard/activity?espace=commercial")).json()
+    assert {e["kind"] for e in commercial["events"]} == {"crm_write"}
+    assert commercial["kinds"] == ["coaching", "crm_write"]
+    # Sans espace, on voit les deux : le filtre est débrayable.
+    assert (await client.get("/api/v1/dashboard/activity")).json()["total"] == 2
+
+    # File de traitement : les noms suivent `module.fonction`. Les tâches
+    # techniques n'appartiennent à aucun espace et ne sortent que sans filtre.
+    noms = lambda corps: {t["name"] for t in corps["tasks"]}  # noqa: E731
+    file_rh = (await client.get("/api/v1/queue/tasks?espace=rh")).json()
+    assert noms(file_rh) == {"hr.rank_run"} and file_rh["total"] == 1
+    file_com = (await client.get("/api/v1/queue/tasks?espace=commercial")).json()
+    assert noms(file_com) == {"sales.sync_crm"}
+    assert "core.ping" in noms((await client.get("/api/v1/queue/tasks")).json())
+
+    # Usage : coût et appels suivent le même périmètre, pour que le total en
+    # haut de page ne contredise pas les lignes du bas.
+    usage_rh = (await client.get("/api/v1/usage?espace=rh")).json()
+    assert usage_rh["total_calls"] == 1
+    assert usage_rh["cost_usd"] == pytest.approx(0.03)
+    appels_rh = (await client.get("/api/v1/usage/calls?espace=rh")).json()
+    assert appels_rh["total"] == 1 and appels_rh["calls"][0]["agent"] == "hr.score"
+    agents_com = (await client.get("/api/v1/usage/by-agent?espace=commercial")).json()
+    assert {a["agent"] for a in agents_com["by_agent"]} == {"sales.assistant"}
+    jours_com = (await client.get("/api/v1/usage/daily?espace=commercial")).json()
+    assert sum(j["calls"] for j in jours_com["series"]) == 1
+    assert (await client.get("/api/v1/usage/calls")).json()["total"] == 3
+
+    # Un espace inconnu est refusé partout de la même façon.
+    for url in (
+        "/api/v1/dashboard/activity?espace=marketing",
+        "/api/v1/queue/tasks?espace=marketing",
+        "/api/v1/usage/calls?espace=marketing",
+    ):
+        assert (await client.get(url)).status_code == 422, url

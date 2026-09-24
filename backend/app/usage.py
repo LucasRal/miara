@@ -19,9 +19,10 @@ from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends
-from sqlalchemy import Date, cast, func, select
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy import Date, cast, func, or_, select
 
+from app import espaces
 from app.auth.deps import RequestContext, require_role
 from app.core.models import LLMCall
 
@@ -35,9 +36,25 @@ Context = Annotated[RequestContext, Depends(require_role("owner", "admin"))]
 MAX_JOURS = 180
 MAX_APPELS = 200
 
+# Paramètre commun aux quatre vues de l'écran : les graphiques, les tableaux
+# et la liste d'appels doivent parler du même périmètre, sinon le total en
+# haut de page contredit les lignes du bas.
+Espace = Annotated[
+    str | None, Query(description=f"Espace de travail parmi {list(espaces.ESPACES)}")
+]
+
+
+def _perimetre(espace: str | None) -> list[Any]:
+    """Filtre SQL de l'espace : les agents journalisés `module.fonction`."""
+    espaces.valider(espace)
+    prefixes = espaces.prefixes(espace)
+    if prefixes is None:
+        return []
+    return [or_(*(LLMCall.agent.startswith(p) for p in prefixes))]
+
 
 @router.get("/usage")
-async def usage(ctx: Context) -> dict[str, Any]:
+async def usage(ctx: Context, espace: Espace = None) -> dict[str, Any]:
     rows = (
         await ctx.session.execute(
             select(
@@ -47,6 +64,7 @@ async def usage(ctx: Context) -> dict[str, Any]:
                 func.coalesce(func.sum(LLMCall.output_tokens), 0).label("output_tokens"),
                 func.coalesce(func.sum(LLMCall.cost_usd), Decimal(0)).label("cost_usd"),
             )
+            .where(*_perimetre(espace))
             .group_by(LLMCall.alias)
             .order_by(LLMCall.alias)
         )
@@ -73,7 +91,7 @@ async def usage(ctx: Context) -> dict[str, Any]:
 
 
 @router.get("/usage/daily")
-async def daily(ctx: Context, days: int = 30) -> dict[str, Any]:
+async def daily(ctx: Context, days: int = 30, espace: Espace = None) -> dict[str, Any]:
     """Coût et jetons par jour : la courbe du chapitre 8.
 
     Les jours sans appel n'apparaissent pas : c'est à l'écran de combler les
@@ -91,7 +109,7 @@ async def daily(ctx: Context, days: int = 30) -> dict[str, Any]:
                 func.coalesce(func.sum(LLMCall.output_tokens), 0).label("output_tokens"),
                 func.coalesce(func.sum(LLMCall.cost_usd), Decimal(0)).label("cost_usd"),
             )
-            .where(LLMCall.created_at >= depuis)
+            .where(LLMCall.created_at >= depuis, *_perimetre(espace))
             .group_by(jour)
             .order_by(jour)
         )
@@ -112,7 +130,7 @@ async def daily(ctx: Context, days: int = 30) -> dict[str, Any]:
 
 
 @router.get("/usage/by-agent")
-async def by_agent(ctx: Context) -> dict[str, Any]:
+async def by_agent(ctx: Context, espace: Espace = None) -> dict[str, Any]:
     """Coût, jetons et latence par agent, puis par alias de modèle.
 
     Deux regroupements et non un seul : le mémoire compare les agents entre
@@ -129,6 +147,7 @@ async def by_agent(ctx: Context) -> dict[str, Any]:
                 func.coalesce(func.sum(LLMCall.cost_usd), Decimal(0)).label("cost_usd"),
                 func.avg(LLMCall.latency_ms).label("latency_ms"),
             )
+            .where(*_perimetre(espace))
             .group_by(LLMCall.agent, LLMCall.alias)
             .order_by(LLMCall.agent, LLMCall.alias)
         )
@@ -158,17 +177,23 @@ async def by_agent(ctx: Context) -> dict[str, Any]:
 
 
 @router.get("/usage/calls")
-async def calls(ctx: Context, limit: int = 25, offset: int = 0) -> dict[str, Any]:
+async def calls(
+    ctx: Context, limit: int = 25, offset: int = 0, espace: Espace = None
+) -> dict[str, Any]:
     """Derniers appels : agent, modèle, latence, coût. Jamais le prompt.
 
     Paginé côté serveur, comme la file : la table grandit à chaque appel de
     modèle. Le total accompagne la page.
     """
-    total = (await ctx.session.execute(select(func.count()).select_from(LLMCall))).scalar_one()
+    perimetre = _perimetre(espace)
+    total = (
+        await ctx.session.execute(select(func.count()).select_from(LLMCall).where(*perimetre))
+    ).scalar_one()
     rows = (
         (
             await ctx.session.execute(
                 select(LLMCall)
+                .where(*perimetre)
                 .order_by(LLMCall.created_at.desc())
                 .offset(max(offset, 0))
                 .limit(min(max(limit, 1), MAX_APPELS))
