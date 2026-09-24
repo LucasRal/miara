@@ -517,7 +517,7 @@ export function SalesWorkspace() {
   );
 
   return (
-    <div className="grid flex-1 gap-4 lg:grid-cols-[16rem_1fr]">
+    <div className="grid flex-1 gap-4 lg:min-h-0 lg:grid-cols-[16rem_1fr] lg:grid-rows-1">
       {/* Écrire est ce qu'on vient faire ici. Même liste des fils réduite à
           un seul arrêt de tabulation, la saisie reste derrière la trace de
           chaque réponse — un dépliant focusable par tour, donc un nombre de
@@ -549,12 +549,14 @@ export function SalesWorkspace() {
                 Vos fils de discussion avec l&apos;agent commercial.
               </SheetDescription>
             </SheetHeader>
-            <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4">{liste}</div>
+            {/* Le tiroir borne déjà sa hauteur : la colonne défile
+                dedans, et « Nouvelle conversation » reste sous la main. */}
+            <div className="min-h-0 flex-1 px-4 pb-4">{liste}</div>
           </SheetContent>
         </Sheet>
       )}
 
-      <section className="flex min-h-[28rem] min-w-0 flex-1 flex-col rounded-lg border">
+      <section className="flex min-h-[28rem] min-w-0 flex-1 flex-col rounded-lg border lg:min-h-0">
         {/* Le titre du fil ouvert, sur le fil : sinon la seule façon de savoir
             où l'on est était de repérer l'entrée surlignée dans la colonne de
             gauche — impossible sous `lg`, où elle est repliée. */}
@@ -567,11 +569,14 @@ export function SalesWorkspace() {
             </p>
           </div>
         )}
-        {/* Le fil ne défile PAS dans son cadre : c'est la page qui défile, à
-            toutes les largeurs. Une seule zone de défilement verticale par
-            écran, et le composeur reste atteignable parce qu'il est collant.
-            (`onScroll` reste branché : si un jour le cadre est borné, le
-            suivi du bas continue de fonctionner sans rien changer ici.) */}
+        {/* À partir de `lg`, le fil défile dans son cadre : le titre du fil
+            au-dessus et le composeur en dessous ne bougent plus, et relire
+            une réponse ne fait plus glisser l'écran entier. Sous `lg`, il
+            n'est pas borné — c'est la page qui défile, une seule zone de
+            défilement sous le pouce, et le composeur reste atteignable
+            parce qu'il est collant.
+            `zone()` mesure laquelle des deux défile plutôt que de le
+            supposer : le suivi du bas du fil fonctionne dans les deux cas. */}
         {/* `role="log"` : les ajouts sont annoncés, poliment, dans l'ordre —
             et rien n'est relu. La clé au fil ouvert remonte la région à
             chaque changement de conversation : une région live qui NAÎT avec
@@ -585,7 +590,7 @@ export function SalesWorkspace() {
           aria-live="polite"
           aria-relevant="additions"
           aria-label="Fil de la conversation"
-          className="flex-1 space-y-4 p-4"
+          className="flex-1 space-y-4 p-4 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain"
         >
           {messages.length === 0 &&
             !enCours &&
@@ -692,7 +697,7 @@ export function SalesWorkspace() {
             lecteur d'écran entend du tour, c'est « l'agent réfléchit » puis le
             résumé — la région d'état juste en dessous. */}
         {enCours && (
-          <div className="px-4 pb-4">
+          <div className="shrink-0 px-4 pb-4">
             <Card className="gap-2 py-3">
               <CardContent className="px-3">
                 <p className="mb-2 text-xs font-medium text-muted-foreground">

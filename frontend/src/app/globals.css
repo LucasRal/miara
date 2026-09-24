@@ -150,6 +150,15 @@
      cinquante lignes d'un coup. */
   --zone-donnees: min(65vh, 38rem);
 
+  /* Hauteur du contenu d'un écran qui doit tenir dans la fenêtre plutôt que
+     la dépasser (une conversation) : la fenêtre moins l'en-tête collant et
+     les marges du contenu. L'écran se partage alors cette hauteur entre ses
+     zones, et c'est chacune qui défile — pas la page entière.
+     `svh` et non `vh` : sur mobile, `vh` compte la hauteur que la barre
+     d'adresse occupe encore. Le plancher garde l'écran utilisable sur une
+     fenêtre basse, quitte à ce que la page défile un peu. */
+  --zone-travail: max(30rem, calc(100svh - 8.5rem));
+
   /* --- Barre latérale ----------------------------------------------------- */
   --sidebar: #f7f9fa;
   --sidebar-foreground: var(--ink);

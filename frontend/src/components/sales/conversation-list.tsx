@@ -138,7 +138,7 @@ export function ConversationList({
   }
 
   return (
-    <aside className="flex min-w-0 flex-col gap-2">
+    <aside className="flex h-full min-h-0 min-w-0 flex-col gap-2">
       <Button ref={nouvelleRef} size="sm" onClick={onNouvelle} className="w-full">
         <Plus data-icon="inline-start" /> Nouvelle conversation
       </Button>
@@ -176,101 +176,115 @@ export function ConversationList({
             </div>
           )}
 
-          {trouvees.length === 0 ? (
-            <p className="px-3 py-2 text-sm text-muted-foreground" role="status">
-              Aucun fil ne porte ce titre.
-            </p>
-          ) : (
-            <nav
-              ref={navRef}
-              aria-label="Conversations"
-              aria-describedby="aide-fils"
-              onKeyDown={auClavier}
-              className="flex flex-col gap-3"
-            >
-              <p id="aide-fils" className="sr-only">
-                Utilisez les flèches haut et bas pour parcourir les conversations, droite pour
-                ouvrir leurs actions.
+          {/* La liste défile chez elle : « Nouvelle conversation » et la
+              recherche restent en place, quelle que soit la longueur de
+              l'historique — avant, vingt fils poussaient le bouton hors de
+              l'écran et emportaient toute la page avec eux.
+              `-mx-1 px-1` : la marge que réclame l'anneau de focus, pour
+              qu'il ne déclenche pas une barre de défilement horizontale.
+              `relative` : les noms accessibles des menus d'actions sont des
+              éléments `sr-only`, donc positionnés en absolu. Sans bloc
+              conteneur ici, le dernier d'entre eux se plaçait par rapport à
+              la page, qui gagnait deux cents pixels de défilement vide. */}
+          <div className="relative -mx-1 flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto overscroll-contain px-1">
+            {trouvees.length === 0 ? (
+              <p className="px-3 py-2 text-sm text-muted-foreground" role="status">
+                Aucun fil ne porte ce titre.
               </p>
-              {groupes.map((groupe) => (
-                <section key={groupe.jour} className="flex flex-col gap-1">
-                  <h2 className="px-3 text-xs font-medium text-muted-foreground">{groupe.jour}</h2>
-                  <ul className="flex flex-col gap-1">
-                    {groupe.fils.map((c) => {
-                      const courant = actif === c.id;
-                      // Le nom accessible doit distinguer des voisines homonymes :
-                      // l'heure et le nombre de messages sont déjà à l'écran.
-                      const marque = repere[c.id];
-                      return (
-                        <li
-                          key={c.id}
-                          data-fil-id={c.id}
-                          className="group/fil flex items-center gap-1"
-                        >
-                          <button
-                            type="button"
-                            data-colonne="titre"
-                            tabIndex={c.id === ancre ? 0 : -1}
-                            onFocus={() => setCurseur(c.id)}
-                            onClick={() => onOuvrir(c.id)}
-                            aria-current={courant ? "true" : undefined}
-                            className={cn(
-                              "min-w-0 flex-1 rounded-md px-3 py-2 text-left text-sm",
-                              courant
-                                ? "bg-secondary text-secondary-foreground"
-                                : "text-muted-foreground hover:bg-muted"
-                            )}
+            ) : (
+              <nav
+                ref={navRef}
+                aria-label="Conversations"
+                aria-describedby="aide-fils"
+                onKeyDown={auClavier}
+                className="flex flex-col gap-3"
+              >
+                <p id="aide-fils" className="sr-only">
+                  Utilisez les flèches haut et bas pour parcourir les conversations, droite pour
+                  ouvrir leurs actions.
+                </p>
+                {groupes.map((groupe) => (
+                  <section key={groupe.jour} className="flex flex-col gap-1">
+                    <h2 className="px-3 text-xs font-medium text-muted-foreground">
+                      {groupe.jour}
+                    </h2>
+                    <ul className="flex flex-col gap-1">
+                      {groupe.fils.map((c) => {
+                        const courant = actif === c.id;
+                        // Le nom accessible doit distinguer des voisines homonymes :
+                        // l'heure et le nombre de messages sont déjà à l'écran.
+                        const marque = repere[c.id];
+                        return (
+                          <li
+                            key={c.id}
+                            data-fil-id={c.id}
+                            className="group/fil flex items-center gap-1"
                           >
-                            <span className="block truncate">{c.title}</span>
-                            <span className="block text-xs">{marque}</span>
-                          </button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                data-colonne="actions"
-                                tabIndex={-1}
-                                className="size-8 shrink-0"
-                              >
-                                <MoreHorizontal aria-hidden />
-                                <span className="sr-only">
-                                  Actions sur la conversation {c.title} — {marque}
-                                </span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem
-                                onSelect={() => {
-                                  setTitre(c.title);
-                                  setARenommer(c);
-                                }}
-                              >
-                                <Pencil aria-hidden /> Renommer
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                variant="destructive"
-                                onSelect={() => setASupprimer(c)}
-                              >
-                                <Trash2 aria-hidden /> Supprimer
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </section>
-              ))}
-            </nav>
-          )}
+                            <button
+                              type="button"
+                              data-colonne="titre"
+                              tabIndex={c.id === ancre ? 0 : -1}
+                              onFocus={() => setCurseur(c.id)}
+                              onClick={() => onOuvrir(c.id)}
+                              aria-current={courant ? "true" : undefined}
+                              className={cn(
+                                "min-w-0 flex-1 rounded-md px-3 py-2 text-left text-sm",
+                                courant
+                                  ? "bg-secondary text-secondary-foreground"
+                                  : "text-muted-foreground hover:bg-muted"
+                              )}
+                            >
+                              <span className="block truncate">{c.title}</span>
+                              <span className="block text-xs">{marque}</span>
+                            </button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  data-colonne="actions"
+                                  tabIndex={-1}
+                                  className="size-8 shrink-0"
+                                >
+                                  <MoreHorizontal aria-hidden />
+                                  <span className="sr-only">
+                                    Actions sur la conversation {c.title} — {marque}
+                                  </span>
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                  onSelect={() => {
+                                    setTitre(c.title);
+                                    setARenommer(c);
+                                  }}
+                                >
+                                  <Pencil aria-hidden /> Renommer
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  variant="destructive"
+                                  onSelect={() => setASupprimer(c)}
+                                >
+                                  <Trash2 aria-hidden /> Supprimer
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </section>
+                ))}
+              </nav>
+            )}
 
-          {reste > 0 && (
-            <Button variant="ghost" size="sm" onClick={() => setTranche((n) => n + TRANCHE)}>
-              Afficher {prochaines} conversation{prochaines > 1 ? "s" : ""} de plus
-              <span className="sr-only"> — {reste} restantes</span>
-            </Button>
-          )}
+            {reste > 0 && (
+              <Button variant="ghost" size="sm" onClick={() => setTranche((n) => n + TRANCHE)}>
+                Afficher {prochaines} conversation{prochaines > 1 ? "s" : ""} de plus
+                <span className="sr-only"> — {reste} restantes</span>
+              </Button>
+            )}
+          </div>
         </>
       )}
 
