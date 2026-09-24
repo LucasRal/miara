@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { OrgSwitcher } from "@/components/auth/org-switcher";
+import { EspaceSwitcher } from "@/components/layout/espace-switcher";
 import { MainNav } from "@/components/layout/main-nav";
 import { NavMobile } from "@/components/layout/nav-mobile";
 import { Badge } from "@/components/ui/badge";
@@ -28,9 +29,11 @@ import { libelleRole } from "@/lib/roles";
  * rechargement, car le rôle change avec l'organisation.
  *
  * Deux navigations pour une seule source (`visibleSections`) : les onglets à
- * partir de `sm`, un tiroir sous `sm`. Le rôle et le nom, autrefois en
- * `hidden sm:inline`, vivent maintenant dans le menu compte — donc visibles
- * partout.
+ * partir de `sm`, un tiroir sous `sm`. Les deux sont cadrées sur l'espace de
+ * travail actif, que le sélecteur voisin permet de changer.
+ *
+ * Le rôle et le nom, autrefois en `hidden sm:inline`, vivent maintenant dans
+ * le menu compte — donc visibles partout.
  */
 export function AppHeader({ me: initial }: { me: Me }) {
   const router = useRouter();
@@ -61,8 +64,12 @@ export function AppHeader({ me: initial }: { me: Me }) {
               router.refresh();
             }}
           />
+          {/* L'espace de travail se lit juste après l'organisation : « chez
+              qui » puis « dans quel métier ». Sous `sm`, il vit dans le
+              tiroir, où la place ne manque pas. */}
+          <EspaceSwitcher className="hidden w-52 sm:flex" />
           {me.role && (
-            <Badge variant="secondary" className="hidden sm:inline-flex">
+            <Badge variant="secondary" className="hidden lg:inline-flex">
               {libelleRole(me.role)}
             </Badge>
           )}

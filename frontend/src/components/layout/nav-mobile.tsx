@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 
+import { EspaceSwitcher } from "@/components/layout/espace-switcher";
 import {
   Sheet,
   SheetContent,
@@ -13,7 +14,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import type { Role } from "@/lib/api";
-import { sectionFor, visibleSections } from "@/lib/navigation";
+import { useEspace } from "@/lib/espace";
+import { nomEspace, sectionFor, visibleSections } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
 /**
@@ -29,6 +31,7 @@ import { cn } from "@/lib/utils";
  */
 export function NavMobile({ role, children }: { role: Role | null; children: ReactNode }) {
   const pathname = usePathname();
+  const { espace } = useEspace();
   const [ouvert, setOuvert] = useState(false);
   const active = sectionFor(pathname);
 
@@ -42,11 +45,18 @@ export function NavMobile({ role, children }: { role: Role | null; children: Rea
       <SheetContent side="left" className="w-72">
         <SheetHeader>
           <SheetTitle>Sections</SheetTitle>
-          <SheetDescription>Les sections ouvertes à votre rôle.</SheetDescription>
+          <SheetDescription>
+            Les sections ouvertes à votre rôle dans l&apos;espace {nomEspace(espace)}.
+          </SheetDescription>
         </SheetHeader>
+        {/* Le sélecteur vit dans le tiroir sous `sm` : la barre d'en-tête y
+            porte déjà l'organisation et le menu du compte. */}
+        <div className="px-4">
+          <EspaceSwitcher className="w-full" />
+        </div>
         <nav aria-label="Sections" className="px-4 pb-4">
           <ul className="flex flex-col gap-1">
-            {visibleSections(role).map((section) => {
+            {visibleSections(role, espace).map((section) => {
               const courant = active?.href === section.href;
               return (
                 <li key={section.href}>
@@ -60,7 +70,7 @@ export function NavMobile({ role, children }: { role: Role | null; children: Rea
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"
                     )}
                   >
-                    {section.label}
+                    {section.labelCourt ?? section.label}
                   </Link>
                 </li>
               );
