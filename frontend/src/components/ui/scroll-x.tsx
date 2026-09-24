@@ -100,7 +100,13 @@ export function ScrollX({
         // ni l'un ni l'autre, pour ne pas polluer la navigation clavier.
         {...(bords.deborde ? { tabIndex: 0, role: "region", "aria-label": label } : {})}
         className={cn(
-          "w-full",
+          // `relative` : un enfant positionné en absolu (les libellés
+          // `sr-only` des actions répétées, par exemple) se place sinon par
+          // rapport au cadre extérieur — donc HORS de la zone défilante, qui
+          // ne le rogne plus. Le dernier d'entre eux ajoutait alors sa
+          // position à la hauteur de la page : cent soixante pixels de
+          // défilement vide sous l'écran des offres.
+          "relative w-full",
           bords.gauche || bords.droite ? "overflow-x-auto" : undefined,
           // `overscroll-contain` : arrivé en bas du cadre, la molette ne
           // repart pas dans la page — on lit un tableau, on ne quitte pas
