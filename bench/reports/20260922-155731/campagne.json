@@ -2,7 +2,7 @@
   "campagne": {
     "version": 1,
     "date": "2026-09-22T15:57:31+00:00",
-    "sha": "e6ebfc6-sale",
+    "sha": "d793943-sale",
     "dossier": "../bench/reports/20260922-155731",
     "graine": 20260922,
     "topologie_workers": "separee",
@@ -159,7 +159,7 @@
   },
   "environnement": {
     "date": "2026-09-22T15:57:31+00:00",
-    "sha": "e6ebfc6-sale",
+    "sha": "d793943-sale",
     "machine": {
       "hote": "lucas",
       "noyau": "7.0.0-29-generic",

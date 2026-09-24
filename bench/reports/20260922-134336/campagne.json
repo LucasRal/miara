@@ -2,7 +2,7 @@
   "campagne": {
     "version": 1,
     "date": "2026-09-22T13:43:36+00:00",
-    "sha": "e6ebfc6-sale",
+    "sha": "d793943-sale",
     "dossier": "/home/ubuntu/projects/thesis/bench/reports/20260922-134336",
     "graine": 20260922,
     "alias_override": {},
@@ -458,7 +458,7 @@
   },
   "environnement": {
     "date": "2026-09-22T13:43:36+00:00",
-    "sha": "e6ebfc6-sale",
+    "sha": "d793943-sale",
     "machine": {
       "hote": "lucas",
       "noyau": "7.0.0-29-generic",

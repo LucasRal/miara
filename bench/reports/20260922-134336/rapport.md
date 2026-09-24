@@ -1,6 +1,6 @@
 # Campagne de charge Miara
 
-- Date : 2026-09-22T13:43:36+00:00 · empreinte `e6ebfc6-sale`
+- Date : 2026-09-22T13:43:36+00:00 · empreinte `d793943-sale`
 - Machine : Intel Core Processor (Haswell, no TSX) · 6 vCPU · 11671 Mo
 - Graine : 20260922
 - Budget : 13.467116 / 18.0 USD (0 point(s) non exécuté(s) faute de budget)

@@ -8,11 +8,19 @@ retrouver n'importe quelle valeur sans parcourir le chapitre.
 ## Campagne d'évaluation de référence {-}
 
 Les trois fichiers portent le même horodatage, `20260922T132654`, et la même
-empreinte de code, `e6ebfc6-sale`, dont le suffixe indique que le dépôt
+empreinte de code, `d793943-sale`, dont le suffixe indique que le dépôt
 comportait des modifications non validées au moment de l'exécution : le rapport
 n'est pas rejouable à l'identique depuis cette seule empreinte.
 
-`evals/reports/20260922T132654_e6ebfc6-sale.json`
+L'historique du dépôt a été réécrit le 24 septembre 2026 pour corriger
+l'identité d'auteur des commits. Les empreintes citées dans cette annexe et
+dans le chapitre 8 sont celles de l'historique actuel : celle de la campagne de
+référence, `e6ebfc6` jusque-là, est devenue `d793943`. La réécriture n'a touché
+que l'identité d'auteur ; l'arbre de fichiers désigné est le même, et les
+fichiers de mesure ont été renommés pour que leur nom continue de désigner un
+commit existant.
+
+`evals/reports/20260922T132654_d793943-sale.json`
 : Rapport complet, structuré, versionné par un numéro de format. Contient le
   détail CV par CV et question par question, les agrégats de chaque suite, le
   résultat du dépouillement de la relecture du juge et le verdict de chacun des
@@ -20,13 +28,13 @@ n'est pas rejouable à l'identique depuis cette seule empreinte.
   chapitre 8, y compris ceux qui sont présentés comme calculés à partir de son
   détail.
 
-`evals/reports/20260922T132654_e6ebfc6-sale.md`
+`evals/reports/20260922T132654_d793943-sale.md`
 : Résumé rédigé, produit par la même exécution. Il contient, sans
   retraitement, les tableaux de classement par offre, la matrice de confusion
   par strate, les mesures de l'assistant commercial, les corrélations du coach
   par critère, la nature des preuves avancées et les cas adverses.
 
-`evals/reports/20260922T132654_e6ebfc6-sale_relecture.md`
+`evals/reports/20260922T132654_d793943-sale_relecture.md`
 : Feuille de relecture humaine des verdicts du modèle juge. Neuf cas tirés sur
   quarante-sept, chacun avec le fait attendu, la réponse complète de l'agent,
   le verdict du juge et l'avis du relecteur. Le seul désaccord y est motivé.

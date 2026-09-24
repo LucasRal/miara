@@ -56,7 +56,7 @@ l'autre n'a pas été estimée par répétition.
 | developpeur-full-stack | 60 | 0,918 | 60,0 % | 85,0 % | 75,0 % | 0 | 11,8 | 0,0120 |
 | **ensemble** | **180** | **0,910** | | | **76,1 %** | **0** | **11,5** | **0,0122** |
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.md`, section « Présélection
+Source : `evals/reports/20260922T132654_d793943-sale.md`, section « Présélection
 RH » ; valeurs complètes dans le fichier JSON de même nom. « Élim. » désigne
 l'exactitude de la décision sur les critères éliminatoires.
 
@@ -84,7 +84,7 @@ arbitraire.
 | developpeur-full-stack | 30 | 15 | 0 | 15 | 0,750 |
 | **ensemble (somme)** | **94** | **43** | **2** | **41** | **0,7611** |
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.json`, chemin
+Source : `evals/reports/20260922T132654_d793943-sale.json`, chemin
 `suites.hr.offres.<offre>.must_have` ; la ligne d'ensemble est la somme des
 trois offres, et l'exactitude d'ensemble 0,7611 figure telle quelle dans le
 fichier au chemin `suites.hr.global.exactitude_must_have`.
@@ -108,7 +108,7 @@ produit.
 | limite | 0 | 0 | 4 | 41 |
 | hors profil | 0 | 0 | 2 | 43 |
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.md`, section « Matrice de
+Source : `evals/reports/20260922T132654_d793943-sale.md`, section « Matrice de
 confusion par strate ».
 
 Quarante et un des quarante-cinq CV de la strate *limite* sont classés *hors
@@ -144,7 +144,7 @@ publiées séparément et que la seconde porte un seuil propre.
 | Structuration du profil | 6,113 s | 5,876 s | 6,313 s |
 | Notation contre la grille | 4,908 s | 5,599 s | 5,401 s |
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.json`, chemin
+Source : `evals/reports/20260922T132654_d793943-sale.json`, chemin
 `suites.hr.offres.<offre>.etapes`, champ `mean_seconds` ; soixante mesures par
 case.
 
@@ -186,7 +186,7 @@ chapitre.
 | Tours coupés par la limite d'étapes | 0 |
 | Écritures proposées hors procédure | 0 |
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.md`, section « Assistant
+Source : `evals/reports/20260922T132654_d793943-sale.md`, section « Assistant
 commercial ».
 
 Trois résultats sont bons et ne doivent pas être noyés par les deux qui ne le
@@ -209,7 +209,7 @@ il conduit à une conclusion nuancée qu'il faut exposer entièrement.
 | `get_opportunity` (atomique) | 4 | 1,000 | 2,50 s |
 | aucun outil | 1 | 0,000 | 1,58 s |
 
-Source : calculé à partir de `evals/reports/20260922T132654_e6ebfc6-sale.json`,
+Source : calculé à partir de `evals/reports/20260922T132654_d793943-sale.json`,
 chemin `suites.sales.detail`, en regroupant les trente questions par ensemble
 d'outils exécutés.
 
@@ -271,9 +271,9 @@ Le juge a rendu quarante-sept verdicts, dont neuf ont été tirés pour relectur
 humaine, soit dix-neuf pour cent. La relecture a été faite et dépouillée :
 **huit accords et un désaccord, soit 88,9 % d'accord**.
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.json`, chemin
+Source : `evals/reports/20260922T132654_d793943-sale.json`, chemin
 `juge.relecture` ; détail des neuf cas dans
-`evals/reports/20260922T132654_e6ebfc6-sale_relecture.md`.
+`evals/reports/20260922T132654_d793943-sale_relecture.md`.
 
 Le désaccord est instructif, et le sens dans lequel il joue importe. Le fait de
 référence était formulé en relatif, « la clôture est prévue dans environ
@@ -305,7 +305,7 @@ chapitre 9 en tire la seule conclusion possible.
 | Latence maximale | 4,5 s | — |
 | Appels au modèle par question | 2,0 | — |
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.json`, chemin
+Source : `evals/reports/20260922T132654_d793943-sale.json`, chemin
 `suites.sales.latence` et `suites.sales.etapes`.
 
 Le seuil de trois secondes au 95\textsuperscript{e} centile, posé par la
@@ -350,7 +350,7 @@ l'améliorer. Le verdict du chapitre 9 en tient compte.
 | developpeur-full-stack | 121 | 312 242 | 0,720698 | 0,012012 |
 | **ensemble** | **361** | **938 794** | **2,199332** | **0,012219** |
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.json`, chemin
+Source : `evals/reports/20260922T132654_d793943-sale.json`, chemin
 `suites.hr.offres.<offre>` (champs `appels_llm`, `jetons`, `cout_usd`,
 `cout_par_cv_usd`) ; les totaux d'appels et de jetons sont la somme des trois
 offres, le coût total 2,199332 et le coût par CV 0,012219 figurent tels quels au
@@ -396,7 +396,7 @@ La corrélation de rang sur la note globale atteint 0,985 sur dix textes, pour u
 | prochaine étape | 0,949 | 0,50 | 10 |
 | ton et concision | 0,842 | 0,50 | 10 |
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.md`, section « Coach
+Source : `evals/reports/20260922T132654_d793943-sale.md`, section « Coach
 commercial ».
 
 Quatre critères sur cinq se situent entre 0,842 et 0,949 ; celui de la gestion
@@ -419,7 +419,7 @@ chiffre de la campagne.
 | Preuve vide | 0 |
 | Total | 50 |
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.md`, section « Preuves
+Source : `evals/reports/20260922T132654_d793943-sale.md`, section « Preuves
 avancées par le coach ».
 
 Le taux de preuves conformes est de 40,0 % pour un seuil de 90 %, et le taux de
@@ -450,7 +450,7 @@ autant que du seuil.
 | CV porteur d'une injection de consigne | 5 | 5 |
 | Texte de coaching porteur d'une injection | 1 | 1 |
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.md`, section « Cas
+Source : `evals/reports/20260922T132654_d793943-sale.md`, section « Cas
 adverses ».
 
 | Mesure sur les cinq CV porteurs d'injection | Valeur |
@@ -459,7 +459,7 @@ adverses ».
 | Tentatives signalées dans les réserves du rapport | 5 sur 5 |
 | Notes restées à cinq points de la référence (qualité) | 3 sur 5 |
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.json`, chemin
+Source : `evals/reports/20260922T132654_d793943-sale.json`, chemin
 `suites.adverse.par_cas.injection_de_consigne`.
 
 Aucune des cinq consignes injectées n'a été suivie, et les cinq tentatives ont
@@ -859,7 +859,7 @@ Source : `thesis/soutenance/demo/repetitions.md`.
 | Tentatives d'injection signalées | ≥ 3 / 5 | 5 / 5 | tenu |
 | Fichiers corrompus traités proprement | 2 / 2 | 2 / 2 | tenu |
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.json`, chemins
+Source : `evals/reports/20260922T132654_d793943-sale.json`, chemins
 `seuils.violations` et `seuils.detail_respectes` ; le rapport déclare huit
 seuils respectés et cinq violations.
 

@@ -65,7 +65,7 @@ matérialise ce que l'assemblage décrit plus haut produit effectivement : une
 application unique où les deux agents coexistent sous la même
 authentification et la même organisation active.
 
-![Tableau de bord de l'organisation active, capture du 22 septembre 2026 sur la révision `e6ebfc6`. Le gain de temps affiché repose sur une hypothèse de configuration discutée plus loin, non sur une mesure.\label{fig:tdb}](figures/captures/out/ecran-tableau-de-bord.png){width=92%}
+![Tableau de bord de l'organisation active, capture du 22 septembre 2026 sur la révision `d793943`. Le gain de temps affiché repose sur une hypothèse de configuration discutée plus loin, non sur une mesure.\label{fig:tdb}](figures/captures/out/ecran-tableau-de-bord.png){width=92%}
 
 ## Un monolithe modulaire plutôt que des services distribués
 

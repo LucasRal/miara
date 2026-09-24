@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any
 
 # Coûts unitaires observés le 2026-09-22 sur le jeu doré complet (rapport
-# `evals/reports/20260922T125933_e6ebfc6-sale.json` : 0,012413 USD par CV noté).
+# `evals/reports/20260922T125933_d793943-sale.json` : 0,012413 USD par CV noté).
 # Ils ne servent QU'À la réservation de budget avant de lancer un scénario ;
 # la dépense rapportée est toujours celle relue dans `llm_calls`, jamais celle-ci.
 COUT_ESTIME_CV_USD = 0.0125

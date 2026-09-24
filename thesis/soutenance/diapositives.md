@@ -98,7 +98,7 @@ suivie, 3 CV scannés sur 3 et 2 fichiers corrompus sur 2 traités proprement, 1
 texte de coaching piégé sur 1. Valable pour **ces** cas, écrits pour ce
 mémoire : aucune conclusion générale sur l'injection indirecte.
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.json`.
+Source : `evals/reports/20260922T132654_d793943-sale.json`.
 
 # H1 — le classement tient
 
@@ -111,7 +111,7 @@ Source : `evals/reports/20260922T132654_e6ebfc6-sale.json`.
 
 180 CV en 360,5 s d'horloge, 0 échec.
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.md`.
+Source : `evals/reports/20260922T132654_d793943-sale.md`.
 
 # H1 — et pourtant le produit n'est pas utilisable
 
@@ -138,7 +138,7 @@ amont du classement.**
 | Absence de donnée bien annoncée | 3 / 3 |
 | Écritures hors procédure | 0 |
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.md`.
+Source : `evals/reports/20260922T132654_d793943-sale.md`.
 
 # Outil composite contre outils atomiques
 
@@ -196,7 +196,7 @@ Source : `bench/reports/20260922-134336/campagne.json`.
 Moins de 5 % d'écart entre trois grilles différentes : une tarification au lot
 est possible.
 
-Source : `evals/reports/20260922T132654_e6ebfc6-sale.json`.
+Source : `evals/reports/20260922T132654_d793943-sale.json`.
 
 # Le coach : le bon et le mauvais chiffre
 
